@@ -88,6 +88,12 @@ p {
   font-weight: 700;
   background: var(--text);
   color: #06100d;
+  cursor: pointer;
+}
+
+.button:disabled {
+  cursor: not-allowed;
+  opacity: .7;
 }
 
 .button.secondary {
@@ -135,7 +141,7 @@ p {
 }
 
 .form {
-  max-width: 440px;
+  max-width: 500px;
   margin: 60px auto;
 }
 
@@ -147,6 +153,12 @@ input {
   padding: 14px 16px;
   border-radius: 14px;
   margin-bottom: 12px;
+}
+
+.form-error {
+  color: #ffb4b4;
+  font-size: 14px;
+  margin: 0 0 16px;
 }
 
 @media (max-width: 800px) {
