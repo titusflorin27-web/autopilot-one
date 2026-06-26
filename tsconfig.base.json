@@ -1,0 +1,19 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "lib": ["ES2022", "DOM"],
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "strict": true,
+    "skipLibCheck": true,
+    "resolveJsonModule": true,
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "baseUrl": ".",
+    "paths": {
+      "@autopilot/shared": ["packages/shared/src/index.ts"],
+      "@autopilot/business-kernel": ["packages/business-kernel/src/index.ts"],
+      "@autopilot/ai-gateway": ["packages/ai-gateway/src/index.ts"]
+    }
+  }
+}
