@@ -4,6 +4,22 @@ AI-native Business Operating System for small and medium businesses.
 
 ## Current build
 
+### Build #004 — Business DNA
+
+This build turns company onboarding into a structured Business DNA profile that AI Employees can use as operating context.
+
+Included:
+
+- Shared Business DNA TypeScript contract
+- Structured fields for summary, products, services, rules, tone, FAQ and objectives
+- Protected `GET /api/business-dna/:organizationId` endpoint
+- Protected `PUT /api/business-dna` endpoint
+- OWNER/ADMIN write access and member read access
+- Real onboarding UI connected to the API
+- Dashboard navigation to Business DNA
+
+## Previous builds
+
 ### Build #003 — Identity
 
 This build adds the first production-grade identity layer on top of the Build #002 monorepo foundation.
@@ -22,8 +38,6 @@ Included:
 - Authentication and role guards for protected API routes
 - Connected Register/Login UI
 - Dashboard session check through `/api/users/me`
-
-## Previous build
 
 ### Build #002 — Foundation
 
@@ -71,6 +85,13 @@ POST /api/auth/login
 POST /api/auth/refresh
 POST /api/auth/logout
 GET /api/users/me
+```
+
+## Business DNA API
+
+```http
+GET /api/business-dna/:organizationId
+PUT /api/business-dna
 ```
 
 Protected requests use:
