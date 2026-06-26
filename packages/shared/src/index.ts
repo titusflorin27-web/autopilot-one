@@ -5,6 +5,11 @@ export type UserRole = "owner" | "admin" | "member";
 export type EventStatus = "pending" | "processing" | "completed" | "failed";
 export type KnowledgeSourceType = "TXT" | "PDF" | "DOCX" | "WEBSITE";
 export type KnowledgeSourceStatus = "UPLOADED" | "INDEXED" | "FAILED";
+export type ConversationStatus = "OPEN" | "WAITING_FOR_HUMAN" | "CLOSED";
+export type MessageSender = "CUSTOMER" | "AI" | "HUMAN" | "SYSTEM";
+export type LeadStatus = "NEW" | "QUALIFIED" | "DISQUALIFIED" | "CONVERTED";
+export type TaskStatus = "OPEN" | "DONE" | "CANCELLED";
+export type TaskPriority = "LOW" | "MEDIUM" | "HIGH";
 
 export interface BusinessEvent<TPayload = unknown> {
   id: ID;
@@ -67,4 +72,25 @@ export interface KnowledgeSearchResult {
   sourceType: KnowledgeSourceType;
   content: string;
   score: number;
+}
+
+export interface ReceptionAiResult {
+  conversationId: ID;
+  reply: string;
+  confidence: number;
+  shouldEscalate: boolean;
+  leadId?: ID | null;
+  taskId?: ID | null;
+  citations: KnowledgeSearchResult[];
+}
+
+export interface ReceptionConversationSummary {
+  id: ID;
+  organizationId: ID;
+  customerName?: string | null;
+  customerEmail?: string | null;
+  channel: string;
+  status: ConversationStatus;
+  createdAt: string;
+  updatedAt: string;
 }

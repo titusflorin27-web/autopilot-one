@@ -39,23 +39,58 @@ enum KnowledgeSourceStatus {
   FAILED
 }
 
+enum ConversationStatus {
+  OPEN
+  WAITING_FOR_HUMAN
+  CLOSED
+}
+
+enum MessageSender {
+  CUSTOMER
+  AI
+  HUMAN
+  SYSTEM
+}
+
+enum LeadStatus {
+  NEW
+  QUALIFIED
+  DISQUALIFIED
+  CONVERTED
+}
+
+enum TaskStatus {
+  OPEN
+  DONE
+  CANCELLED
+}
+
+enum TaskPriority {
+  LOW
+  MEDIUM
+  HIGH
+}
+
 model Organization {
-  id               String             @id @default(cuid())
+  id               String                 @id @default(cuid())
   name             String
-  slug             String             @unique
+  slug             String                 @unique
   industry         String?
   website          String?
   country          String?
-  language         String             @default("en")
-  timezone         String             @default("UTC")
-  status           OrganizationStatus @default(ACTIVE)
+  language         String                 @default("en")
+  timezone         String                 @default("UTC")
+  status           OrganizationStatus     @default(ACTIVE)
   businessDna      Json?
   memberships      Membership[]
   events           Event[]
   knowledgeSources KnowledgeSource[]
   knowledgeChunks  KnowledgeChunk[]
-  createdAt        DateTime           @default(now())
-  updatedAt        DateTime           @updatedAt
+  conversations    ReceptionConversation[]
+  leads            Lead[]
+  tasks            Task[]
+  createdAt        DateTime               @default(now())
+  updatedAt        DateTime               @updatedAt
 }
 
 model User {
@@ -143,4 +178,69 @@ model KnowledgeChunk {
   @@unique([sourceId, chunkIndex])
   @@index([organizationId])
   @@index([sourceId])
+}
+
+model ReceptionConversation {
+  id             String             @id @default(cuid())
+  organizationId String
+  organization   Organization       @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  customerName   String?
+  customerEmail  String?
+  channel        String             @default("web")
+  status         ConversationStatus @default(OPEN)
+  leadId         String?
+  lead           Lead?              @relation(fields: [leadId], references: [id])
+  messages       ReceptionMessage[]
+  createdAt      DateTime           @default(now())
+  updatedAt      DateTime           @updatedAt
+
+  @@index([organizationId])
+  @@index([status])
+}
+
+model ReceptionMessage {
+  id             String                @id @default(cuid())
+  conversationId String
+  conversation   ReceptionConversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  sender         MessageSender
+  content        String
+  metadata       Json?
+  createdAt      DateTime              @default(now())
+
+  @@index([conversationId])
+  @@index([sender])
+}
+
+model Lead {
+  id             String                  @id @default(cuid())
+  organizationId String
+  organization   Organization            @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  name           String?
+  email          String?
+  summary        String
+  score          Int                     @default(0)
+  status         LeadStatus              @default(NEW)
+  conversations  ReceptionConversation[]
+  createdAt      DateTime                @default(now())
+  updatedAt      DateTime                @updatedAt
+
+  @@index([organizationId])
+  @@index([status])
+}
+
+model Task {
+  id             String       @id @default(cuid())
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  title          String
+  description    String
+  status         TaskStatus   @default(OPEN)
+  priority       TaskPriority @default(MEDIUM)
+  dueAt          DateTime?
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+
+  @@index([organizationId])
+  @@index([status])
+  @@index([priority])
 }

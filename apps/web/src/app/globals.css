@@ -157,7 +157,8 @@ p {
 }
 
 .business-dna-form,
-.knowledge-layout {
+.knowledge-layout,
+.reception-layout {
   display: grid;
   gap: 18px;
 }
@@ -199,6 +200,8 @@ input[type="file"] {
   border-radius: 16px;
   padding: 14px;
   background: rgba(255,255,255,.04);
+  text-align: left;
+  color: var(--text);
 }
 
 .source-item strong,
@@ -215,6 +218,15 @@ input[type="file"] {
 .source-item p {
   font-size: 14px;
   margin: 8px 0 0;
+}
+
+.ghost-button {
+  width: 100%;
+  cursor: pointer;
+}
+
+.ghost-button:hover {
+  border-color: var(--accent);
 }
 
 .form-error {
