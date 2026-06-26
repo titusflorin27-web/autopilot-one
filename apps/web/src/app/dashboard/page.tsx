@@ -10,6 +10,7 @@ export default function DashboardPage() {
         <nav>
           <Link href="/dashboard">Dashboard</Link>
           <Link href="/onboarding">Business DNA</Link>
+          <Link href="/knowledge-base">Knowledge Base</Link>
         </nav>
       </aside>
       <section className="main">
