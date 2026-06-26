@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException } from "@nestjs/common";
-import { Prisma } from "@prisma/client";
 import { BusinessDna } from "@autopilot/shared";
+import { Prisma } from "@prisma/client";
 import { PrismaService } from "../../common/prisma.service";
 import { normalizeBusinessDna, UpdateBusinessDnaDto } from "./dto/update-business-dna.dto";
 
@@ -28,7 +28,7 @@ export class BusinessDnaService {
       organizationId: organization.id,
       organizationName: organization.name,
       organizationSlug: organization.slug,
-      businessDna: organization.businessDna as BusinessDna | null,
+      businessDna: organization.businessDna as unknown as BusinessDna | null,
       updatedAt: organization.updatedAt,
     };
   }
