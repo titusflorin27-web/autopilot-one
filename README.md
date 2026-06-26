@@ -4,6 +4,24 @@ AI-native Business Operating System for small and medium businesses.
 
 ## Current build
 
+### Build #005 — Knowledge Base
+
+This build adds the first organization-level Knowledge Base layer.
+
+Included:
+
+- Upload TXT, PDF and DOCX sources
+- Website source ingestion
+- Knowledge source registry
+- Automatic chunk indexing
+- Search endpoint for indexed knowledge chunks
+- Shared Knowledge Base TypeScript contracts
+- Protected Knowledge Base API with organization-scoped RBAC
+- Connected `/knowledge-base` UI
+- Dashboard navigation to Knowledge Base
+
+## Previous builds
+
 ### Build #004 — Business DNA
 
 This build turns company onboarding into a structured Business DNA profile that AI Employees can use as operating context.
@@ -17,8 +35,6 @@ Included:
 - OWNER/ADMIN write access and member read access
 - Real onboarding UI connected to the API
 - Dashboard navigation to Business DNA
-
-## Previous builds
 
 ### Build #003 — Identity
 
@@ -92,6 +108,16 @@ GET /api/users/me
 ```http
 GET /api/business-dna/:organizationId
 PUT /api/business-dna
+```
+
+## Knowledge Base API
+
+```http
+GET /api/knowledge-base/organization/:organizationId/sources
+POST /api/knowledge-base/text
+POST /api/knowledge-base/website
+POST /api/knowledge-base/upload
+POST /api/knowledge-base/search
 ```
 
 Protected requests use:
