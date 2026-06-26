@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { DashboardClient } from "./DashboardClient";
 
 export default function DashboardPage() {
@@ -6,6 +7,10 @@ export default function DashboardPage() {
       <aside className="sidebar">
         <h3>Autopilot One</h3>
         <p>Command Center</p>
+        <nav>
+          <Link href="/dashboard">Dashboard</Link>
+          <Link href="/onboarding">Business DNA</Link>
+        </nav>
       </aside>
       <section className="main">
         <DashboardClient />
