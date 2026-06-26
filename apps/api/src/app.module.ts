@@ -7,6 +7,7 @@ import { OrganizationsModule } from "./modules/organizations/organizations.modul
 import { UsersModule } from "./modules/users/users.module";
 import { EventsModule } from "./modules/events/events.module";
 import { BusinessDnaModule } from "./modules/business-dna/business-dna.module";
+import { KnowledgeBaseModule } from "./modules/knowledge-base/knowledge-base.module";
 
 @Module({
   imports: [
@@ -18,6 +19,7 @@ import { BusinessDnaModule } from "./modules/business-dna/business-dna.module";
     UsersModule,
     EventsModule,
     BusinessDnaModule,
+    KnowledgeBaseModule,
   ],
 })
 export class AppModule {}
