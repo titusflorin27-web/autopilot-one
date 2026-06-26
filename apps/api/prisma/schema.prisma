@@ -13,7 +13,7 @@ enum OrganizationStatus {
   DELETED
 }
 
-enum UserRole {
+enum MembershipRole {
   OWNER
   ADMIN
   MEMBER
@@ -37,23 +37,49 @@ model Organization {
   timezone    String             @default("UTC")
   status      OrganizationStatus @default(ACTIVE)
   businessDna Json?
-  users       User[]
+  memberships Membership[]
   events      Event[]
   createdAt   DateTime           @default(now())
   updatedAt   DateTime           @updatedAt
 }
 
 model User {
-  id             String        @id @default(cuid())
-  organizationId String?
-  organization   Organization? @relation(fields: [organizationId], references: [id])
-  email          String        @unique
-  firstName      String?
-  lastName       String?
-  role           UserRole      @default(MEMBER)
-  passwordHash   String?
-  createdAt      DateTime      @default(now())
-  updatedAt      DateTime      @updatedAt
+  id            String         @id @default(cuid())
+  email         String         @unique
+  firstName     String?
+  lastName      String?
+  passwordHash  String
+  memberships   Membership[]
+  refreshTokens RefreshToken[]
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+}
+
+model Membership {
+  id             String         @id @default(cuid())
+  userId         String
+  organizationId String
+  role           MembershipRole @default(MEMBER)
+  user           User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  organization   Organization   @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  createdAt      DateTime       @default(now())
+  updatedAt      DateTime       @updatedAt
+
+  @@unique([userId, organizationId])
+  @@index([organizationId])
+  @@index([userId])
+}
+
+model RefreshToken {
+  id        String    @id @default(cuid())
+  userId    String
+  tokenHash String    @unique
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  expiresAt DateTime
+  revokedAt DateTime?
+  createdAt DateTime  @default(now())
+
+  @@index([userId])
 }
 
 model Event {
