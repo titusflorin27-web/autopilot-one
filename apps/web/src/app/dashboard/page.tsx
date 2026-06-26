@@ -11,6 +11,7 @@ export default function DashboardPage() {
           <Link href="/dashboard">Dashboard</Link>
           <Link href="/onboarding">Business DNA</Link>
           <Link href="/knowledge-base">Knowledge Base</Link>
+          <Link href="/reception-ai">Reception AI</Link>
         </nav>
       </aside>
       <section className="main">
