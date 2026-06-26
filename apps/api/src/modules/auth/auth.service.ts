@@ -141,7 +141,7 @@ export class AuthService {
 
     const accessToken = await this.jwt.signAsync(payload, {
       secret: this.getAccessTokenSecret(),
-      expiresIn: this.getAccessTokenTtl(),
+      expiresIn: 900,
     });
 
     const refreshToken = randomBytes(48).toString("base64url");
@@ -159,7 +159,7 @@ export class AuthService {
       tokenType: "Bearer",
       accessToken,
       refreshToken,
-      accessTokenExpiresIn: this.getAccessTokenTtl(),
+      accessTokenExpiresIn: 900,
       refreshTokenExpiresAt,
     };
   }
@@ -195,10 +195,6 @@ export class AuthService {
     }
 
     return secret ?? "local-development-access-secret-change-me";
-  }
-
-  private getAccessTokenTtl(): string {
-    return this.config.get<string>("JWT_ACCESS_TOKEN_TTL") ?? "15m";
   }
 
   private getRefreshTokenExpiresAt(): Date {
