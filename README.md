@@ -4,6 +4,25 @@ AI-native Business Operating System for small and medium businesses.
 
 ## Current build
 
+### Build #006 — Reception AI
+
+This build adds the first AI Employee: Reception AI.
+
+Included:
+
+- Reception conversations
+- Customer and AI messages
+- Lead detection and scoring
+- Automatic task creation
+- Human escalation when confidence is low or risk signals appear
+- Business DNA context usage
+- Knowledge Base retrieval usage
+- Protected Reception AI API with organization-scoped RBAC
+- Connected `/reception-ai` UI
+- Dashboard navigation to Reception AI
+
+## Previous builds
+
 ### Build #005 — Knowledge Base
 
 This build adds the first organization-level Knowledge Base layer.
@@ -19,8 +38,6 @@ Included:
 - Protected Knowledge Base API with organization-scoped RBAC
 - Connected `/knowledge-base` UI
 - Dashboard navigation to Knowledge Base
-
-## Previous builds
 
 ### Build #004 — Business DNA
 
@@ -118,6 +135,14 @@ POST /api/knowledge-base/text
 POST /api/knowledge-base/website
 POST /api/knowledge-base/upload
 POST /api/knowledge-base/search
+```
+
+## Reception AI API
+
+```http
+GET /api/reception-ai/organization/:organizationId/conversations
+GET /api/reception-ai/organization/:organizationId/tasks
+POST /api/reception-ai/message
 ```
 
 Protected requests use:
