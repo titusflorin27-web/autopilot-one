@@ -1,4 +1,5 @@
 import { Injectable } from "@nestjs/common";
+import { Prisma } from "@prisma/client";
 import { PrismaService } from "../../common/prisma.service";
 import { CreateEventDto } from "./dto/create-event.dto";
 
@@ -11,7 +12,7 @@ export class EventsService {
       data: {
         organizationId: dto.organizationId,
         type: dto.type,
-        payload: dto.payload,
+        payload: dto.payload as Prisma.InputJsonValue,
       },
     });
   }
