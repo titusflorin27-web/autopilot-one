@@ -156,7 +156,8 @@ p {
   margin: 60px auto;
 }
 
-.business-dna-form {
+.business-dna-form,
+.knowledge-layout {
   display: grid;
   gap: 18px;
 }
@@ -182,6 +183,38 @@ textarea {
   resize: vertical;
   font: inherit;
   line-height: 1.5;
+}
+
+input[type="file"] {
+  color: var(--muted);
+}
+
+.source-list {
+  display: grid;
+  gap: 12px;
+}
+
+.source-item {
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  padding: 14px;
+  background: rgba(255,255,255,.04);
+}
+
+.source-item strong,
+.source-item span {
+  display: block;
+}
+
+.source-item span {
+  color: var(--muted);
+  font-size: 14px;
+  margin-top: 4px;
+}
+
+.source-item p {
+  font-size: 14px;
+  margin: 8px 0 0;
 }
 
 .form-error {

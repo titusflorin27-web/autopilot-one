@@ -26,21 +26,36 @@ enum EventStatus {
   FAILED
 }
 
+enum KnowledgeSourceType {
+  TXT
+  PDF
+  DOCX
+  WEBSITE
+}
+
+enum KnowledgeSourceStatus {
+  UPLOADED
+  INDEXED
+  FAILED
+}
+
 model Organization {
-  id          String             @id @default(cuid())
-  name        String
-  slug        String             @unique
-  industry    String?
-  website     String?
-  country     String?
-  language    String             @default("en")
-  timezone    String             @default("UTC")
-  status      OrganizationStatus @default(ACTIVE)
-  businessDna Json?
-  memberships Membership[]
-  events      Event[]
-  createdAt   DateTime           @default(now())
-  updatedAt   DateTime           @updatedAt
+  id               String             @id @default(cuid())
+  name             String
+  slug             String             @unique
+  industry         String?
+  website          String?
+  country          String?
+  language         String             @default("en")
+  timezone         String             @default("UTC")
+  status           OrganizationStatus @default(ACTIVE)
+  businessDna      Json?
+  memberships      Membership[]
+  events           Event[]
+  knowledgeSources KnowledgeSource[]
+  knowledgeChunks  KnowledgeChunk[]
+  createdAt        DateTime           @default(now())
+  updatedAt        DateTime           @updatedAt
 }
 
 model User {
@@ -91,4 +106,41 @@ model Event {
   status         EventStatus  @default(PENDING)
   createdAt      DateTime     @default(now())
   processedAt    DateTime?
+}
+
+model KnowledgeSource {
+  id             String                @id @default(cuid())
+  organizationId String
+  organization   Organization          @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  type           KnowledgeSourceType
+  status         KnowledgeSourceStatus @default(UPLOADED)
+  title          String
+  url            String?
+  fileName       String?
+  mimeType       String?
+  contentHash    String?
+  error          String?
+  chunks         KnowledgeChunk[]
+  createdAt      DateTime              @default(now())
+  updatedAt      DateTime              @updatedAt
+
+  @@index([organizationId])
+  @@index([type])
+  @@index([status])
+}
+
+model KnowledgeChunk {
+  id             String          @id @default(cuid())
+  organizationId String
+  organization   Organization    @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  sourceId       String
+  source         KnowledgeSource @relation(fields: [sourceId], references: [id], onDelete: Cascade)
+  chunkIndex     Int
+  content        String
+  tokenCount     Int
+  createdAt      DateTime        @default(now())
+
+  @@unique([sourceId, chunkIndex])
+  @@index([organizationId])
+  @@index([sourceId])
 }
