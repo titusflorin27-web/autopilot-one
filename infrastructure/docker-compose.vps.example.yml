@@ -18,7 +18,7 @@ services:
     restart: unless-stopped
     environment:
       POSTGRES_USER: autopilot
-      POSTGRES_PASSWORD: change-me
+      POSTGRES_PASSWORD: replace-with-generated-postgres-password
       POSTGRES_DB: autopilot
     volumes:
       - postgres_data:/var/lib/postgresql/data
