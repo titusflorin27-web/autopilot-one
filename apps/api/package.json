@@ -1,6 +1,6 @@
 {
   "name": "@autopilot/api",
-  "version": "0.7.0",
+  "version": "0.8.0",
   "private": true,
   "scripts": {
     "dev": "nest start --watch",
@@ -11,6 +11,7 @@
     "prisma:migrate": "prisma migrate dev"
   },
   "dependencies": {
+    "@autopilot/ai-gateway": "workspace:*",
     "@autopilot/business-kernel": "workspace:*",
     "@autopilot/shared": "workspace:*",
     "@nestjs/common": "^10.4.15",
