@@ -4,6 +4,23 @@ AI-native Business Operating System for small and medium businesses.
 
 ## Current build
 
+### Build #013 — Widget Runtime Enforcement
+
+This build connects organization widget settings to the public widget runtime.
+
+Included:
+
+- Public widget config endpoint
+- Runtime widget enabled/disabled enforcement
+- Per-organization widget token enforcement
+- Per-organization allowed origins enforcement
+- Runtime title/color/position loading in `/autopilot-widget.js`
+- Public response widget metadata
+- Widget settings UI display for public config endpoint
+- Shared `PublicWidgetConfig` contract
+
+## Previous builds
+
 ### Build #012 — Widget Settings / Install Manager
 
 This build adds organization-level management for the embeddable Reception AI widget.
@@ -21,8 +38,6 @@ Included:
 - `/widget-settings` install manager UI
 - Generated copy/paste install snippet
 - Dashboard navigation to Widget Settings
-
-## Previous builds
 
 ### Build #011 — Embeddable Website Widget
 
@@ -231,7 +246,7 @@ PUBLIC_WIDGET_RATE_LIMIT_MAX=20
 PUBLIC_WIDGET_RATE_LIMIT_WINDOW_SECONDS=60
 ```
 
-If `PUBLIC_WIDGET_TOKEN` is empty, token checks are disabled. If `PUBLIC_WIDGET_ALLOWED_ORIGINS` is empty, origin checks are disabled.
+Organization widget settings override global token/origin defaults when configured.
 
 ## Widget settings API
 
@@ -239,6 +254,24 @@ If `PUBLIC_WIDGET_TOKEN` is empty, token checks are disabled. If `PUBLIC_WIDGET_
 GET /api/organizations/:id/widget-settings
 PATCH /api/organizations/:id/widget-settings
 POST /api/organizations/:id/widget-settings/token
+```
+
+## Public widget config API
+
+```http
+GET /api/public/reception-ai/widget/:organizationSlug/config
+```
+
+Returns runtime-safe widget configuration:
+
+```json
+{
+  "organizationSlug": "your-company-slug",
+  "widgetEnabled": true,
+  "title": "Reception AI",
+  "primaryColor": "#8ee6c9",
+  "position": "RIGHT"
+}
 ```
 
 ## Website widget embed
@@ -312,10 +345,11 @@ PATCH /api/reception-ai/leads/:leadId
 ## Public Website API
 
 ```http
+GET /api/public/reception-ai/widget/:organizationSlug/config
 POST /api/public/reception-ai/message
 ```
 
-Public request body:
+Public message body:
 
 ```json
 {
