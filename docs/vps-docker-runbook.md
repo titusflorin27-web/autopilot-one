@@ -15,6 +15,14 @@ Services:
 - postgres
 - redis
 
+## Production pilot domains
+
+Use these domains for the first VPS pilot:
+
+- Web app: `https://app.autopilot-one.com`
+- API app: `https://api.autopilot-one.com`
+- API health: `https://api.autopilot-one.com/api/health`
+
 ## Server preparation
 
 Install Docker and Docker Compose using the official instructions for your server operating system.
@@ -54,6 +62,14 @@ nano apps/api/.env
 nano apps/web/.env.local
 ```
 
+Required production domain values:
+
+```env
+API_CORS_ORIGINS=https://app.autopilot-one.com
+NEXT_PUBLIC_API_URL=https://api.autopilot-one.com/api
+NEXT_PUBLIC_APP_URL=https://app.autopilot-one.com
+```
+
 Required replacements:
 
 - database password
@@ -63,6 +79,20 @@ Required replacements:
 - CORS origins
 - widget allowed origins
 - optional AI Gateway key
+
+## Reverse proxy setup
+
+Confirm `infrastructure/caddy/Caddyfile.example` contains:
+
+```caddy
+app.autopilot-one.com {
+  reverse_proxy web:3000
+}
+
+api.autopilot-one.com {
+  reverse_proxy api:4000
+}
+```
 
 ## Start stack
 
@@ -82,6 +112,7 @@ docker compose -f infrastructure/docker-compose.production.example.yml exec api 
 
 ```bash
 curl http://localhost:4000/api/health
+curl https://api.autopilot-one.com/api/health
 ```
 
 Expected result:
@@ -98,6 +129,7 @@ Open:
 
 ```text
 http://localhost:3000
+https://app.autopilot-one.com
 ```
 
 Verify:
@@ -150,6 +182,7 @@ Then verify:
 
 ```bash
 curl http://localhost:4000/api/health
+curl https://api.autopilot-one.com/api/health
 ```
 
 ## Backup reminder
