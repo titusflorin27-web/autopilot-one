@@ -12,6 +12,7 @@ import { ReceptionAiModule } from "./modules/reception-ai/reception-ai.module";
 import { InboxModule } from "./modules/inbox/inbox.module";
 import { NotificationsModule } from "./modules/notifications/notifications.module";
 import { BillingModule } from "./modules/billing/billing.module";
+import { LaunchModule } from "./modules/launch/launch.module";
 
 @Module({
   imports: [
@@ -28,6 +29,7 @@ import { BillingModule } from "./modules/billing/billing.module";
     InboxModule,
     NotificationsModule,
     BillingModule,
+    LaunchModule,
   ],
 })
 export class AppModule {}
