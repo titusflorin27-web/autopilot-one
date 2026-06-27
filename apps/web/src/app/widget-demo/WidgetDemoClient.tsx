@@ -1,6 +1,6 @@
 "use client";
 
-import { FormEvent, useState } from "react";
+import { FormEvent, useEffect, useState } from "react";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:4000/api";
 
@@ -13,6 +13,10 @@ type PublicReceptionResponse = {
   aiProvider?: string;
   aiModel?: string;
   usedFallback?: boolean;
+  rateLimit?: {
+    windowSeconds: number;
+    max: number;
+  };
   citations: Array<{
     sourceTitle: string;
     score: number;
@@ -24,15 +28,30 @@ type ChatMessage = {
   content: string;
 };
 
+function createVisitorId() {
+  return `visitor_${Math.random().toString(36).slice(2)}_${Date.now().toString(36)}`;
+}
+
 export function WidgetDemoClient() {
   const [organizationSlug, setOrganizationSlug] = useState("demo-company");
   const [customerName, setCustomerName] = useState("");
   const [customerEmail, setCustomerEmail] = useState("");
+  const [widgetToken, setWidgetToken] = useState("");
+  const [visitorId, setVisitorId] = useState("");
   const [conversationId, setConversationId] = useState<string | null>(null);
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [lastResponse, setLastResponse] = useState<PublicReceptionResponse | null>(null);
   const [isSending, setIsSending] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const storageKey = "autopilot.publicVisitorId";
+    const existing = window.localStorage.getItem(storageKey);
+    const nextVisitorId = existing ?? createVisitorId();
+
+    window.localStorage.setItem(storageKey, nextVisitorId);
+    setVisitorId(nextVisitorId);
+  }, []);
 
   async function onSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -57,6 +76,8 @@ export function WidgetDemoClient() {
           customerName: customerName || undefined,
           customerEmail: customerEmail || undefined,
           conversationId: conversationId ?? undefined,
+          visitorId: visitorId || undefined,
+          widgetToken: widgetToken || undefined,
           websiteUrl: typeof window !== "undefined" ? window.location.href : undefined,
           message,
         }),
@@ -85,9 +106,9 @@ export function WidgetDemoClient() {
   return (
     <div className="widget-demo-layout">
       <section className="card">
-        <div className="eyebrow">BUILD #009 Public Web Intake</div>
-        <h1>Embeddable Reception AI intake.</h1>
-        <p>This demo calls the public website endpoint and creates real Reception AI conversations.</p>
+        <div className="eyebrow">BUILD #010 Public Channel Hardening</div>
+        <h1>Reception AI widget with guardrails.</h1>
+        <p>This demo calls the hardened public website endpoint with visitor identity, optional widget token and rate-limit metadata.</p>
       </section>
 
       <section className="grid two-columns">
@@ -96,7 +117,9 @@ export function WidgetDemoClient() {
           <input value={organizationSlug} onChange={(event) => setOrganizationSlug(event.target.value)} placeholder="Organization slug" />
           <input value={customerName} onChange={(event) => setCustomerName(event.target.value)} placeholder="Customer name" />
           <input value={customerEmail} onChange={(event) => setCustomerEmail(event.target.value)} placeholder="Customer email" type="email" />
-          <p>Use your organization slug from registration. For local test, create/register a company and copy its slug from dashboard data.</p>
+          <input value={widgetToken} onChange={(event) => setWidgetToken(event.target.value)} placeholder="Widget token, optional" />
+          <p>Visitor id: {visitorId || "creating..."}</p>
+          <p>Use your organization slug from registration. If `PUBLIC_WIDGET_TOKEN` is configured in API env, paste the same token here.</p>
         </article>
 
         <article className="widget-shell">
@@ -125,6 +148,7 @@ export function WidgetDemoClient() {
               <span>Confidence {(lastResponse.confidence * 100).toFixed(0)}%</span>
               <span>Escalation {lastResponse.shouldEscalate ? "yes" : "no"}</span>
               <span>Conversation {lastResponse.conversationId.slice(0, 8)}</span>
+              {lastResponse.rateLimit ? <span>Limit {lastResponse.rateLimit.max}/{lastResponse.rateLimit.windowSeconds}s</span> : null}
             </div>
           ) : null}
         </article>
@@ -142,6 +166,8 @@ export function WidgetDemoClient() {
   "customerName": "Optional name",
   "customerEmail": "Optional email",
   "conversationId": "Optional follow-up conversation id",
+  "visitorId": "Stable anonymous visitor id",
+  "widgetToken": "Optional public widget token",
   "websiteUrl": "https://customer-site.example"
 }`}</pre>
       </section>
