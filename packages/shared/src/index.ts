@@ -2,7 +2,7 @@ export type ID = string;
 
 export type OrganizationStatus = "active" | "suspended" | "deleted";
 export type UserRole = "owner" | "admin" | "member";
-export type EventStatus = "pending" | "processing" | "completed" | "failed";
+export type EventStatus = "pending" | "processing" | "failed" | "completed";
 export type KnowledgeSourceType = "TXT" | "PDF" | "DOCX" | "WEBSITE";
 export type KnowledgeSourceStatus = "UPLOADED" | "INDEXED" | "FAILED";
 export type ConversationStatus = "OPEN" | "WAITING_FOR_HUMAN" | "CLOSED";
@@ -182,6 +182,27 @@ export interface ReceptionConversationSummary {
   closedAt?: string | null;
   createdAt: string;
   updatedAt: string;
+}
+
+export interface InboxMessage {
+  id: ID;
+  sender: MessageSender;
+  content: string;
+  createdAt: string;
+}
+
+export interface InboxConversationSummary extends ReceptionConversationSummary {
+  lead?: {
+    id: ID;
+    score: number;
+    status: LeadStatus;
+    summary: string;
+  } | null;
+  messages: InboxMessage[];
+}
+
+export interface InboxConversationDetail extends InboxConversationSummary {
+  messages: InboxMessage[];
 }
 
 export interface ReceptionOperationsSummary {
