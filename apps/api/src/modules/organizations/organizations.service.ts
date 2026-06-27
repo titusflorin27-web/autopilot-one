@@ -96,6 +96,7 @@ export class OrganizationsService {
 
     return {
       ...organization,
+      publicConfigEndpoint: this.buildPublicConfigEndpoint(organization.slug),
       installSnippet: this.buildInstallSnippet(organization),
     };
   }
@@ -128,6 +129,7 @@ export class OrganizationsService {
 
     return {
       ...organization,
+      publicConfigEndpoint: this.buildPublicConfigEndpoint(organization.slug),
       installSnippet: this.buildInstallSnippet(organization),
     };
   }
@@ -149,6 +151,7 @@ export class OrganizationsService {
 
     return {
       ...organization,
+      publicConfigEndpoint: this.buildPublicConfigEndpoint(organization.slug),
       installSnippet: this.buildInstallSnippet(organization),
     };
   }
@@ -175,6 +178,10 @@ export class OrganizationsService {
     const tokenLine = organization.widgetToken ? `\n  data-widget-token="${organization.widgetToken}"` : "";
 
     return `<script\n  src="https://your-autopilot-web-host.example/autopilot-widget.js"\n  data-organization-slug="${organization.slug}"\n  data-api-url="https://your-autopilot-api-host.example/api"\n  data-title="${organization.widgetTitle}"${tokenLine}\n  async\n></script>`;
+  }
+
+  private buildPublicConfigEndpoint(slug: string) {
+    return `/api/public/reception-ai/widget/${slug}/config`;
   }
 
   private createWidgetToken() {
