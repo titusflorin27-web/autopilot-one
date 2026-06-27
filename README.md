@@ -4,6 +4,26 @@ AI-native Business Operating System for small and medium businesses.
 
 ## Current build
 
+### Build #012 — Widget Settings / Install Manager
+
+This build adds organization-level management for the embeddable Reception AI widget.
+
+Included:
+
+- Widget settings stored on organizations
+- Widget enable/disable flag
+- Widget title configuration
+- Widget primary color configuration
+- Widget left/right position setting
+- Widget token storage and regeneration
+- Allowed origins list storage
+- Protected widget settings API
+- `/widget-settings` install manager UI
+- Generated copy/paste install snippet
+- Dashboard navigation to Widget Settings
+
+## Previous builds
+
 ### Build #011 — Embeddable Website Widget
 
 This build ships the first real embeddable Reception AI widget for customer websites.
@@ -20,8 +40,6 @@ Included:
 - Public conversation continuation
 - Widget demo page with real copy/paste snippet
 - Documentation for installing the widget on external websites
-
-## Previous builds
 
 ### Build #010 — Public Channel Hardening
 
@@ -214,6 +232,14 @@ PUBLIC_WIDGET_RATE_LIMIT_WINDOW_SECONDS=60
 ```
 
 If `PUBLIC_WIDGET_TOKEN` is empty, token checks are disabled. If `PUBLIC_WIDGET_ALLOWED_ORIGINS` is empty, origin checks are disabled.
+
+## Widget settings API
+
+```http
+GET /api/organizations/:id/widget-settings
+PATCH /api/organizations/:id/widget-settings
+POST /api/organizations/:id/widget-settings/token
+```
 
 ## Website widget embed
 

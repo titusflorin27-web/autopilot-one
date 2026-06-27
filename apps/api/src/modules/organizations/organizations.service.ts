@@ -1,7 +1,9 @@
 import { ConflictException, Injectable, NotFoundException } from "@nestjs/common";
 import { MembershipRole, Prisma } from "@prisma/client";
+import { randomBytes } from "crypto";
 import { PrismaService } from "../../common/prisma.service";
 import { CreateOrganizationDto } from "./dto/create-organization.dto";
+import { UpdateWidgetSettingsDto } from "./dto/update-widget-settings.dto";
 
 @Injectable()
 export class OrganizationsService {
@@ -19,6 +21,7 @@ export class OrganizationsService {
             country: dto.country,
             language: dto.language ?? "en",
             timezone: dto.timezone ?? "UTC",
+            widgetTitle: `${dto.name.trim()} Reception AI`,
           },
         });
 
@@ -79,5 +82,102 @@ export class OrganizationsService {
     }
 
     return organization;
+  }
+
+  async getWidgetSettings(organizationId: string) {
+    const organization = await this.prisma.organization.findUnique({
+      where: { id: organizationId },
+      select: this.widgetSettingsSelect(),
+    });
+
+    if (!organization) {
+      throw new NotFoundException("Organization not found");
+    }
+
+    return {
+      ...organization,
+      installSnippet: this.buildInstallSnippet(organization),
+    };
+  }
+
+  async updateWidgetSettings(organizationId: string, dto: UpdateWidgetSettingsDto) {
+    const organization = await this.prisma.organization.update({
+      where: { id: organizationId },
+      data: {
+        widgetEnabled: dto.widgetEnabled,
+        widgetTitle: dto.widgetTitle?.trim(),
+        widgetPrimaryColor: dto.widgetPrimaryColor,
+        widgetPosition: dto.widgetPosition,
+        widgetToken: dto.widgetToken?.trim() || undefined,
+        widgetAllowedOrigins: dto.widgetAllowedOrigins?.map((origin) => origin.trim()).filter(Boolean),
+      },
+      select: this.widgetSettingsSelect(),
+    });
+
+    await this.prisma.event.create({
+      data: {
+        organizationId,
+        type: "widget.settings_updated",
+        payload: {
+          widgetEnabled: organization.widgetEnabled,
+          widgetTitle: organization.widgetTitle,
+          allowedOriginsCount: organization.widgetAllowedOrigins.length,
+        } as Prisma.InputJsonValue,
+      },
+    });
+
+    return {
+      ...organization,
+      installSnippet: this.buildInstallSnippet(organization),
+    };
+  }
+
+  async regenerateWidgetToken(organizationId: string) {
+    const organization = await this.prisma.organization.update({
+      where: { id: organizationId },
+      data: { widgetToken: this.createWidgetToken() },
+      select: this.widgetSettingsSelect(),
+    });
+
+    await this.prisma.event.create({
+      data: {
+        organizationId,
+        type: "widget.token_regenerated",
+        payload: { tokenRegenerated: true } as Prisma.InputJsonValue,
+      },
+    });
+
+    return {
+      ...organization,
+      installSnippet: this.buildInstallSnippet(organization),
+    };
+  }
+
+  private widgetSettingsSelect() {
+    return {
+      id: true,
+      name: true,
+      slug: true,
+      widgetEnabled: true,
+      widgetTitle: true,
+      widgetPrimaryColor: true,
+      widgetPosition: true,
+      widgetToken: true,
+      widgetAllowedOrigins: true,
+    } satisfies Prisma.OrganizationSelect;
+  }
+
+  private buildInstallSnippet(organization: {
+    slug: string;
+    widgetTitle: string;
+    widgetToken: string | null;
+  }) {
+    const tokenLine = organization.widgetToken ? `\n  data-widget-token="${organization.widgetToken}"` : "";
+
+    return `<script\n  src="https://your-autopilot-web-host.example/autopilot-widget.js"\n  data-organization-slug="${organization.slug}"\n  data-api-url="https://your-autopilot-api-host.example/api"\n  data-title="${organization.widgetTitle}"${tokenLine}\n  async\n></script>`;
+  }
+
+  private createWidgetToken() {
+    return `widget_${randomBytes(24).toString("hex")}`;
   }
 }
