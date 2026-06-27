@@ -1,0 +1,54 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: autopilot
+      POSTGRES_PASSWORD: change-me
+      POSTGRES_DB: autopilot
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+
+  api:
+    build:
+      context: ..
+      dockerfile: apps/api/Dockerfile
+    environment:
+      NODE_ENV: production
+      DATABASE_URL: postgresql://autopilot:change-me@postgres:5432/autopilot?schema=public
+      REDIS_URL: redis://redis:6379
+      API_PORT: 4000
+      API_CORS_ORIGINS: http://localhost:3000
+      JWT_ACCESS_SECRET: change-me-long-random-value
+      JWT_ACCESS_TOKEN_TTL: 15m
+      REFRESH_TOKEN_TTL_DAYS: 30
+      PUBLIC_WIDGET_ALLOWED_ORIGINS: http://localhost:3000
+      PUBLIC_WIDGET_RATE_LIMIT_MAX: 20
+      PUBLIC_WIDGET_RATE_LIMIT_WINDOW_SECONDS: 60
+    depends_on:
+      - postgres
+      - redis
+    ports:
+      - "4000:4000"
+
+  web:
+    build:
+      context: ..
+      dockerfile: apps/web/Dockerfile
+    environment:
+      NODE_ENV: production
+      NEXT_PUBLIC_API_URL: http://localhost:4000/api
+      NEXT_PUBLIC_APP_URL: http://localhost:3000
+    depends_on:
+      - api
+    ports:
+      - "3000:3000"
+
+volumes:
+  postgres_data:
