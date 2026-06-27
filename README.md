@@ -4,6 +4,25 @@ AI-native Business Operating System for small and medium businesses.
 
 ## Current build
 
+### Build #014 — Widget Analytics / Install Health
+
+This build adds observability for the public Reception AI widget.
+
+Included:
+
+- `WidgetEvent` analytics table
+- Widget event types: config loaded, loaded, opened, message sent, message received, error
+- Public widget event tracking endpoint
+- Protected widget analytics endpoint
+- Install health indicators
+- Public funnel metrics for conversations, messages, leads and tasks
+- Domain/source reporting from public widget events
+- `/widget-analytics` dashboard page
+- Widget script telemetry for load/open/error
+- Shared `WidgetAnalytics` contract
+
+## Previous builds
+
 ### Build #013 — Widget Runtime Enforcement
 
 This build connects organization widget settings to the public widget runtime.
@@ -18,8 +37,6 @@ Included:
 - Public response widget metadata
 - Widget settings UI display for public config endpoint
 - Shared `PublicWidgetConfig` contract
-
-## Previous builds
 
 ### Build #012 — Widget Settings / Install Manager
 
@@ -332,6 +349,7 @@ POST /api/knowledge-base/search
 
 ```http
 GET /api/reception-ai/organization/:organizationId/summary
+GET /api/reception-ai/organization/:organizationId/widget-analytics
 GET /api/reception-ai/organization/:organizationId/conversations
 GET /api/reception-ai/organization/:organizationId/tasks
 GET /api/reception-ai/organization/:organizationId/leads
@@ -346,6 +364,7 @@ PATCH /api/reception-ai/leads/:leadId
 
 ```http
 GET /api/public/reception-ai/widget/:organizationSlug/config
+POST /api/public/reception-ai/widget/event
 POST /api/public/reception-ai/message
 ```
 
@@ -360,6 +379,18 @@ Public message body:
   "conversationId": "Optional follow-up conversation id",
   "visitorId": "Stable anonymous visitor id",
   "widgetToken": "Optional public widget token",
+  "websiteUrl": "https://customer-site.example"
+}
+```
+
+Public event body:
+
+```json
+{
+  "organizationSlug": "your-company-slug",
+  "type": "OPENED",
+  "visitorId": "Stable anonymous visitor id",
+  "conversationId": "Optional conversation id",
   "websiteUrl": "https://customer-site.example"
 }
 ```
