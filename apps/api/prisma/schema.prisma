@@ -181,18 +181,21 @@ model KnowledgeChunk {
 }
 
 model ReceptionConversation {
-  id             String             @id @default(cuid())
-  organizationId String
-  organization   Organization       @relation(fields: [organizationId], references: [id], onDelete: Cascade)
-  customerName   String?
-  customerEmail  String?
-  channel        String             @default("web")
-  status         ConversationStatus @default(OPEN)
-  leadId         String?
-  lead           Lead?              @relation(fields: [leadId], references: [id])
-  messages       ReceptionMessage[]
-  createdAt      DateTime           @default(now())
-  updatedAt      DateTime           @updatedAt
+  id               String             @id @default(cuid())
+  organizationId   String
+  organization     Organization       @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  customerName     String?
+  customerEmail    String?
+  channel          String             @default("web")
+  status           ConversationStatus @default(OPEN)
+  escalationReason String?
+  internalNote     String?
+  closedAt         DateTime?
+  leadId           String?
+  lead             Lead?              @relation(fields: [leadId], references: [id])
+  messages         ReceptionMessage[]
+  createdAt        DateTime           @default(now())
+  updatedAt        DateTime           @updatedAt
 
   @@index([organizationId])
   @@index([status])
@@ -212,17 +215,19 @@ model ReceptionMessage {
 }
 
 model Lead {
-  id             String                  @id @default(cuid())
-  organizationId String
-  organization   Organization            @relation(fields: [organizationId], references: [id], onDelete: Cascade)
-  name           String?
-  email          String?
-  summary        String
-  score          Int                     @default(0)
-  status         LeadStatus              @default(NEW)
-  conversations  ReceptionConversation[]
-  createdAt      DateTime                @default(now())
-  updatedAt      DateTime                @updatedAt
+  id              String                  @id @default(cuid())
+  organizationId  String
+  organization    Organization            @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  name            String?
+  email           String?
+  summary         String
+  score           Int                     @default(0)
+  status          LeadStatus              @default(NEW)
+  ownerNote       String?
+  lastContactedAt DateTime?
+  conversations   ReceptionConversation[]
+  createdAt       DateTime                @default(now())
+  updatedAt       DateTime                @updatedAt
 
   @@index([organizationId])
   @@index([status])
@@ -236,6 +241,8 @@ model Task {
   description    String
   status         TaskStatus   @default(OPEN)
   priority       TaskPriority @default(MEDIUM)
+  ownerNote      String?
+  completedAt    DateTime?
   dueAt          DateTime?
   createdAt      DateTime     @default(now())
   updatedAt      DateTime     @updatedAt

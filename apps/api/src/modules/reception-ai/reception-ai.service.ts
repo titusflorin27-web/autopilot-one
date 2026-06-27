@@ -1,8 +1,20 @@
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { BusinessDna, KnowledgeSearchResult } from "@autopilot/shared";
-import { ConversationStatus, KnowledgeSourceStatus, LeadStatus, MessageSender, Prisma, TaskPriority } from "@prisma/client";
+import {
+  ConversationStatus,
+  KnowledgeSourceStatus,
+  LeadStatus,
+  MessageSender,
+  Prisma,
+  TaskPriority,
+  TaskStatus,
+} from "@prisma/client";
 import { PrismaService } from "../../common/prisma.service";
 import { HandleReceptionMessageDto } from "./dto/handle-message.dto";
+import { HumanReplyDto } from "./dto/human-reply.dto";
+import { UpdateConversationDto } from "./dto/update-conversation.dto";
+import { UpdateLeadDto } from "./dto/update-lead.dto";
+import { UpdateTaskDto } from "./dto/update-task.dto";
 
 const DEFAULT_CONFIDENCE = 0.72;
 const ESCALATION_CONFIDENCE_THRESHOLD = 0.45;
@@ -18,7 +30,7 @@ export class ReceptionAiService {
         lead: true,
         messages: {
           orderBy: { createdAt: "asc" },
-          take: 6,
+          take: 10,
         },
       },
       orderBy: { updatedAt: "desc" },
@@ -28,8 +40,194 @@ export class ReceptionAiService {
   listTasks(organizationId: string) {
     return this.prisma.task.findMany({
       where: { organizationId },
-      orderBy: [{ priority: "desc" }, { createdAt: "desc" }],
+      orderBy: [{ status: "asc" }, { priority: "desc" }, { createdAt: "desc" }],
     });
+  }
+
+  listLeads(organizationId: string) {
+    return this.prisma.lead.findMany({
+      where: { organizationId },
+      include: {
+        conversations: {
+          select: { id: true, status: true, updatedAt: true },
+          orderBy: { updatedAt: "desc" },
+          take: 3,
+        },
+      },
+      orderBy: [{ score: "desc" }, { updatedAt: "desc" }],
+    });
+  }
+
+  async getOperationsSummary(organizationId: string) {
+    const [conversationGroups, taskGroups, leadGroups] = await Promise.all([
+      this.prisma.receptionConversation.groupBy({
+        by: ["status"],
+        where: { organizationId },
+        _count: { _all: true },
+      }),
+      this.prisma.task.groupBy({
+        by: ["status"],
+        where: { organizationId },
+        _count: { _all: true },
+      }),
+      this.prisma.lead.groupBy({
+        by: ["status"],
+        where: { organizationId },
+        _count: { _all: true },
+      }),
+    ]);
+
+    return {
+      conversations: this.countByStatus(conversationGroups),
+      tasks: this.countByStatus(taskGroups),
+      leads: this.countByStatus(leadGroups),
+    };
+  }
+
+  async updateConversation(conversationId: string, dto: UpdateConversationDto) {
+    const data: Prisma.ReceptionConversationUpdateInput = {
+      status: dto.status,
+      escalationReason: dto.escalationReason,
+      internalNote: dto.internalNote,
+    };
+
+    if (dto.status) {
+      data.closedAt = dto.status === ConversationStatus.CLOSED ? new Date() : null;
+    }
+
+    const conversation = await this.prisma.receptionConversation.update({
+      where: { id: conversationId },
+      data,
+      include: { lead: true, messages: { orderBy: { createdAt: "asc" }, take: 10 } },
+    });
+
+    await this.prisma.event.create({
+      data: {
+        organizationId: conversation.organizationId,
+        type: "reception_ai.conversation_updated",
+        payload: {
+          conversationId,
+          status: dto.status,
+          escalationReason: dto.escalationReason,
+        } as Prisma.InputJsonValue,
+      },
+    });
+
+    return conversation;
+  }
+
+  async humanReply(conversationId: string, dto: HumanReplyDto) {
+    return this.prisma.$transaction(async (tx) => {
+      const conversation = await tx.receptionConversation.findUnique({
+        where: { id: conversationId },
+        select: { id: true, organizationId: true },
+      });
+
+      if (!conversation) {
+        throw new NotFoundException("Conversation not found");
+      }
+
+      const message = await tx.receptionMessage.create({
+        data: {
+          conversationId,
+          sender: MessageSender.HUMAN,
+          content: dto.content,
+        },
+      });
+
+      const updatedConversation = await tx.receptionConversation.update({
+        where: { id: conversationId },
+        data: {
+          status: ConversationStatus.OPEN,
+          internalNote: dto.internalNote,
+          closedAt: null,
+        },
+        include: { lead: true, messages: { orderBy: { createdAt: "asc" }, take: 10 } },
+      });
+
+      await tx.event.create({
+        data: {
+          organizationId: conversation.organizationId,
+          type: "reception_ai.human_reply_added",
+          payload: {
+            conversationId,
+            messageId: message.id,
+          } as Prisma.InputJsonValue,
+        },
+      });
+
+      return updatedConversation;
+    });
+  }
+
+  async updateTask(taskId: string, dto: UpdateTaskDto) {
+    const data: Prisma.TaskUpdateInput = {
+      status: dto.status,
+      priority: dto.priority,
+      ownerNote: dto.ownerNote,
+    };
+
+    if (dto.status) {
+      data.completedAt = dto.status === TaskStatus.DONE ? new Date() : null;
+    }
+
+    const task = await this.prisma.task.update({
+      where: { id: taskId },
+      data,
+    });
+
+    await this.prisma.event.create({
+      data: {
+        organizationId: task.organizationId,
+        type: "reception_ai.task_updated",
+        payload: {
+          taskId,
+          status: dto.status,
+          priority: dto.priority,
+        } as Prisma.InputJsonValue,
+      },
+    });
+
+    return task;
+  }
+
+  async updateLead(leadId: string, dto: UpdateLeadDto) {
+    const data: Prisma.LeadUpdateInput = {
+      status: dto.status,
+      score: dto.score,
+      ownerNote: dto.ownerNote,
+      summary: dto.summary,
+    };
+
+    if (dto.ownerNote || dto.status === LeadStatus.QUALIFIED || dto.status === LeadStatus.CONVERTED) {
+      data.lastContactedAt = new Date();
+    }
+
+    const lead = await this.prisma.lead.update({
+      where: { id: leadId },
+      data,
+      include: {
+        conversations: {
+          select: { id: true, status: true, updatedAt: true },
+          orderBy: { updatedAt: "desc" },
+          take: 3,
+        },
+      },
+    });
+
+    await this.prisma.event.create({
+      data: {
+        organizationId: lead.organizationId,
+        type: "reception_ai.lead_updated",
+        payload: {
+          leadId,
+          status: dto.status,
+          score: dto.score,
+        } as Prisma.InputJsonValue,
+      },
+    });
+
+    return lead;
   }
 
   async handleMessage(dto: HandleReceptionMessageDto) {
@@ -52,6 +250,7 @@ export class ReceptionAiService {
     const shouldCreateLead = leadScore >= 45 || Boolean(dto.customerEmail);
     const confidence = this.calculateConfidence(dto.message, businessDna, citations);
     const shouldEscalate = confidence < ESCALATION_CONFIDENCE_THRESHOLD || this.needsHuman(dto.message);
+    const escalationReason = shouldEscalate ? this.getEscalationReason(dto.message, confidence) : undefined;
     const reply = this.composeReply({
       organizationName: organization.name,
       message: dto.message,
@@ -69,6 +268,8 @@ export class ReceptionAiService {
               customerName: dto.customerName,
               customerEmail: dto.customerEmail,
               status: shouldEscalate ? ConversationStatus.WAITING_FOR_HUMAN : ConversationStatus.OPEN,
+              escalationReason,
+              closedAt: null,
             },
           })
         : await tx.receptionConversation.create({
@@ -78,6 +279,7 @@ export class ReceptionAiService {
               customerEmail: dto.customerEmail,
               channel: dto.channel ?? "web",
               status: shouldEscalate ? ConversationStatus.WAITING_FOR_HUMAN : ConversationStatus.OPEN,
+              escalationReason,
             },
           });
 
@@ -118,6 +320,7 @@ export class ReceptionAiService {
             title: shouldEscalate ? "Review Reception AI conversation" : "Follow up with new lead",
             description: this.composeTaskDescription(dto.message, reply, leadScore, shouldEscalate),
             priority: shouldEscalate || leadScore >= 70 ? TaskPriority.HIGH : TaskPriority.MEDIUM,
+            ownerNote: escalationReason,
           },
         });
         taskId = task.id;
@@ -131,6 +334,7 @@ export class ReceptionAiService {
           metadata: {
             confidence,
             shouldEscalate,
+            escalationReason,
             leadScore,
             citations: citations.map((citation) => ({
               sourceId: citation.sourceId,
@@ -151,6 +355,7 @@ export class ReceptionAiService {
             taskId,
             confidence,
             shouldEscalate,
+            escalationReason,
           } as Prisma.InputJsonValue,
         },
       });
@@ -160,6 +365,7 @@ export class ReceptionAiService {
         reply,
         confidence,
         shouldEscalate,
+        escalationReason,
         leadId,
         taskId,
         citations,
@@ -259,6 +465,19 @@ export class ReceptionAiService {
     return Math.max(0.1, Math.min(0.98, Number(confidence.toFixed(2))));
   }
 
+  private getEscalationReason(message: string, confidence: number): string {
+    if (confidence < ESCALATION_CONFIDENCE_THRESHOLD) {
+      return `Low confidence response (${Math.round(confidence * 100)}%).`;
+    }
+
+    const lowerMessage = message.toLowerCase();
+    const matchedSignal = ["refund", "legal", "lawsuit", "angry", "complaint", "cancel", "human", "manager"].find((signal) =>
+      lowerMessage.includes(signal),
+    );
+
+    return matchedSignal ? `Human review signal detected: ${matchedSignal}.` : "Human review requested.";
+  }
+
   private scoreLead(message: string): number {
     const tokens = this.tokenize(message);
     const strongSignals = ["price", "pricing", "quote", "demo", "buy", "purchase", "contract", "urgent", "meeting", "call", "consultation"];
@@ -312,5 +531,13 @@ export class ReceptionAiService {
 
   private truncate(value: string, maxLength: number): string {
     return value.length > maxLength ? `${value.slice(0, maxLength).trim()}...` : value;
+  }
+
+  private countByStatus<T extends { _count: { _all: number } }>(groups: Array<T & Record<string, unknown>>) {
+    return groups.reduce<Record<string, number>>((accumulator, group) => {
+      const [status] = Object.entries(group).find(([key]) => key !== "_count") ?? ["unknown", "unknown"];
+      accumulator[String(group[status])] = group._count._all;
+      return accumulator;
+    }, {});
   }
 }
