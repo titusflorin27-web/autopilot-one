@@ -14,6 +14,7 @@ export default function DashboardPage() {
           <Link href="/reception-ai">Reception AI</Link>
           <Link href="/widget-demo">Website Widget</Link>
           <Link href="/widget-settings">Widget Settings</Link>
+          <Link href="/widget-analytics">Widget Analytics</Link>
         </nav>
       </aside>
       <section className="main">
