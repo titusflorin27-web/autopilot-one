@@ -88,6 +88,25 @@ export interface ReceptionAiResult {
   citations: KnowledgeSearchResult[];
 }
 
+export interface PublicReceptionAiResult {
+  conversationId: ID;
+  reply: string;
+  confidence: number;
+  shouldEscalate: boolean;
+  escalationReason?: string | null;
+  aiProvider?: string;
+  aiModel?: string;
+  usedFallback?: boolean;
+  rateLimit?: {
+    windowSeconds: number;
+    max: number;
+  };
+  citations: Array<{
+    sourceTitle: string;
+    score: number;
+  }>;
+}
+
 export interface ReceptionConversationSummary {
   id: ID;
   organizationId: ID;
