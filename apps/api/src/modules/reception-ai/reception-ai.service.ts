@@ -7,6 +7,7 @@ import {
   KnowledgeSourceStatus,
   LeadStatus,
   MessageSender,
+  OrganizationStatus,
   Prisma,
   TaskPriority,
   TaskStatus,
@@ -14,6 +15,7 @@ import {
 import { PrismaService } from "../../common/prisma.service";
 import { HandleReceptionMessageDto } from "./dto/handle-message.dto";
 import { HumanReplyDto } from "./dto/human-reply.dto";
+import { PublicReceptionMessageDto } from "./dto/public-reception-message.dto";
 import { UpdateConversationDto } from "./dto/update-conversation.dto";
 import { UpdateLeadDto } from "./dto/update-lead.dto";
 import { UpdateTaskDto } from "./dto/update-task.dto";
@@ -262,6 +264,54 @@ export class ReceptionAiService {
     });
 
     return lead;
+  }
+
+  async handlePublicMessage(dto: PublicReceptionMessageDto) {
+    const organization = await this.prisma.organization.findUnique({
+      where: { slug: dto.organizationSlug },
+      select: { id: true, status: true },
+    });
+
+    if (!organization || organization.status !== OrganizationStatus.ACTIVE) {
+      throw new NotFoundException("Public Reception AI endpoint not available");
+    }
+
+    let conversationId = dto.conversationId;
+
+    if (conversationId) {
+      const conversation = await this.prisma.receptionConversation.findUnique({
+        where: { id: conversationId },
+        select: { id: true, organizationId: true, status: true },
+      });
+
+      if (!conversation || conversation.organizationId !== organization.id || conversation.status === ConversationStatus.CLOSED) {
+        conversationId = undefined;
+      }
+    }
+
+    const result = await this.handleMessage({
+      organizationId: organization.id,
+      conversationId,
+      customerName: this.cleanOptional(dto.customerName),
+      customerEmail: this.cleanOptional(dto.customerEmail),
+      channel: dto.websiteUrl ? `public-web:${dto.websiteUrl}` : "public-web",
+      message: dto.message.trim(),
+    });
+
+    return {
+      conversationId: result.conversationId,
+      reply: result.reply,
+      confidence: result.confidence,
+      shouldEscalate: result.shouldEscalate,
+      escalationReason: result.escalationReason,
+      aiProvider: result.aiProvider,
+      aiModel: result.aiModel,
+      usedFallback: result.usedFallback,
+      citations: result.citations.map((citation) => ({
+        sourceTitle: citation.sourceTitle,
+        score: citation.score,
+      })),
+    };
   }
 
   async handleMessage(dto: HandleReceptionMessageDto) {
@@ -659,6 +709,11 @@ export class ReceptionAiService {
 
   private truncate(value: string, maxLength: number): string {
     return value.length > maxLength ? `${value.slice(0, maxLength).trim()}...` : value;
+  }
+
+  private cleanOptional(value?: string): string | undefined {
+    const cleaned = value?.trim();
+    return cleaned?.length ? cleaned : undefined;
   }
 
   private clampConfidence(value: number): number {

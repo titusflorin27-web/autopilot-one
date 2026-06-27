@@ -4,6 +4,24 @@ AI-native Business Operating System for small and medium businesses.
 
 ## Current build
 
+### Build #009 — Public Web Intake
+
+This build turns Reception AI into a public website intake channel.
+
+Included:
+
+- Public `POST /api/public/reception-ai/message` endpoint
+- Anonymous customer message intake by organization slug
+- Public follow-up conversation support
+- Validation limits for public input
+- Active-organization check before public access
+- Safe public response shape without internal task/lead IDs
+- Connected `/widget-demo` page
+- Website widget UI shell
+- Dashboard navigation to Website Widget
+
+## Previous builds
+
 ### Build #008 — AI Gateway
 
 This build connects Reception AI to the AI Gateway and prepares model-backed response generation.
@@ -19,8 +37,6 @@ Included:
 - AI provider/model/fallback metadata in message events
 - AI Gateway environment configuration
 - `/reception-ai` UI display for provider, model and fallback mode
-
-## Previous builds
 
 ### Build #007 — AI Employee Operations
 
@@ -193,6 +209,25 @@ PATCH /api/reception-ai/conversations/:conversationId
 POST /api/reception-ai/conversations/:conversationId/human-reply
 PATCH /api/reception-ai/tasks/:taskId
 PATCH /api/reception-ai/leads/:leadId
+```
+
+## Public Website API
+
+```http
+POST /api/public/reception-ai/message
+```
+
+Public request body:
+
+```json
+{
+  "organizationSlug": "your-company-slug",
+  "message": "Customer question",
+  "customerName": "Optional name",
+  "customerEmail": "Optional email",
+  "conversationId": "Optional follow-up conversation id",
+  "websiteUrl": "https://customer-site.example"
+}
 ```
 
 Protected requests use:
