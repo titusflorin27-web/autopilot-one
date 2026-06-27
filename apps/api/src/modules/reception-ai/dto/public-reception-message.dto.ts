@@ -26,6 +26,16 @@ export class PublicReceptionMessageDto {
   conversationId?: string;
 
   @IsOptional()
+  @IsString()
+  @MaxLength(120)
+  visitorId?: string;
+
+  @IsOptional()
+  @IsString()
+  @MaxLength(200)
+  widgetToken?: string;
+
+  @IsOptional()
   @IsUrl({ require_protocol: true })
   websiteUrl?: string;
 }
