@@ -11,6 +11,7 @@ import { KnowledgeBaseModule } from "./modules/knowledge-base/knowledge-base.mod
 import { ReceptionAiModule } from "./modules/reception-ai/reception-ai.module";
 import { InboxModule } from "./modules/inbox/inbox.module";
 import { NotificationsModule } from "./modules/notifications/notifications.module";
+import { BillingModule } from "./modules/billing/billing.module";
 
 @Module({
   imports: [
@@ -26,6 +27,7 @@ import { NotificationsModule } from "./modules/notifications/notifications.modul
     ReceptionAiModule,
     InboxModule,
     NotificationsModule,
+    BillingModule,
   ],
 })
 export class AppModule {}
