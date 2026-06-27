@@ -1,4 +1,11 @@
-import { Injectable, NotFoundException } from "@nestjs/common";
+import {
+  ForbiddenException,
+  HttpException,
+  HttpStatus,
+  Injectable,
+  NotFoundException,
+  UnauthorizedException,
+} from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import { AiGateway, AiResponse, NullAiProvider, OpenAiCompatibleProvider } from "@autopilot/ai-gateway";
 import { BusinessDna, KnowledgeSearchResult } from "@autopilot/shared";
@@ -39,9 +46,25 @@ type ResolvedReceptionOutput = ReceptionModelOutput & {
   usedFallback: boolean;
 };
 
+type PublicRequestContext = {
+  origin?: string;
+  userAgent?: string;
+  ip?: string;
+};
+
+type RateLimitEntry = {
+  count: number;
+  resetAt: number;
+};
+
 @Injectable()
 export class ReceptionAiService {
   private readonly aiGateway: AiGateway;
+  private readonly publicWidgetToken?: string;
+  private readonly publicAllowedOrigins: string[];
+  private readonly publicRateLimitMax: number;
+  private readonly publicRateLimitWindowMs: number;
+  private readonly publicRateLimits = new Map<string, RateLimitEntry>();
 
   constructor(
     private readonly prisma: PrismaService,
@@ -57,6 +80,10 @@ export class ReceptionAiService {
         ? new OpenAiCompatibleProvider({ apiKey, model, baseUrl, providerName })
         : new NullAiProvider(),
     ]);
+    this.publicWidgetToken = this.cleanOptional(this.config.get<string>("PUBLIC_WIDGET_TOKEN"));
+    this.publicAllowedOrigins = this.parseCsv(this.config.get<string>("PUBLIC_WIDGET_ALLOWED_ORIGINS"));
+    this.publicRateLimitMax = this.toPositiveInt(this.config.get<string>("PUBLIC_WIDGET_RATE_LIMIT_MAX"), 20);
+    this.publicRateLimitWindowMs = this.toPositiveInt(this.config.get<string>("PUBLIC_WIDGET_RATE_LIMIT_WINDOW_SECONDS"), 60) * 1000;
   }
 
   listConversations(organizationId: string) {
@@ -266,7 +293,9 @@ export class ReceptionAiService {
     return lead;
   }
 
-  async handlePublicMessage(dto: PublicReceptionMessageDto) {
+  async handlePublicMessage(dto: PublicReceptionMessageDto, context: PublicRequestContext = {}) {
+    this.enforcePublicChannelPolicy(dto, context);
+
     const organization = await this.prisma.organization.findUnique({
       where: { slug: dto.organizationSlug },
       select: { id: true, status: true },
@@ -307,6 +336,10 @@ export class ReceptionAiService {
       aiProvider: result.aiProvider,
       aiModel: result.aiModel,
       usedFallback: result.usedFallback,
+      rateLimit: {
+        windowSeconds: Math.round(this.publicRateLimitWindowMs / 1000),
+        max: this.publicRateLimitMax,
+      },
       citations: result.citations.map((citation) => ({
         sourceTitle: citation.sourceTitle,
         score: citation.score,
@@ -643,6 +676,49 @@ export class ReceptionAiService {
     return this.clampConfidence(confidence);
   }
 
+  private enforcePublicChannelPolicy(dto: PublicReceptionMessageDto, context: PublicRequestContext) {
+    this.assertAllowedOrigin(context.origin);
+    this.assertWidgetToken(dto.widgetToken);
+    this.assertRateLimit(dto.organizationSlug, dto.visitorId ?? context.ip ?? "anonymous");
+  }
+
+  private assertAllowedOrigin(origin?: string) {
+    if (!this.publicAllowedOrigins.length) {
+      return;
+    }
+
+    if (!origin || !this.publicAllowedOrigins.includes(origin)) {
+      throw new ForbiddenException("Public widget origin is not allowed");
+    }
+  }
+
+  private assertWidgetToken(widgetToken?: string) {
+    if (!this.publicWidgetToken) {
+      return;
+    }
+
+    if (widgetToken !== this.publicWidgetToken) {
+      throw new UnauthorizedException("Invalid public widget token");
+    }
+  }
+
+  private assertRateLimit(organizationSlug: string, visitorKey: string) {
+    const now = Date.now();
+    const key = `${organizationSlug}:${visitorKey}`;
+    const existing = this.publicRateLimits.get(key);
+
+    if (!existing || existing.resetAt <= now) {
+      this.publicRateLimits.set(key, { count: 1, resetAt: now + this.publicRateLimitWindowMs });
+      return;
+    }
+
+    if (existing.count >= this.publicRateLimitMax) {
+      throw new HttpException("Public widget rate limit exceeded", HttpStatus.TOO_MANY_REQUESTS);
+    }
+
+    existing.count += 1;
+  }
+
   private getEscalationReason(message: string, confidence: number): string {
     if (confidence < ESCALATION_CONFIDENCE_THRESHOLD) {
       return `Low confidence response (${Math.round(confidence * 100)}%).`;
@@ -714,6 +790,18 @@ export class ReceptionAiService {
   private cleanOptional(value?: string): string | undefined {
     const cleaned = value?.trim();
     return cleaned?.length ? cleaned : undefined;
+  }
+
+  private parseCsv(value?: string): string[] {
+    return (value ?? "")
+      .split(",")
+      .map((item) => item.trim())
+      .filter(Boolean);
+  }
+
+  private toPositiveInt(value: string | undefined, fallback: number): number {
+    const parsed = Number(value);
+    return Number.isInteger(parsed) && parsed > 0 ? parsed : fallback;
   }
 
   private clampConfidence(value: number): number {

@@ -4,6 +4,23 @@ AI-native Business Operating System for small and medium businesses.
 
 ## Current build
 
+### Build #010 — Public Channel Hardening
+
+This build hardens the public website intake channel for Reception AI.
+
+Included:
+
+- Optional public widget token validation
+- Optional public origin allowlist
+- In-memory public widget rate limit
+- Public visitor id support
+- Public response rate-limit metadata
+- Hardened `/widget-demo` page
+- Shared public Reception AI response contract
+- Documentation for public widget guardrails
+
+## Previous builds
+
 ### Build #009 — Public Web Intake
 
 This build turns Reception AI into a public website intake channel.
@@ -19,8 +36,6 @@ Included:
 - Connected `/widget-demo` page
 - Website widget UI shell
 - Dashboard navigation to Website Widget
-
-## Previous builds
 
 ### Build #008 — AI Gateway
 
@@ -170,6 +185,19 @@ AI_GATEWAY_BASE_URL="https://api.openai.com/v1"
 AI_GATEWAY_API_KEY=""
 ```
 
+## Public widget hardening
+
+Public widget hardening is optional for local/demo use. Configure these in the API environment when needed:
+
+```env
+PUBLIC_WIDGET_TOKEN=""
+PUBLIC_WIDGET_ALLOWED_ORIGINS="https://customer-site.example,https://www.customer-site.example"
+PUBLIC_WIDGET_RATE_LIMIT_MAX=20
+PUBLIC_WIDGET_RATE_LIMIT_WINDOW_SECONDS=60
+```
+
+If `PUBLIC_WIDGET_TOKEN` is empty, token checks are disabled. If `PUBLIC_WIDGET_ALLOWED_ORIGINS` is empty, origin checks are disabled.
+
 ## Identity API
 
 ```http
@@ -226,6 +254,8 @@ Public request body:
   "customerName": "Optional name",
   "customerEmail": "Optional email",
   "conversationId": "Optional follow-up conversation id",
+  "visitorId": "Stable anonymous visitor id",
+  "widgetToken": "Optional public widget token",
   "websiteUrl": "https://customer-site.example"
 }
 ```
