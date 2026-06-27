@@ -29,6 +29,8 @@ export interface NotificationEmailPayload { subject: string; preview: string; hr
 export interface NotificationCenter { total: number; highPriority: number; items: NotificationItem[]; emailReady: NotificationEmailPayload[]; }
 export interface BillingLimits { widgetMessages: number; knowledgeSources: number; teamMembers: number; }
 export interface BillingOverview { organization: { id: ID; name: string; slug: string; billingPlan: BillingPlan; billingStatus: BillingStatus; billingCurrentPeriodStart: string; }; limits: BillingLimits; usage: BillingLimits; remaining: BillingLimits; overLimit: Record<keyof BillingLimits, boolean>; plans: Array<{ plan: BillingPlan; limits: BillingLimits }>; }
+export interface LaunchStep { id: string; title: string; description: string; href: string; complete: boolean; }
+export interface LaunchChecklist { organization: { id: ID; name: string; slug: string; }; completed: number; total: number; progress: number; readyForPilot: boolean; metrics: Record<string, number>; steps: LaunchStep[]; }
 export interface KnowledgeSourceSummary { id: ID; organizationId: ID; type: KnowledgeSourceType; status: KnowledgeSourceStatus; title: string; url?: string | null; fileName?: string | null; mimeType?: string | null; chunkCount: number; createdAt: string; updatedAt: string; }
 export interface KnowledgeSearchResult { chunkId: ID; sourceId: ID; sourceTitle: string; sourceType: KnowledgeSourceType; content: string; score: number; }
 export interface ReceptionAiResult { conversationId: ID; reply: string; confidence: number; shouldEscalate: boolean; escalationReason?: string | null; leadId?: ID | null; taskId?: ID | null; aiProvider?: string; aiModel?: string; usedFallback?: boolean; citations: KnowledgeSearchResult[]; }
