@@ -164,7 +164,8 @@ p {
 .business-dna-form,
 .knowledge-layout,
 .reception-layout,
-.widget-demo-layout {
+.widget-demo-layout,
+.inbox-layout {
   display: grid;
   gap: 18px;
 }
@@ -284,7 +285,8 @@ input[type="file"] {
   font-size: 13px;
 }
 
-.widget-messages {
+.widget-messages,
+.inbox-messages {
   padding: 18px;
   display: flex;
   flex-direction: column;
@@ -329,6 +331,32 @@ input[type="file"] {
   padding: 0 18px 18px;
 }
 
+.inbox-grid {
+  display: grid;
+  grid-template-columns: 360px 1fr;
+  gap: 18px;
+}
+
+.inbox-list,
+.inbox-detail {
+  min-height: 640px;
+}
+
+.inbox-filters {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.inbox-header {
+  display: flex;
+  justify-content: space-between;
+  gap: 18px;
+  border-bottom: 1px solid var(--line);
+  padding-bottom: 18px;
+}
+
 .code-block {
   overflow-x: auto;
   border: 1px solid var(--line);
@@ -351,6 +379,6 @@ input[type="file"] {
 }
 
 @media (max-width: 800px) {
-  .grid, .grid.two-columns, .dashboard { grid-template-columns: 1fr; }
+  .grid, .grid.two-columns, .dashboard, .inbox-grid { grid-template-columns: 1fr; }
   .sidebar { border-right: none; border-bottom: 1px solid var(--line); }
 }
