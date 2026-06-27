@@ -7,7 +7,8 @@ export class HealthController {
     return {
       status: "ok",
       service: "autopilot-api",
-      version: "0.2.0",
+      version: "0.18.0",
+      uptimeSeconds: Math.round(process.uptime()),
       timestamp: new Date().toISOString(),
     };
   }
