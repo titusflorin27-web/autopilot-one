@@ -9,6 +9,7 @@ import { EventsModule } from "./modules/events/events.module";
 import { BusinessDnaModule } from "./modules/business-dna/business-dna.module";
 import { KnowledgeBaseModule } from "./modules/knowledge-base/knowledge-base.module";
 import { ReceptionAiModule } from "./modules/reception-ai/reception-ai.module";
+import { InboxModule } from "./modules/inbox/inbox.module";
 
 @Module({
   imports: [
@@ -22,6 +23,7 @@ import { ReceptionAiModule } from "./modules/reception-ai/reception-ai.module";
     BusinessDnaModule,
     KnowledgeBaseModule,
     ReceptionAiModule,
+    InboxModule,
   ],
 })
 export class AppModule {}
