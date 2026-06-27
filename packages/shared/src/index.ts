@@ -79,6 +79,7 @@ export interface ReceptionAiResult {
   reply: string;
   confidence: number;
   shouldEscalate: boolean;
+  escalationReason?: string | null;
   leadId?: ID | null;
   taskId?: ID | null;
   citations: KnowledgeSearchResult[];
@@ -91,6 +92,15 @@ export interface ReceptionConversationSummary {
   customerEmail?: string | null;
   channel: string;
   status: ConversationStatus;
+  escalationReason?: string | null;
+  internalNote?: string | null;
+  closedAt?: string | null;
   createdAt: string;
   updatedAt: string;
+}
+
+export interface ReceptionOperationsSummary {
+  conversations: Record<ConversationStatus, number> | Record<string, number>;
+  tasks: Record<TaskStatus, number> | Record<string, number>;
+  leads: Record<LeadStatus, number> | Record<string, number>;
 }
