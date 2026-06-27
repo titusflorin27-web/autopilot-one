@@ -62,6 +62,7 @@ export interface WidgetSettings {
   widgetPosition: WidgetPosition;
   widgetToken?: string | null;
   widgetAllowedOrigins: string[];
+  publicConfigEndpoint: string;
   installSnippet: string;
 }
 
