@@ -65,6 +65,18 @@ export interface WidgetSettings {
   installSnippet: string;
 }
 
+export interface PublicWidgetConfig {
+  organizationSlug: string;
+  widgetEnabled: boolean;
+  title: string;
+  primaryColor: string;
+  position: WidgetPosition;
+  rateLimit?: {
+    windowSeconds: number;
+    max: number;
+  };
+}
+
 export interface KnowledgeSourceSummary {
   id: ID;
   organizationId: ID;
@@ -111,6 +123,11 @@ export interface PublicReceptionAiResult {
   aiProvider?: string;
   aiModel?: string;
   usedFallback?: boolean;
+  widget?: {
+    title: string;
+    primaryColor: string;
+    position: WidgetPosition;
+  };
   rateLimit?: {
     windowSeconds: number;
     max: number;
