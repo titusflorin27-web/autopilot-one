@@ -4,6 +4,25 @@ AI-native Business Operating System for small and medium businesses.
 
 ## Current build
 
+### Build #011 — Embeddable Website Widget
+
+This build ships the first real embeddable Reception AI widget for customer websites.
+
+Included:
+
+- Static widget script at `/autopilot-widget.js`
+- Floating website chat bubble
+- Script `data-*` configuration
+- Organization slug wiring
+- API URL wiring
+- Optional widget token wiring
+- Stable anonymous visitor id storage
+- Public conversation continuation
+- Widget demo page with real copy/paste snippet
+- Documentation for installing the widget on external websites
+
+## Previous builds
+
 ### Build #010 — Public Channel Hardening
 
 This build hardens the public website intake channel for Reception AI.
@@ -18,8 +37,6 @@ Included:
 - Hardened `/widget-demo` page
 - Shared public Reception AI response contract
 - Documentation for public widget guardrails
-
-## Previous builds
 
 ### Build #009 — Public Web Intake
 
@@ -197,6 +214,33 @@ PUBLIC_WIDGET_RATE_LIMIT_WINDOW_SECONDS=60
 ```
 
 If `PUBLIC_WIDGET_TOKEN` is empty, token checks are disabled. If `PUBLIC_WIDGET_ALLOWED_ORIGINS` is empty, origin checks are disabled.
+
+## Website widget embed
+
+Add this snippet before the closing `body` tag on a customer website:
+
+```html
+<script
+  src="https://your-autopilot-web-host.example/autopilot-widget.js"
+  data-organization-slug="your-company-slug"
+  data-api-url="https://your-autopilot-api-host.example/api"
+  data-title="Reception AI"
+  data-widget-token="optional-public-widget-token"
+  async
+></script>
+```
+
+For local development:
+
+```html
+<script
+  src="http://localhost:3000/autopilot-widget.js"
+  data-organization-slug="your-company-slug"
+  data-api-url="http://localhost:4000/api"
+  data-title="Reception AI"
+  async
+></script>
+```
 
 ## Identity API
 
