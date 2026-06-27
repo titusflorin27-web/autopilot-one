@@ -18,6 +18,7 @@ import {
   Prisma,
   TaskPriority,
   TaskStatus,
+  WidgetPosition,
 } from "@prisma/client";
 import { PrismaService } from "../../common/prisma.service";
 import { HandleReceptionMessageDto } from "./dto/handle-message.dto";
@@ -55,6 +56,18 @@ type PublicRequestContext = {
 type RateLimitEntry = {
   count: number;
   resetAt: number;
+};
+
+type PublicWidgetRuntimeSettings = {
+  id: string;
+  slug: string;
+  status: OrganizationStatus;
+  widgetEnabled: boolean;
+  widgetTitle: string;
+  widgetPrimaryColor: string;
+  widgetPosition: WidgetPosition;
+  widgetToken: string | null;
+  widgetAllowedOrigins: string[];
 };
 
 @Injectable()
@@ -144,6 +157,25 @@ export class ReceptionAiService {
       conversations: this.countByStatus(conversationGroups),
       tasks: this.countByStatus(taskGroups),
       leads: this.countByStatus(leadGroups),
+    };
+  }
+
+  async getPublicWidgetConfig(organizationSlug: string, context: PublicRequestContext = {}) {
+    const organization = await this.findPublicWidgetRuntimeSettings(organizationSlug);
+
+    this.assertPublicWidgetAvailable(organization);
+    this.assertAllowedOrigin(context.origin, organization.widgetAllowedOrigins);
+
+    return {
+      organizationSlug: organization.slug,
+      widgetEnabled: organization.widgetEnabled,
+      title: organization.widgetTitle,
+      primaryColor: organization.widgetPrimaryColor,
+      position: organization.widgetPosition,
+      rateLimit: {
+        windowSeconds: Math.round(this.publicRateLimitWindowMs / 1000),
+        max: this.publicRateLimitMax,
+      },
     };
   }
 
@@ -294,16 +326,9 @@ export class ReceptionAiService {
   }
 
   async handlePublicMessage(dto: PublicReceptionMessageDto, context: PublicRequestContext = {}) {
-    this.enforcePublicChannelPolicy(dto, context);
+    const organization = await this.findPublicWidgetRuntimeSettings(dto.organizationSlug);
 
-    const organization = await this.prisma.organization.findUnique({
-      where: { slug: dto.organizationSlug },
-      select: { id: true, status: true },
-    });
-
-    if (!organization || organization.status !== OrganizationStatus.ACTIVE) {
-      throw new NotFoundException("Public Reception AI endpoint not available");
-    }
+    this.enforcePublicChannelPolicy(dto, context, organization);
 
     let conversationId = dto.conversationId;
 
@@ -336,6 +361,11 @@ export class ReceptionAiService {
       aiProvider: result.aiProvider,
       aiModel: result.aiModel,
       usedFallback: result.usedFallback,
+      widget: {
+        title: organization.widgetTitle,
+        primaryColor: organization.widgetPrimaryColor,
+        position: organization.widgetPosition,
+      },
       rateLimit: {
         windowSeconds: Math.round(this.publicRateLimitWindowMs / 1000),
         max: this.publicRateLimitMax,
@@ -676,28 +706,66 @@ export class ReceptionAiService {
     return this.clampConfidence(confidence);
   }
 
-  private enforcePublicChannelPolicy(dto: PublicReceptionMessageDto, context: PublicRequestContext) {
-    this.assertAllowedOrigin(context.origin);
-    this.assertWidgetToken(dto.widgetToken);
+  private async findPublicWidgetRuntimeSettings(organizationSlug: string): Promise<PublicWidgetRuntimeSettings> {
+    const organization = await this.prisma.organization.findUnique({
+      where: { slug: organizationSlug },
+      select: {
+        id: true,
+        slug: true,
+        status: true,
+        widgetEnabled: true,
+        widgetTitle: true,
+        widgetPrimaryColor: true,
+        widgetPosition: true,
+        widgetToken: true,
+        widgetAllowedOrigins: true,
+      },
+    });
+
+    if (!organization) {
+      throw new NotFoundException("Public Reception AI endpoint not available");
+    }
+
+    return organization;
+  }
+
+  private enforcePublicChannelPolicy(
+    dto: PublicReceptionMessageDto,
+    context: PublicRequestContext,
+    organization: PublicWidgetRuntimeSettings,
+  ) {
+    this.assertPublicWidgetAvailable(organization);
+    this.assertAllowedOrigin(context.origin, organization.widgetAllowedOrigins);
+    this.assertWidgetToken(dto.widgetToken, organization.widgetToken);
     this.assertRateLimit(dto.organizationSlug, dto.visitorId ?? context.ip ?? "anonymous");
   }
 
-  private assertAllowedOrigin(origin?: string) {
-    if (!this.publicAllowedOrigins.length) {
+  private assertPublicWidgetAvailable(organization: PublicWidgetRuntimeSettings) {
+    if (organization.status !== OrganizationStatus.ACTIVE || !organization.widgetEnabled) {
+      throw new NotFoundException("Public Reception AI endpoint not available");
+    }
+  }
+
+  private assertAllowedOrigin(origin?: string, organizationAllowedOrigins: string[] = []) {
+    const allowedOrigins = organizationAllowedOrigins.length ? organizationAllowedOrigins : this.publicAllowedOrigins;
+
+    if (!allowedOrigins.length) {
       return;
     }
 
-    if (!origin || !this.publicAllowedOrigins.includes(origin)) {
+    if (!origin || !allowedOrigins.includes(origin)) {
       throw new ForbiddenException("Public widget origin is not allowed");
     }
   }
 
-  private assertWidgetToken(widgetToken?: string) {
-    if (!this.publicWidgetToken) {
+  private assertWidgetToken(widgetToken?: string, organizationWidgetToken?: string | null) {
+    const expectedToken = this.cleanOptional(organizationWidgetToken ?? undefined) ?? this.publicWidgetToken;
+
+    if (!expectedToken) {
       return;
     }
 
-    if (widgetToken !== this.publicWidgetToken) {
+    if (widgetToken !== expectedToken) {
       throw new UnauthorizedException("Invalid public widget token");
     }
   }

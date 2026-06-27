@@ -62,7 +62,20 @@ export interface WidgetSettings {
   widgetPosition: WidgetPosition;
   widgetToken?: string | null;
   widgetAllowedOrigins: string[];
+  publicConfigEndpoint: string;
   installSnippet: string;
+}
+
+export interface PublicWidgetConfig {
+  organizationSlug: string;
+  widgetEnabled: boolean;
+  title: string;
+  primaryColor: string;
+  position: WidgetPosition;
+  rateLimit?: {
+    windowSeconds: number;
+    max: number;
+  };
 }
 
 export interface KnowledgeSourceSummary {
@@ -111,6 +124,11 @@ export interface PublicReceptionAiResult {
   aiProvider?: string;
   aiModel?: string;
   usedFallback?: boolean;
+  widget?: {
+    title: string;
+    primaryColor: string;
+    position: WidgetPosition;
+  };
   rateLimit?: {
     windowSeconds: number;
     max: number;
