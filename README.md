@@ -4,9 +4,9 @@ AI-native Business Operating System for small and medium businesses.
 
 ## Current status
 
-### Build #020 — Release Candidate / Smoke Test
+### Build #021 — Pilot Readiness
 
-Autopilot One is now at MVP Release Candidate stage.
+Autopilot One is at MVP Release Candidate stage and now includes pilot readiness documentation.
 
 The product includes:
 
@@ -24,12 +24,16 @@ The product includes:
 - Plans and usage limits
 - Launch Checklist
 - Production readiness checklist
+- Deployment plan
+- Pilot readiness checklist
 
-## Release candidate docs
+## Release and pilot docs
 
 - `docs/release-candidate.md`
 - `docs/mvp-walkthrough.md`
 - `docs/production-readiness.md`
+- `docs/deployment-plan.md`
+- `docs/pilot-readiness.md`
 
 ## Requirements
 
@@ -61,7 +65,7 @@ pnpm typecheck
 pnpm build
 ```
 
-Then follow `docs/mvp-walkthrough.md`.
+Then follow `docs/mvp-walkthrough.md` and `docs/pilot-readiness.md`.
 
 ## Core app routes
 
