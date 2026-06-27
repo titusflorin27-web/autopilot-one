@@ -82,6 +82,9 @@ export interface ReceptionAiResult {
   escalationReason?: string | null;
   leadId?: ID | null;
   taskId?: ID | null;
+  aiProvider?: string;
+  aiModel?: string;
+  usedFallback?: boolean;
   citations: KnowledgeSearchResult[];
 }
 
