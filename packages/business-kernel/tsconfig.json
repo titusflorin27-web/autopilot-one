@@ -3,10 +3,15 @@
   "compilerOptions": {
     "module": "CommonJS",
     "moduleResolution": "Node",
+    "baseUrl": ".",
+    "paths": {
+      "@autopilot/shared": ["../shared/dist/index.d.ts"]
+    },
     "rootDir": "src",
     "outDir": "dist",
     "declaration": true,
     "noEmit": false
   },
-  "include": ["src"]
+  "include": ["src"],
+  "exclude": ["dist", "node_modules"]
 }
