@@ -4,9 +4,9 @@ AI-native Business Operating System for small and medium businesses.
 
 ## Current status
 
-### Build #021 — Pilot Readiness
+### Build #023 — Deployment Runbook
 
-Autopilot One is at MVP Release Candidate stage and now includes pilot readiness documentation.
+Autopilot One is at MVP Release Candidate stage and now includes Docker deployment templates plus an operational runbook.
 
 The product includes:
 
@@ -26,6 +26,8 @@ The product includes:
 - Production readiness checklist
 - Deployment plan
 - Pilot readiness checklist
+- Docker deploy files
+- VPS Docker runbook
 
 ## Release and pilot docs
 
@@ -33,6 +35,8 @@ The product includes:
 - `docs/mvp-walkthrough.md`
 - `docs/production-readiness.md`
 - `docs/deployment-plan.md`
+- `docs/deployment-templates.md`
+- `docs/vps-docker-runbook.md`
 - `docs/pilot-readiness.md`
 
 ## Requirements
@@ -65,7 +69,7 @@ pnpm typecheck
 pnpm build
 ```
 
-Then follow `docs/mvp-walkthrough.md` and `docs/pilot-readiness.md`.
+Then follow `docs/mvp-walkthrough.md`, `docs/pilot-readiness.md` and `docs/vps-docker-runbook.md`.
 
 ## Core app routes
 
