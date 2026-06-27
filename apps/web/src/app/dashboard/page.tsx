@@ -13,6 +13,7 @@ export default function DashboardPage() {
           <Link href="/knowledge-base">Knowledge Base</Link>
           <Link href="/reception-ai">Reception AI</Link>
           <Link href="/widget-demo">Website Widget</Link>
+          <Link href="/widget-settings">Widget Settings</Link>
         </nav>
       </aside>
       <section className="main">
