@@ -10,6 +10,9 @@ RUN pnpm install --frozen-lockfile=false
 
 FROM deps AS build
 COPY apps/api apps/api
+RUN pnpm --filter @autopilot/shared build
+RUN pnpm --filter @autopilot/business-kernel build
+RUN pnpm --filter @autopilot/ai-gateway build
 RUN pnpm --filter @autopilot/api prisma:generate
 RUN pnpm --filter @autopilot/api build
 
