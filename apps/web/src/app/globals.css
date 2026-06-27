@@ -103,6 +103,11 @@ p {
   color: var(--text);
 }
 
+.button.mini {
+  padding: 8px 12px;
+  font-size: 12px;
+}
+
 .grid {
   display: grid;
   gap: 18px;
@@ -227,6 +232,21 @@ input[type="file"] {
 
 .ghost-button:hover {
   border-color: var(--accent);
+}
+
+.reset-button {
+  border: 0;
+  background: transparent;
+  color: inherit;
+  padding: 0;
+  text-align: left;
+}
+
+.mini-actions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-top: 12px;
 }
 
 .form-error {
