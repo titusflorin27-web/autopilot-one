@@ -44,6 +44,8 @@ export function WidgetDemoClient() {
   const [isSending, setIsSending] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
+  const embedSnippet = `<script\n  src="http://localhost:3000/autopilot-widget.js"\n  data-organization-slug="${organizationSlug}"\n  data-api-url="${API_URL}"\n  data-title="Reception AI"${widgetToken ? `\n  data-widget-token="${widgetToken}"` : ""}\n  async\n></script>`;
+
   useEffect(() => {
     const storageKey = "autopilot.publicVisitorId";
     const existing = window.localStorage.getItem(storageKey);
@@ -106,9 +108,9 @@ export function WidgetDemoClient() {
   return (
     <div className="widget-demo-layout">
       <section className="card">
-        <div className="eyebrow">BUILD #010 Public Channel Hardening</div>
-        <h1>Reception AI widget with guardrails.</h1>
-        <p>This demo calls the hardened public website endpoint with visitor identity, optional widget token and rate-limit metadata.</p>
+        <div className="eyebrow">BUILD #011 Embeddable Widget</div>
+        <h1>Install Reception AI on any website.</h1>
+        <p>This page shows the public endpoint and the real script tag for the floating website widget.</p>
       </section>
 
       <section className="grid two-columns">
@@ -119,7 +121,7 @@ export function WidgetDemoClient() {
           <input value={customerEmail} onChange={(event) => setCustomerEmail(event.target.value)} placeholder="Customer email" type="email" />
           <input value={widgetToken} onChange={(event) => setWidgetToken(event.target.value)} placeholder="Widget token, optional" />
           <p>Visitor id: {visitorId || "creating..."}</p>
-          <p>Use your organization slug from registration. If `PUBLIC_WIDGET_TOKEN` is configured in API env, paste the same token here.</p>
+          <p>Paste the snippet below before the closing body tag on a customer website.</p>
         </article>
 
         <article className="widget-shell">
@@ -156,20 +158,25 @@ export function WidgetDemoClient() {
 
       {error ? <p className="form-error">{error}</p> : null}
 
-      <section className="card">
-        <h2>Embed contract</h2>
-        <p>Public websites call:</p>
-        <pre className="code-block">{`POST /api/public/reception-ai/message
+      <section className="grid two-columns">
+        <article className="card">
+          <h2>Embed snippet</h2>
+          <p>Copy this into the target website.</p>
+          <pre className="code-block">{embedSnippet}</pre>
+        </article>
+
+        <article className="card">
+          <h2>Public API contract</h2>
+          <pre className="code-block">{`POST /api/public/reception-ai/message
 {
   "organizationSlug": "your-company-slug",
   "message": "Customer question",
-  "customerName": "Optional name",
-  "customerEmail": "Optional email",
   "conversationId": "Optional follow-up conversation id",
   "visitorId": "Stable anonymous visitor id",
   "widgetToken": "Optional public widget token",
   "websiteUrl": "https://customer-site.example"
 }`}</pre>
+        </article>
       </section>
     </div>
   );
