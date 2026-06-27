@@ -4,9 +4,9 @@ AI-native Business Operating System for small and medium businesses.
 
 ## Current status
 
-### Build #023 — Deployment Runbook
+### Build #024 — Automated Smoke Tests
 
-Autopilot One is at MVP Release Candidate stage and now includes Docker deployment templates plus an operational runbook.
+Autopilot One is at MVP Release Candidate stage and now includes automated smoke tests in CI.
 
 The product includes:
 
@@ -28,6 +28,7 @@ The product includes:
 - Pilot readiness checklist
 - Docker deploy files
 - VPS Docker runbook
+- Automated smoke tests
 
 ## Release and pilot docs
 
@@ -38,6 +39,7 @@ The product includes:
 - `docs/deployment-templates.md`
 - `docs/vps-docker-runbook.md`
 - `docs/pilot-readiness.md`
+- `docs/builds/024-smoke-tests.md`
 
 ## Requirements
 
@@ -67,6 +69,7 @@ pnpm install --frozen-lockfile=false
 pnpm db:generate
 pnpm typecheck
 pnpm build
+pnpm smoke:test
 ```
 
 Then follow `docs/mvp-walkthrough.md`, `docs/pilot-readiness.md` and `docs/vps-docker-runbook.md`.
