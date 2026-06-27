@@ -9,6 +9,7 @@ export default function DashboardPage() {
         <p>Command Center</p>
         <nav>
           <Link href="/dashboard">Dashboard</Link>
+          <Link href="/launch">Launch Checklist</Link>
           <Link href="/billing">Billing</Link>
           <Link href="/notifications">Notifications</Link>
           <Link href="/inbox">Inbox</Link>
