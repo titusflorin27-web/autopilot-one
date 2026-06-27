@@ -28,8 +28,8 @@ The pilot target runs:
 
 Public traffic enters through the reverse proxy:
 
-- `app.example.com` → web app
-- `api.example.com` → API app
+- `app.autopilot-one.com` → web app
+- `api.autopilot-one.com` → API app
 
 ## Why this target
 
