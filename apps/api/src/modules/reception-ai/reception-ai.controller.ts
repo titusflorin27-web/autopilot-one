@@ -23,6 +23,12 @@ export class ReceptionAiController {
     return this.receptionAi.getOperationsSummary(organizationId);
   }
 
+  @Get("organization/:organizationId/widget-analytics")
+  @Roles(...MEMBER_ROLES)
+  getWidgetAnalytics(@Param("organizationId") organizationId: string) {
+    return this.receptionAi.getWidgetAnalytics(organizationId);
+  }
+
   @Get("organization/:organizationId/conversations")
   @Roles(...MEMBER_ROLES)
   listConversations(@Param("organizationId") organizationId: string) {

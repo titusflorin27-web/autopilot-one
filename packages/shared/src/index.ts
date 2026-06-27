@@ -11,6 +11,7 @@ export type LeadStatus = "NEW" | "QUALIFIED" | "DISQUALIFIED" | "CONVERTED";
 export type TaskStatus = "OPEN" | "DONE" | "CANCELLED";
 export type TaskPriority = "LOW" | "MEDIUM" | "HIGH";
 export type WidgetPosition = "LEFT" | "RIGHT";
+export type WidgetEventType = "CONFIG_LOADED" | "LOADED" | "OPENED" | "MESSAGE_SENT" | "MESSAGE_RECEIVED" | "ERROR";
 
 export interface BusinessEvent<TPayload = unknown> {
   id: ID;
@@ -76,6 +77,36 @@ export interface PublicWidgetConfig {
     windowSeconds: number;
     max: number;
   };
+}
+
+export interface WidgetAnalytics {
+  windowDays: number;
+  installHealth: {
+    hasConfigLoad: boolean;
+    hasWidgetLoad: boolean;
+    hasWidgetOpen: boolean;
+    hasMessageSent: boolean;
+    lastEventAt?: string | null;
+  };
+  events: Record<string, number>;
+  publicFunnel: {
+    conversations: number;
+    messages: number;
+    leads: number;
+    tasks: number;
+  };
+  domains: Record<string, number>;
+  recentEvents: Array<{
+    id: ID;
+    type: WidgetEventType;
+    visitorId?: string | null;
+    conversationId?: string | null;
+    websiteUrl?: string | null;
+    origin?: string | null;
+    userAgent?: string | null;
+    metadata?: unknown;
+    createdAt: string;
+  }>;
 }
 
 export interface KnowledgeSourceSummary {

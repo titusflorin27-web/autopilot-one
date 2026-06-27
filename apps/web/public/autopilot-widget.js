@@ -31,6 +31,22 @@
     return value === "LEFT" ? "left" : "right";
   }
 
+  function track(type, visitorId, conversationId, metadata) {
+    fetch(`${apiUrl}/public/reception-ai/widget/event`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        organizationSlug,
+        type,
+        visitorId,
+        conversationId: conversationId || undefined,
+        websiteUrl: window.location.href,
+        metadata,
+      }),
+      keepalive: true,
+    }).catch(() => undefined);
+  }
+
   async function boot() {
     const config = await loadConfig();
 
@@ -44,6 +60,7 @@
     let conversationId = window.localStorage.getItem(conversationKey);
 
     window.localStorage.setItem(visitorKey, visitorId);
+    track("LOADED", visitorId, conversationId, { title, position });
 
     const root = document.createElement("div");
     root.id = "autopilot-one-widget";
@@ -136,7 +153,9 @@
     addMessage("Hi. How can we help?", "ai");
 
     bubble.addEventListener("click", () => {
-      panel.style.display = panel.style.display === "none" ? "block" : "none";
+      const willOpen = panel.style.display === "none";
+      panel.style.display = willOpen ? "block" : "none";
+      if (willOpen) track("OPENED", visitorId, conversationId);
       input.focus();
     });
 
@@ -171,6 +190,7 @@
         window.localStorage.setItem(conversationKey, conversationId);
         addMessage(data.reply, "ai");
       } catch (error) {
+        track("ERROR", visitorId, conversationId, { message: error instanceof Error ? error.message : "unknown" });
         addMessage(error instanceof Error ? error.message : "Reception AI could not answer.", "ai");
       } finally {
         send.disabled = false;

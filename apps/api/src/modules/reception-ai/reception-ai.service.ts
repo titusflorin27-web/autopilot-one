@@ -18,12 +18,14 @@ import {
   Prisma,
   TaskPriority,
   TaskStatus,
+  WidgetEventType,
   WidgetPosition,
 } from "@prisma/client";
 import { PrismaService } from "../../common/prisma.service";
 import { HandleReceptionMessageDto } from "./dto/handle-message.dto";
 import { HumanReplyDto } from "./dto/human-reply.dto";
 import { PublicReceptionMessageDto } from "./dto/public-reception-message.dto";
+import { TrackWidgetEventDto } from "./dto/track-widget-event.dto";
 import { UpdateConversationDto } from "./dto/update-conversation.dto";
 import { UpdateLeadDto } from "./dto/update-lead.dto";
 import { UpdateTaskDto } from "./dto/update-task.dto";
@@ -160,11 +162,67 @@ export class ReceptionAiService {
     };
   }
 
+  async getWidgetAnalytics(organizationId: string) {
+    const since = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);
+    const [eventGroups, recentEvents, publicConversations, publicMessages, publicLeads, publicTasks] = await Promise.all([
+      this.prisma.widgetEvent.groupBy({
+        by: ["type"],
+        where: { organizationId, createdAt: { gte: since } },
+        _count: { _all: true },
+      }),
+      this.prisma.widgetEvent.findMany({
+        where: { organizationId, createdAt: { gte: since } },
+        orderBy: { createdAt: "desc" },
+        take: 20,
+      }),
+      this.prisma.receptionConversation.count({
+        where: { organizationId, channel: { startsWith: "public-web" }, createdAt: { gte: since } },
+      }),
+      this.prisma.receptionMessage.count({
+        where: { conversation: { organizationId, channel: { startsWith: "public-web" } }, createdAt: { gte: since } },
+      }),
+      this.prisma.lead.count({
+        where: { organizationId, conversations: { some: { channel: { startsWith: "public-web" } } }, createdAt: { gte: since } },
+      }),
+      this.prisma.task.count({
+        where: { organizationId, createdAt: { gte: since }, description: { contains: "Customer message:" } },
+      }),
+    ]);
+
+    const events = this.countByStatus(eventGroups);
+    const domains = this.countDomains(recentEvents.map((event) => event.origin ?? event.websiteUrl).filter(Boolean) as string[]);
+
+    return {
+      windowDays: 7,
+      installHealth: {
+        hasConfigLoad: Boolean(events.CONFIG_LOADED),
+        hasWidgetLoad: Boolean(events.LOADED),
+        hasWidgetOpen: Boolean(events.OPENED),
+        hasMessageSent: Boolean(events.MESSAGE_SENT),
+        lastEventAt: recentEvents[0]?.createdAt ?? null,
+      },
+      events,
+      publicFunnel: {
+        conversations: publicConversations,
+        messages: publicMessages,
+        leads: publicLeads,
+        tasks: publicTasks,
+      },
+      domains,
+      recentEvents,
+    };
+  }
+
   async getPublicWidgetConfig(organizationSlug: string, context: PublicRequestContext = {}) {
     const organization = await this.findPublicWidgetRuntimeSettings(organizationSlug);
 
     this.assertPublicWidgetAvailable(organization);
     this.assertAllowedOrigin(context.origin, organization.widgetAllowedOrigins);
+
+    await this.recordWidgetEvent(organization.id, WidgetEventType.CONFIG_LOADED, {
+      context,
+      websiteUrl: context.origin,
+    });
 
     return {
       organizationSlug: organization.slug,
@@ -177,6 +235,23 @@ export class ReceptionAiService {
         max: this.publicRateLimitMax,
       },
     };
+  }
+
+  async trackWidgetEvent(dto: TrackWidgetEventDto, context: PublicRequestContext = {}) {
+    const organization = await this.findPublicWidgetRuntimeSettings(dto.organizationSlug);
+
+    this.assertPublicWidgetAvailable(organization);
+    this.assertAllowedOrigin(context.origin, organization.widgetAllowedOrigins);
+
+    await this.recordWidgetEvent(organization.id, dto.type, {
+      visitorId: dto.visitorId,
+      conversationId: dto.conversationId,
+      websiteUrl: dto.websiteUrl,
+      context,
+      metadata: dto.metadata,
+    });
+
+    return { ok: true };
   }
 
   async updateConversation(conversationId: string, dto: UpdateConversationDto) {
@@ -330,6 +405,13 @@ export class ReceptionAiService {
 
     this.enforcePublicChannelPolicy(dto, context, organization);
 
+    await this.recordWidgetEvent(organization.id, WidgetEventType.MESSAGE_SENT, {
+      visitorId: dto.visitorId,
+      conversationId: dto.conversationId,
+      websiteUrl: dto.websiteUrl,
+      context,
+    });
+
     let conversationId = dto.conversationId;
 
     if (conversationId) {
@@ -350,6 +432,18 @@ export class ReceptionAiService {
       customerEmail: this.cleanOptional(dto.customerEmail),
       channel: dto.websiteUrl ? `public-web:${dto.websiteUrl}` : "public-web",
       message: dto.message.trim(),
+    });
+
+    await this.recordWidgetEvent(organization.id, WidgetEventType.MESSAGE_RECEIVED, {
+      visitorId: dto.visitorId,
+      conversationId: result.conversationId,
+      websiteUrl: dto.websiteUrl,
+      context,
+      metadata: {
+        confidence: result.confidence,
+        shouldEscalate: result.shouldEscalate,
+        usedFallback: result.usedFallback,
+      },
     });
 
     return {
@@ -787,6 +881,31 @@ export class ReceptionAiService {
     existing.count += 1;
   }
 
+  private async recordWidgetEvent(
+    organizationId: string,
+    type: WidgetEventType,
+    input: {
+      visitorId?: string;
+      conversationId?: string;
+      websiteUrl?: string;
+      context?: PublicRequestContext;
+      metadata?: Record<string, unknown>;
+    },
+  ) {
+    await this.prisma.widgetEvent.create({
+      data: {
+        organizationId,
+        type,
+        visitorId: input.visitorId,
+        conversationId: input.conversationId,
+        websiteUrl: input.websiteUrl,
+        origin: input.context?.origin,
+        userAgent: input.context?.userAgent,
+        metadata: (input.metadata ?? {}) as Prisma.InputJsonValue,
+      },
+    });
+  }
+
   private getEscalationReason(message: string, confidence: number): string {
     if (confidence < ESCALATION_CONFIDENCE_THRESHOLD) {
       return `Low confidence response (${Math.round(confidence * 100)}%).`;
@@ -840,6 +959,18 @@ export class ReceptionAiService {
     const phraseBonus = content.toLowerCase().includes(query.toLowerCase()) ? 2 : 0;
 
     return matches / queryTokens.length + phraseBonus;
+  }
+
+  private countDomains(values: string[]) {
+    return values.reduce<Record<string, number>>((accumulator, value) => {
+      try {
+        const domain = new URL(value).hostname;
+        accumulator[domain] = (accumulator[domain] ?? 0) + 1;
+      } catch {
+        accumulator[value] = (accumulator[value] ?? 0) + 1;
+      }
+      return accumulator;
+    }, {});
   }
 
   private tokenize(value: string): string[] {

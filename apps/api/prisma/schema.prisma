@@ -76,6 +76,15 @@ enum WidgetPosition {
   RIGHT
 }
 
+enum WidgetEventType {
+  CONFIG_LOADED
+  LOADED
+  OPENED
+  MESSAGE_SENT
+  MESSAGE_RECEIVED
+  ERROR
+}
+
 model Organization {
   id                   String                  @id @default(cuid())
   name                 String
@@ -95,6 +104,7 @@ model Organization {
   widgetAllowedOrigins String[]                @default([])
   memberships          Membership[]
   events               Event[]
+  widgetEvents         WidgetEvent[]
   knowledgeSources     KnowledgeSource[]
   knowledgeChunks      KnowledgeChunk[]
   conversations        ReceptionConversation[]
@@ -152,6 +162,25 @@ model Event {
   status         EventStatus  @default(PENDING)
   createdAt      DateTime     @default(now())
   processedAt    DateTime?
+}
+
+model WidgetEvent {
+  id             String          @id @default(cuid())
+  organizationId String
+  organization   Organization    @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  type           WidgetEventType
+  visitorId      String?
+  conversationId String?
+  websiteUrl     String?
+  origin         String?
+  userAgent      String?
+  metadata       Json?
+  createdAt      DateTime        @default(now())
+
+  @@index([organizationId])
+  @@index([type])
+  @@index([visitorId])
+  @@index([createdAt])
 }
 
 model KnowledgeSource {
