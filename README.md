@@ -4,9 +4,9 @@ AI-native Business Operating System for small and medium businesses.
 
 ## Current status
 
-### Build #025 — VPS Deploy Target
+### Build #026 — VPS Deploy Scripts
 
-Autopilot One is at MVP Release Candidate stage and now has a selected pilot deploy target: VPS Docker with reverse proxy.
+Autopilot One is at MVP Release Candidate stage and now has VPS operational deploy scripts.
 
 The product includes:
 
@@ -30,6 +30,7 @@ The product includes:
 - VPS Docker runbook
 - Automated smoke tests
 - VPS go-live checklist
+- VPS deploy scripts
 
 ## Release and pilot docs
 
@@ -43,6 +44,7 @@ The product includes:
 - `docs/pilot-readiness.md`
 - `docs/builds/024-smoke-tests.md`
 - `docs/builds/025-vps-target.md`
+- `docs/builds/026-vps-scripts.md`
 
 ## Requirements
 
@@ -76,6 +78,14 @@ pnpm smoke:test
 ```
 
 Then follow `docs/mvp-walkthrough.md`, `docs/pilot-readiness.md`, `docs/vps-docker-runbook.md` and `docs/go-live-vps.md`.
+
+## VPS scripts
+
+```bash
+sh scripts/vps-preflight.sh
+sh scripts/vps-deploy.sh
+sh scripts/vps-healthcheck.sh
+```
 
 ## Core app routes
 
