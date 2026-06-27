@@ -53,10 +53,10 @@ Local default:
 sh scripts/vps-healthcheck.sh
 ```
 
-With public URLs:
+With production pilot URLs:
 
 ```bash
-API_URL=https://api.example.com/api/health APP_URL=https://app.example.com sh scripts/vps-healthcheck.sh
+API_URL=https://api.autopilot-one.com/api/health APP_URL=https://app.autopilot-one.com sh scripts/vps-healthcheck.sh
 ```
 
 ## Validation

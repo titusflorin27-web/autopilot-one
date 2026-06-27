@@ -6,6 +6,14 @@ Prepare Autopilot One MVP for a controlled private pilot.
 
 This document defines the deployment shape, required services, environment values and rollout order.
 
+## Selected pilot domains
+
+Use these production pilot domains for the first VPS deployment:
+
+- Web app: `https://app.autopilot-one.com`
+- API app: `https://api.autopilot-one.com`
+- API health: `https://api.autopilot-one.com/api/health`
+
 ## Recommended deployment shape
 
 Use four runtime components:
@@ -28,8 +36,8 @@ Runtime:
 Required env:
 
 ```env
-NEXT_PUBLIC_API_URL=https://api.example.com/api
-NEXT_PUBLIC_APP_URL=https://app.example.com
+NEXT_PUBLIC_API_URL=https://api.autopilot-one.com/api
+NEXT_PUBLIC_APP_URL=https://app.autopilot-one.com
 ```
 
 Build command:
@@ -60,7 +68,7 @@ NODE_ENV=production
 DATABASE_URL=postgresql://...
 REDIS_URL=redis://...
 API_PORT=4000
-API_CORS_ORIGINS=https://app.example.com
+API_CORS_ORIGINS=https://app.autopilot-one.com
 JWT_ACCESS_SECRET=replace-with-long-random-value
 JWT_ACCESS_TOKEN_TTL=15m
 REFRESH_TOKEN_TTL_DAYS=30

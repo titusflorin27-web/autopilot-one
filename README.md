@@ -4,9 +4,14 @@ AI-native Business Operating System for small and medium businesses.
 
 ## Current status
 
-### Build #026 — VPS Deploy Scripts
+### Build #027 — Production Domain Update
 
-Autopilot One is at MVP Release Candidate stage and now has VPS operational deploy scripts.
+Autopilot One is at MVP Release Candidate stage and now has VPS operational deploy scripts plus the selected production pilot domain configuration.
+
+Selected pilot domains:
+
+- Web: `https://app.autopilot-one.com`
+- API: `https://api.autopilot-one.com`
 
 The product includes:
 
@@ -31,6 +36,7 @@ The product includes:
 - Automated smoke tests
 - VPS go-live checklist
 - VPS deploy scripts
+- Production pilot domain defaults
 
 ## Release and pilot docs
 
@@ -45,6 +51,7 @@ The product includes:
 - `docs/builds/024-smoke-tests.md`
 - `docs/builds/025-vps-target.md`
 - `docs/builds/026-vps-scripts.md`
+- `docs/builds/027-production-domain-update.md`
 
 ## Requirements
 
@@ -85,6 +92,12 @@ Then follow `docs/mvp-walkthrough.md`, `docs/pilot-readiness.md`, `docs/vps-dock
 sh scripts/vps-preflight.sh
 sh scripts/vps-deploy.sh
 sh scripts/vps-healthcheck.sh
+```
+
+Public healthcheck after DNS and VPS deploy:
+
+```bash
+API_URL=https://api.autopilot-one.com/api/health APP_URL=https://app.autopilot-one.com sh scripts/vps-healthcheck.sh
 ```
 
 ## Core app routes
