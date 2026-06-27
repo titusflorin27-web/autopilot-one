@@ -13,7 +13,8 @@ export type WidgetPosition = "LEFT" | "RIGHT";
 export type WidgetEventType = "CONFIG_LOADED" | "LOADED" | "OPENED" | "MESSAGE_SENT" | "MESSAGE_RECEIVED" | "ERROR";
 export type NotificationType = "HUMAN_HANDOFF" | "HIGH_SCORE_LEAD" | "HIGH_PRIORITY_TASK";
 export type NotificationPriority = "LOW" | "MEDIUM" | "HIGH";
-
+export type BillingPlan = "FREE" | "STARTER" | "PRO" | "BUSINESS";
+export type BillingStatus = "TRIALING" | "ACTIVE" | "PAST_DUE" | "CANCELLED";
 export interface BusinessEvent<TPayload = unknown> { id: ID; organizationId: ID; type: string; payload: TPayload; status: EventStatus; createdAt: string; }
 export interface BusinessDnaItem { title: string; description: string; }
 export interface BusinessDnaRule { title: string; description: string; }
@@ -26,6 +27,8 @@ export interface WidgetAnalytics { windowDays: number; installHealth: { hasConfi
 export interface NotificationItem { id: string; type: NotificationType; priority: NotificationPriority; title: string; description: string; href: string; createdAt: string; }
 export interface NotificationEmailPayload { subject: string; preview: string; href: string; }
 export interface NotificationCenter { total: number; highPriority: number; items: NotificationItem[]; emailReady: NotificationEmailPayload[]; }
+export interface BillingLimits { widgetMessages: number; knowledgeSources: number; teamMembers: number; }
+export interface BillingOverview { organization: { id: ID; name: string; slug: string; billingPlan: BillingPlan; billingStatus: BillingStatus; billingCurrentPeriodStart: string; }; limits: BillingLimits; usage: BillingLimits; remaining: BillingLimits; overLimit: Record<keyof BillingLimits, boolean>; plans: Array<{ plan: BillingPlan; limits: BillingLimits }>; }
 export interface KnowledgeSourceSummary { id: ID; organizationId: ID; type: KnowledgeSourceType; status: KnowledgeSourceStatus; title: string; url?: string | null; fileName?: string | null; mimeType?: string | null; chunkCount: number; createdAt: string; updatedAt: string; }
 export interface KnowledgeSearchResult { chunkId: ID; sourceId: ID; sourceTitle: string; sourceType: KnowledgeSourceType; content: string; score: number; }
 export interface ReceptionAiResult { conversationId: ID; reply: string; confidence: number; shouldEscalate: boolean; escalationReason?: string | null; leadId?: ID | null; taskId?: ID | null; aiProvider?: string; aiModel?: string; usedFallback?: boolean; citations: KnowledgeSearchResult[]; }
