@@ -4,6 +4,25 @@ AI-native Business Operating System for small and medium businesses.
 
 ## Current build
 
+### Build #007 — AI Employee Operations
+
+This build turns Reception AI from a demo employee into an operational teammate.
+
+Included:
+
+- Operations summary for conversations, tasks and leads
+- Human handoff workflow
+- Human reply workflow
+- Conversation lifecycle controls: open, waiting for human, closed
+- Task lifecycle controls: open, done, cancelled
+- Lead lifecycle controls: qualified, converted, disqualified
+- Internal notes and escalation reasons
+- Completed timestamps for tasks
+- Closed timestamps for conversations
+- Connected `/reception-ai` operations UI
+
+## Previous builds
+
 ### Build #006 — Reception AI
 
 This build adds the first AI Employee: Reception AI.
@@ -20,8 +39,6 @@ Included:
 - Protected Reception AI API with organization-scoped RBAC
 - Connected `/reception-ai` UI
 - Dashboard navigation to Reception AI
-
-## Previous builds
 
 ### Build #005 — Knowledge Base
 
@@ -140,9 +157,15 @@ POST /api/knowledge-base/search
 ## Reception AI API
 
 ```http
+GET /api/reception-ai/organization/:organizationId/summary
 GET /api/reception-ai/organization/:organizationId/conversations
 GET /api/reception-ai/organization/:organizationId/tasks
+GET /api/reception-ai/organization/:organizationId/leads
 POST /api/reception-ai/message
+PATCH /api/reception-ai/conversations/:conversationId
+POST /api/reception-ai/conversations/:conversationId/human-reply
+PATCH /api/reception-ai/tasks/:taskId
+PATCH /api/reception-ai/leads/:leadId
 ```
 
 Protected requests use:
