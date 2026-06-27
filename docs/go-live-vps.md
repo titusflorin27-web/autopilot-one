@@ -6,14 +6,22 @@ The selected first pilot target is a single VPS running Docker Compose.
 
 This target is chosen because it is simple, controllable and portable.
 
+## Selected pilot domains
+
+Use these domains for the first production pilot:
+
+- Web app: `https://app.autopilot-one.com`
+- API app: `https://api.autopilot-one.com`
+- API health: `https://api.autopilot-one.com/api/health`
+
 ## Required DNS
 
 Create two DNS records:
 
-- `app.example.com` pointing to the VPS public IP
-- `api.example.com` pointing to the VPS public IP
+- `app.autopilot-one.com` pointing to the VPS public IP
+- `api.autopilot-one.com` pointing to the VPS public IP
 
-Replace these domains with the real pilot domains.
+Use A records when the VPS has a primary IPv4 address.
 
 ## Required files
 
@@ -34,9 +42,9 @@ Use these files:
 5. Copy API production env example.
 6. Copy Web production env example.
 7. Replace every placeholder secret.
-8. Replace example domains in env files.
-9. Replace example domains in Caddyfile.
-10. Confirm `API_CORS_ORIGINS` matches the public app URL.
+8. Confirm production domains in env files.
+9. Confirm production domains in Caddyfile.
+10. Confirm `API_CORS_ORIGINS` matches `https://app.autopilot-one.com`.
 11. Confirm widget allowed origins match the pilot website.
 
 ## First deploy commands
@@ -58,7 +66,7 @@ docker compose -f infrastructure/docker-compose.vps.example.yml exec api pnpm db
 ## Health checks
 
 ```bash
-curl https://api.example.com/api/health
+curl https://api.autopilot-one.com/api/health
 ```
 
 Expected:
@@ -72,7 +80,13 @@ Expected:
 Then open:
 
 ```text
-https://app.example.com
+https://app.autopilot-one.com
+```
+
+Or run the VPS script with public URLs:
+
+```bash
+API_URL=https://api.autopilot-one.com/api/health APP_URL=https://app.autopilot-one.com sh scripts/vps-healthcheck.sh
 ```
 
 ## Product smoke flow
