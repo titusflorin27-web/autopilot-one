@@ -28,6 +28,7 @@ type WidgetSettings = {
   widgetPosition: "LEFT" | "RIGHT";
   widgetToken?: string | null;
   widgetAllowedOrigins: string[];
+  publicConfigEndpoint?: string;
   installSnippet: string;
 };
 
@@ -200,8 +201,8 @@ export function WidgetSettingsClient() {
   return (
     <div className="widget-demo-layout">
       <section className="card">
-        <div className="eyebrow">BUILD #012 Widget Settings</div>
-        <h1>Manage widget installation.</h1>
+        <div className="eyebrow">BUILD #013 Widget Runtime Enforcement</div>
+        <h1>Manage widget runtime.</h1>
         <p>{settings ? `Workspace: ${settings.name}` : "No widget settings loaded."}</p>
       </section>
 
@@ -230,8 +231,9 @@ export function WidgetSettingsClient() {
           </form>
 
           <article className="card">
-            <h2>Install snippet</h2>
-            <p>Copy this into the customer website before the closing body tag.</p>
+            <h2>Runtime install</h2>
+            <p>The widget now loads live configuration before rendering.</p>
+            {settings.publicConfigEndpoint ? <p>Public config: <code>{settings.publicConfigEndpoint}</code></p> : null}
             <pre className="code-block">{settings.installSnippet}</pre>
             <button className="button" type="button" onClick={copySnippet}>Copy snippet</button>
           </article>
