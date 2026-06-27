@@ -10,6 +10,6 @@ git checkout main
 git pull origin main
 
 docker compose -f "$COMPOSE_FILE" up --build -d
-docker compose -f "$COMPOSE_FILE" exec api pnpm db:migrate
+docker compose -f "$COMPOSE_FILE" exec -T api pnpm db:migrate
 
 echo "VPS deploy completed. Run scripts/vps-healthcheck.sh next."
