@@ -5,6 +5,9 @@ import { PrismaService } from "../../common/prisma.service";
 import { CreateOrganizationDto } from "./dto/create-organization.dto";
 import { UpdateWidgetSettingsDto } from "./dto/update-widget-settings.dto";
 
+const DEFAULT_PUBLIC_WEB_URL = "https://app.autopilot-one.com";
+const DEFAULT_PUBLIC_API_URL = "https://api.autopilot-one.com/api";
+
 @Injectable()
 export class OrganizationsService {
   constructor(private readonly prisma: PrismaService) {}
@@ -176,12 +179,26 @@ export class OrganizationsService {
     widgetToken: string | null;
   }) {
     const tokenLine = organization.widgetToken ? `\n  data-widget-token="${organization.widgetToken}"` : "";
+    const publicWebUrl = this.getPublicWebUrl();
+    const publicApiUrl = this.getPublicApiUrl();
 
-    return `<script\n  src="https://your-autopilot-web-host.example/autopilot-widget.js"\n  data-organization-slug="${organization.slug}"\n  data-api-url="https://your-autopilot-api-host.example/api"\n  data-title="${organization.widgetTitle}"${tokenLine}\n  async\n></script>`;
+    return `<script\n  src="${publicWebUrl}/autopilot-widget.js"\n  data-organization-slug="${organization.slug}"\n  data-api-url="${publicApiUrl}"\n  data-title="${organization.widgetTitle}"${tokenLine}\n  async\n></script>`;
   }
 
   private buildPublicConfigEndpoint(slug: string) {
-    return `/api/public/reception-ai/widget/${slug}/config`;
+    return `${this.getPublicApiUrl()}/public/reception-ai/widget/${slug}/config`;
+  }
+
+  private getPublicWebUrl() {
+    return this.normalizeUrl(process.env.PUBLIC_APP_URL ?? process.env.NEXT_PUBLIC_APP_URL ?? DEFAULT_PUBLIC_WEB_URL);
+  }
+
+  private getPublicApiUrl() {
+    return this.normalizeUrl(process.env.PUBLIC_API_URL ?? process.env.NEXT_PUBLIC_API_URL ?? DEFAULT_PUBLIC_API_URL);
+  }
+
+  private normalizeUrl(value: string) {
+    return value.replace(/\/+$/, "");
   }
 
   private createWidgetToken() {

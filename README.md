@@ -4,7 +4,7 @@ AI-native Business Operating System for small and medium businesses.
 
 ## Current status
 
-### Build #027 — Production Domain Update
+### Build #028 — Widget Domain Fix
 
 Autopilot One is at MVP Release Candidate stage and now has VPS operational deploy scripts plus the selected production pilot domain configuration.
 
@@ -37,6 +37,7 @@ The product includes:
 - VPS go-live checklist
 - VPS deploy scripts
 - Production pilot domain defaults
+- Production widget install snippet defaults
 
 ## Release and pilot docs
 
@@ -52,6 +53,7 @@ The product includes:
 - `docs/builds/025-vps-target.md`
 - `docs/builds/026-vps-scripts.md`
 - `docs/builds/027-production-domain-update.md`
+- `docs/builds/028-widget-domain-fix.md`
 
 ## Requirements
 
