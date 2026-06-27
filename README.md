@@ -4,6 +4,24 @@ AI-native Business Operating System for small and medium businesses.
 
 ## Current build
 
+### Build #008 — AI Gateway
+
+This build connects Reception AI to the AI Gateway and prepares model-backed response generation.
+
+Included:
+
+- Expanded `@autopilot/ai-gateway` provider abstraction
+- OpenAI-compatible chat provider
+- JSON response parsing through `runJson`
+- Deterministic fallback when no provider or invalid output is available
+- Reception AI prompt template
+- Model-backed structured output contract
+- AI provider/model/fallback metadata in message events
+- AI Gateway environment configuration
+- `/reception-ai` UI display for provider, model and fallback mode
+
+## Previous builds
+
 ### Build #007 — AI Employee Operations
 
 This build turns Reception AI from a demo employee into an operational teammate.
@@ -20,8 +38,6 @@ Included:
 - Completed timestamps for tasks
 - Closed timestamps for conversations
 - Connected `/reception-ai` operations UI
-
-## Previous builds
 
 ### Build #006 — Reception AI
 
@@ -126,6 +142,17 @@ pnpm dev
 
 Web: http://localhost:3000  
 API health: http://localhost:4000/api/health
+
+## AI Gateway configuration
+
+Reception AI runs without an AI provider by using deterministic fallback mode. To enable model-backed output, configure:
+
+```env
+AI_GATEWAY_PROVIDER="openai"
+AI_GATEWAY_MODEL="gpt-4o-mini"
+AI_GATEWAY_BASE_URL="https://api.openai.com/v1"
+AI_GATEWAY_API_KEY=""
+```
 
 ## Identity API
 

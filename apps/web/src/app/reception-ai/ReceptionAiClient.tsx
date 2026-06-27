@@ -26,6 +26,9 @@ type ReceptionResult = {
   escalationReason?: string | null;
   leadId?: string | null;
   taskId?: string | null;
+  aiProvider?: string;
+  aiModel?: string;
+  usedFallback?: boolean;
   citations: Array<{
     sourceTitle: string;
     content: string;
@@ -307,8 +310,8 @@ export function ReceptionAiClient() {
   return (
     <div className="reception-layout">
       <section className="card">
-        <div className="eyebrow">BUILD #007 AI Employee Operations</div>
-        <h1>Operate Reception AI like a real teammate.</h1>
+        <div className="eyebrow">BUILD #008 AI Gateway</div>
+        <h1>Reception AI now has a model gateway.</h1>
         <p>{primaryMembership ? `Workspace: ${primaryMembership.organization.name}` : "No organization found."}</p>
       </section>
 
@@ -322,8 +325,8 @@ export function ReceptionAiClient() {
           <div className="metric">{summary?.tasks?.OPEN ?? 0}</div>
         </article>
         <article className="card">
-          <h3>Qualified leads</h3>
-          <div className="metric">{summary?.leads?.QUALIFIED ?? 0}</div>
+          <h3>Last AI mode</h3>
+          <div className="metric">{result?.usedFallback ? "Fallback" : result?.aiProvider ?? "None"}</div>
         </article>
       </section>
 
@@ -350,6 +353,9 @@ export function ReceptionAiClient() {
                 {result.escalationReason ? <span>Reason: {result.escalationReason}</span> : null}
                 <span>Lead: {result.leadId ?? "none"}</span>
                 <span>Task: {result.taskId ?? "none"}</span>
+                <span>Provider: {result.aiProvider ?? "none"}</span>
+                <span>Model: {result.aiModel ?? "none"}</span>
+                <span>Fallback: {result.usedFallback ? "yes" : "no"}</span>
               </div>
               {result.citations.map((citation, index) => (
                 <div className="source-item" key={`${citation.sourceTitle}-${index}`}>
@@ -360,7 +366,7 @@ export function ReceptionAiClient() {
               ))}
             </div>
           ) : (
-            <p>Send a message to generate the first Reception AI response.</p>
+            <p>Send a message to test provider-backed output or deterministic fallback.</p>
           )}
         </article>
       </section>

@@ -1,4 +1,6 @@
 import { Injectable, NotFoundException } from "@nestjs/common";
+import { ConfigService } from "@nestjs/config";
+import { AiGateway, AiResponse, NullAiProvider, OpenAiCompatibleProvider } from "@autopilot/ai-gateway";
 import { BusinessDna, KnowledgeSearchResult } from "@autopilot/shared";
 import {
   ConversationStatus,
@@ -19,9 +21,41 @@ import { UpdateTaskDto } from "./dto/update-task.dto";
 const DEFAULT_CONFIDENCE = 0.72;
 const ESCALATION_CONFIDENCE_THRESHOLD = 0.45;
 
+type ReceptionModelOutput = {
+  reply: string;
+  confidence: number;
+  shouldEscalate: boolean;
+  escalationReason?: string | null;
+  leadScore?: number;
+  leadSummary?: string;
+  followUpTaskTitle?: string;
+  followUpTaskDescription?: string;
+};
+
+type ResolvedReceptionOutput = ReceptionModelOutput & {
+  aiResponse: AiResponse;
+  usedFallback: boolean;
+};
+
 @Injectable()
 export class ReceptionAiService {
-  constructor(private readonly prisma: PrismaService) {}
+  private readonly aiGateway: AiGateway;
+
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly config: ConfigService,
+  ) {
+    const apiKey = this.config.get<string>("AI_GATEWAY_API_KEY") ?? this.config.get<string>("OPENAI_API_KEY");
+    const model = this.config.get<string>("AI_GATEWAY_MODEL") ?? "gpt-4o-mini";
+    const baseUrl = this.config.get<string>("AI_GATEWAY_BASE_URL");
+    const providerName = this.config.get<string>("AI_GATEWAY_PROVIDER") ?? "openai";
+
+    this.aiGateway = new AiGateway([
+      apiKey
+        ? new OpenAiCompatibleProvider({ apiKey, model, baseUrl, providerName })
+        : new NullAiProvider(),
+    ]);
+  }
 
   listConversations(organizationId: string) {
     return this.prisma.receptionConversation.findMany({
@@ -246,19 +280,38 @@ export class ReceptionAiService {
 
     const businessDna = organization.businessDna as unknown as BusinessDna | null;
     const citations = await this.findRelevantKnowledge(dto.organizationId, dto.message);
-    const leadScore = this.scoreLead(dto.message);
-    const shouldCreateLead = leadScore >= 45 || Boolean(dto.customerEmail);
-    const confidence = this.calculateConfidence(dto.message, businessDna, citations);
-    const shouldEscalate = confidence < ESCALATION_CONFIDENCE_THRESHOLD || this.needsHuman(dto.message);
-    const escalationReason = shouldEscalate ? this.getEscalationReason(dto.message, confidence) : undefined;
-    const reply = this.composeReply({
+    const heuristicLeadScore = this.scoreLead(dto.message);
+    const heuristicConfidence = this.calculateConfidence(dto.message, businessDna, citations);
+    const heuristicShouldEscalate = heuristicConfidence < ESCALATION_CONFIDENCE_THRESHOLD || this.needsHuman(dto.message);
+    const heuristicEscalationReason = heuristicShouldEscalate ? this.getEscalationReason(dto.message, heuristicConfidence) : undefined;
+    const fallbackReply = this.composeReply({
       organizationName: organization.name,
       message: dto.message,
       businessDna,
       citations,
-      leadScore,
-      shouldEscalate,
+      leadScore: heuristicLeadScore,
+      shouldEscalate: heuristicShouldEscalate,
     });
+    const modelOutput = await this.generateReceptionOutput({
+      organizationId: dto.organizationId,
+      organizationName: organization.name,
+      message: dto.message,
+      businessDna,
+      citations,
+      fallback: {
+        reply: fallbackReply,
+        confidence: heuristicConfidence,
+        shouldEscalate: heuristicShouldEscalate,
+        escalationReason: heuristicEscalationReason,
+        leadScore: heuristicLeadScore,
+      },
+    });
+    const leadScore = this.clampScore(modelOutput.leadScore ?? heuristicLeadScore);
+    const shouldCreateLead = leadScore >= 45 || Boolean(dto.customerEmail);
+    const confidence = this.clampConfidence(modelOutput.confidence);
+    const shouldEscalate = modelOutput.shouldEscalate || heuristicShouldEscalate || confidence < ESCALATION_CONFIDENCE_THRESHOLD;
+    const escalationReason = shouldEscalate ? modelOutput.escalationReason ?? heuristicEscalationReason ?? this.getEscalationReason(dto.message, confidence) : undefined;
+    const reply = modelOutput.reply;
 
     return this.prisma.$transaction(async (tx) => {
       const conversation = dto.conversationId
@@ -300,7 +353,7 @@ export class ReceptionAiService {
             organizationId: dto.organizationId,
             name: dto.customerName,
             email: dto.customerEmail,
-            summary: this.summarizeLead(dto.message, leadScore),
+            summary: modelOutput.leadSummary ?? this.summarizeLead(dto.message, leadScore),
             score: leadScore,
             status: leadScore >= 70 ? LeadStatus.QUALIFIED : LeadStatus.NEW,
           },
@@ -317,8 +370,8 @@ export class ReceptionAiService {
         const task = await tx.task.create({
           data: {
             organizationId: dto.organizationId,
-            title: shouldEscalate ? "Review Reception AI conversation" : "Follow up with new lead",
-            description: this.composeTaskDescription(dto.message, reply, leadScore, shouldEscalate),
+            title: modelOutput.followUpTaskTitle ?? (shouldEscalate ? "Review Reception AI conversation" : "Follow up with new lead"),
+            description: modelOutput.followUpTaskDescription ?? this.composeTaskDescription(dto.message, reply, leadScore, shouldEscalate),
             priority: shouldEscalate || leadScore >= 70 ? TaskPriority.HIGH : TaskPriority.MEDIUM,
             ownerNote: escalationReason,
           },
@@ -336,6 +389,11 @@ export class ReceptionAiService {
             shouldEscalate,
             escalationReason,
             leadScore,
+            aiProvider: modelOutput.aiResponse.provider,
+            aiModel: modelOutput.aiResponse.model,
+            aiGatewayError: modelOutput.aiResponse.error,
+            usedFallback: modelOutput.usedFallback,
+            usage: modelOutput.aiResponse.usage,
             citations: citations.map((citation) => ({
               sourceId: citation.sourceId,
               chunkId: citation.chunkId,
@@ -356,6 +414,9 @@ export class ReceptionAiService {
             confidence,
             shouldEscalate,
             escalationReason,
+            aiProvider: modelOutput.aiResponse.provider,
+            aiModel: modelOutput.aiResponse.model,
+            usedFallback: modelOutput.usedFallback,
           } as Prisma.InputJsonValue,
         },
       });
@@ -368,9 +429,76 @@ export class ReceptionAiService {
         escalationReason,
         leadId,
         taskId,
+        aiProvider: modelOutput.aiResponse.provider,
+        aiModel: modelOutput.aiResponse.model,
+        usedFallback: modelOutput.usedFallback,
         citations,
       };
     });
+  }
+
+  private async generateReceptionOutput(input: {
+    organizationId: string;
+    organizationName: string;
+    message: string;
+    businessDna: BusinessDna | null;
+    citations: KnowledgeSearchResult[];
+    fallback: ReceptionModelOutput;
+  }): Promise<ResolvedReceptionOutput> {
+    const aiResponse = await this.aiGateway.runJson<ReceptionModelOutput>({
+      taskType: "generation",
+      organizationId: input.organizationId,
+      temperature: 0.2,
+      system: this.buildReceptionSystemPrompt(),
+      input: JSON.stringify({
+        organizationName: input.organizationName,
+        customerMessage: input.message,
+        businessDna: input.businessDna,
+        knowledgeCitations: input.citations.map((citation) => ({
+          sourceTitle: citation.sourceTitle,
+          content: this.truncate(citation.content, 900),
+          score: citation.score,
+        })),
+        requiredJsonShape: {
+          reply: "string",
+          confidence: "number from 0 to 1",
+          shouldEscalate: "boolean",
+          escalationReason: "string or null",
+          leadScore: "integer from 0 to 100",
+          leadSummary: "string",
+          followUpTaskTitle: "string or null",
+          followUpTaskDescription: "string or null",
+        },
+      }),
+    });
+
+    if (!aiResponse.parsed?.reply) {
+      return {
+        ...input.fallback,
+        aiResponse,
+        usedFallback: true,
+      };
+    }
+
+    return {
+      ...input.fallback,
+      ...aiResponse.parsed,
+      confidence: this.clampConfidence(aiResponse.parsed.confidence),
+      leadScore: this.clampScore(aiResponse.parsed.leadScore ?? input.fallback.leadScore ?? 0),
+      aiResponse,
+      usedFallback: Boolean(aiResponse.error),
+    };
+  }
+
+  private buildReceptionSystemPrompt(): string {
+    return [
+      "You are Reception AI, the first AI Employee inside Autopilot One.",
+      "Answer customers using only the provided Business DNA and Knowledge Base citations.",
+      "Be concise, helpful and commercially useful.",
+      "Escalate when information is missing, risky, legal, refund-related, angry, cancellation-related or low confidence.",
+      "Detect buying intent and produce a lead score from 0 to 100.",
+      "Return only valid JSON. Do not include markdown.",
+    ].join(" ");
   }
 
   private async findRelevantKnowledge(organizationId: string, query: string): Promise<KnowledgeSearchResult[]> {
@@ -462,7 +590,7 @@ export class ReceptionAiService {
       confidence -= 0.2;
     }
 
-    return Math.max(0.1, Math.min(0.98, Number(confidence.toFixed(2))));
+    return this.clampConfidence(confidence);
   }
 
   private getEscalationReason(message: string, confidence: number): string {
@@ -491,7 +619,7 @@ export class ReceptionAiService {
       score += 18;
     }
 
-    return Math.min(100, score);
+    return this.clampScore(score);
   }
 
   private needsHuman(message: string): boolean {
@@ -531,6 +659,14 @@ export class ReceptionAiService {
 
   private truncate(value: string, maxLength: number): string {
     return value.length > maxLength ? `${value.slice(0, maxLength).trim()}...` : value;
+  }
+
+  private clampConfidence(value: number): number {
+    return Math.max(0.1, Math.min(0.98, Number(value.toFixed(2))));
+  }
+
+  private clampScore(value: number): number {
+    return Math.max(0, Math.min(100, Math.round(value)));
   }
 
   private countByStatus<T extends { _count: { _all: number } }>(groups: Array<T & Record<string, unknown>>) {
