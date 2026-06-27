@@ -10,6 +10,7 @@ export type MessageSender = "CUSTOMER" | "AI" | "HUMAN" | "SYSTEM";
 export type LeadStatus = "NEW" | "QUALIFIED" | "DISQUALIFIED" | "CONVERTED";
 export type TaskStatus = "OPEN" | "DONE" | "CANCELLED";
 export type TaskPriority = "LOW" | "MEDIUM" | "HIGH";
+export type WidgetPosition = "LEFT" | "RIGHT";
 
 export interface BusinessEvent<TPayload = unknown> {
   id: ID;
@@ -49,6 +50,19 @@ export interface BusinessDna {
   tone: string;
   faq: BusinessDnaFaq[];
   objectives: BusinessDnaGoal[];
+}
+
+export interface WidgetSettings {
+  id: ID;
+  name: string;
+  slug: string;
+  widgetEnabled: boolean;
+  widgetTitle: string;
+  widgetPrimaryColor: string;
+  widgetPosition: WidgetPosition;
+  widgetToken?: string | null;
+  widgetAllowedOrigins: string[];
+  installSnippet: string;
 }
 
 export interface KnowledgeSourceSummary {
