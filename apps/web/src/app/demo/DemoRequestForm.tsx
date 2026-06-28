@@ -12,10 +12,11 @@ export function DemoRequestForm() {
 
   async function onSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
+    const form = event.currentTarget;
     setSubmitState("submitting");
     setMessage(null);
 
-    const formData = new FormData(event.currentTarget);
+    const formData = new FormData(form);
 
     try {
       const response = await fetch(`${API_URL}/demo-requests`, {
@@ -37,7 +38,7 @@ export function DemoRequestForm() {
         throw new Error(data.message ?? "Nu am putut trimite cererea demo.");
       }
 
-      event.currentTarget.reset();
+      form.reset();
       setSubmitState("success");
       setMessage("Cererea a fost trimisă. Revenim cu un răspuns cât mai rapid.");
     } catch (caughtError) {
