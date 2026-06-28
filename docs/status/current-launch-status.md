@@ -1,6 +1,6 @@
 # Autopilot One — Current launch status
 
-This document is the operating checkpoint after BUILD #048 scripts were added.
+This document is the operating checkpoint after BUILD #048 was validated on the VPS.
 
 No secrets, API keys, passwords or widget tokens are stored here.
 
@@ -129,30 +129,42 @@ No secrets, API keys, passwords or widget tokens are stored here.
 - Saved validated baseline and remaining work
 - Documentation-only build
 
-### BUILD #048 — VPS security hardening scripts
+### BUILD #048 — VPS security hardening
 
 - Added read-only VPS security audit script
 - Added controlled VPS security hardening script
 - Added documentation for firewall/fail2ban/unattended-upgrades workflow
-- Firewall must be enabled only after SSH is confirmed in a second active session
+- Audit ran on the VPS
+- Hardening ran on the VPS
+- UFW firewall is active
+- UFW default incoming policy is deny
+- UFW default outgoing policy is allow
+- UFW allows SSH `22/tcp`
+- UFW allows HTTP `80/tcp`
+- UFW allows HTTPS `443/tcp`
+- UFW allows HTTP/3 `443/udp`
+- fail2ban is active with the `sshd` jail active
+- unattended-upgrades is active
+- cron is active
+- API and Web remained `HTTP/2 200` after hardening
 
 ## Current launch readiness verdict
 
 Autopilot One is live and suitable for a controlled pilot.
 
-It is not yet considered ready for broad public launch or heavy paid traffic until the remaining hardening items are completed and validated on the VPS.
+The production VPS now has a basic hardening layer: UFW, fail2ban and unattended security upgrades are active.
 
-Estimated launch readiness: 80–85% after VPS hardening scripts are added; final percentage depends on successful VPS execution and validation.
+It is not yet considered ready for broad public launch or heavy paid traffic until monitoring, off-server backups, legal final polish, SEO launch polish and final QA are completed.
+
+Estimated launch readiness: 85%.
 
 ## Remaining P0/P1 work
 
 ### P0
 
-- Run VPS security audit on production VPS
-- Run VPS hardening package setup
-- Enable firewall only after SSH access is verified in a second session
 - Confirm that daily backup runs successfully after the scheduled time
 - Healthcheck after every security or infrastructure change
+- Keep current firewall rules under review before changing SSH settings
 
 ### P1
 
@@ -171,15 +183,15 @@ Estimated launch readiness: 80–85% after VPS hardening scripts are added; fina
 - Email notification production polish
 - Log rotation and disk usage monitoring
 - UX polish for final launch
+- SSH key-only access after key-based login is confirmed and tested
 
 ## Recommended next build order
 
-1. Validate BUILD #048 on the VPS
-2. BUILD #049 — Monitoring and uptime checks
-3. BUILD #050 — Off-server backups and restore test
-4. BUILD #051 — Legal/ANPC/refund/GDPR final polish
-5. BUILD #052 — SEO, sitemap, robots and metadata
-6. BUILD #053 — Final Launch QA
+1. BUILD #049 — Monitoring and uptime checks
+2. BUILD #050 — Off-server backups and restore test
+3. BUILD #051 — Legal/ANPC/refund/GDPR final polish
+4. BUILD #052 — SEO, sitemap, robots and metadata
+5. BUILD #053 — Final Launch QA
 
 ## Standard safe VPS deploy pattern
 
@@ -211,5 +223,5 @@ curl -I https://app.autopilot-one.com
 - Never commit or paste secrets, API keys, database passwords or widget tokens
 - Never regenerate the widget token without a clear reason
 - Do not run destructive restore commands without `CONFIRM_RESTORE=YES` and an explicit operator decision
-- Do not enable firewall rules until SSH access has been verified and the allow rules are in place
-- Keep the current SSH session open while testing a second SSH session before enabling UFW
+- Do not change SSH settings until key-based access is confirmed and tested
+- Do not expose Postgres or Redis publicly
