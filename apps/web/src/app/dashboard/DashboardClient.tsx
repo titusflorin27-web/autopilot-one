@@ -6,16 +6,16 @@ import { useEffect, useState } from "react";
 const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:4000/api";
 
 const metrics = [
-  ["Leads captured", "18"],
-  ["Hours saved", "42"],
-  ["Events processed", "316"],
-  ["AI employees", "3"],
+  ["Clienți potențiali captați", "18"],
+  ["Ore economisite", "42"],
+  ["Evenimente procesate", "316"],
+  ["Angajați cu inteligență artificială", "3"],
 ];
 
 const timeline = [
-  "Reception AI answered a new customer message.",
-  "Sales AI prepared a follow-up task.",
-  "CEO AI detected slower response time than usual.",
+  "Recepția AI a răspuns la un mesaj nou al unui client.",
+  "AI-ul de vânzări a pregătit o sarcină ulterioară.",
+  "AI-ul CEO a detectat un timp de răspuns mai lent decât de obicei.",
 ];
 
 type CurrentUser = {
@@ -39,7 +39,7 @@ export function DashboardClient() {
 
     if (!accessToken) {
       setIsLoading(false);
-      setError("Please log in to access your command center.");
+      setError("Autentifică-te pentru a accesa centrul de comandă.");
       return;
     }
 
@@ -52,27 +52,27 @@ export function DashboardClient() {
         const data = await response.json();
 
         if (!response.ok) {
-          throw new Error(data.message ?? "Session expired");
+          throw new Error(data.message ?? "Sesiunea a expirat");
         }
 
         setUser(data);
       })
       .catch((caughtError) => {
-        setError(caughtError instanceof Error ? caughtError.message : "Session expired");
+        setError(caughtError instanceof Error ? caughtError.message : "Sesiunea a expirat");
       })
       .finally(() => setIsLoading(false));
   }, []);
 
   if (isLoading) {
-    return <p>Loading command center...</p>;
+    return <p>Se încarcă centrul de comandă...</p>;
   }
 
   if (error) {
     return (
       <section className="card">
-        <h1>Authentication required.</h1>
+        <h1>Autentificare necesară.</h1>
         <p>{error}</p>
-        <Link href="/login" className="button">Go to login</Link>
+        <Link href="/login" className="button">Mergi la login</Link>
       </section>
     );
   }
@@ -81,10 +81,10 @@ export function DashboardClient() {
 
   return (
     <>
-      <div className="eyebrow">Business Timeline</div>
-      <h1>Your company is operating.</h1>
+      <div className="eyebrow">Cronologie de afaceri</div>
+      <h1>Compania dumneavoastră este în funcțiune.</h1>
       <p>
-        Signed in as {user?.email}
+        Conectat ca {user?.email}
         {primaryMembership ? ` · ${primaryMembership.organization.name} · ${primaryMembership.role}` : null}
       </p>
 
@@ -98,7 +98,7 @@ export function DashboardClient() {
       </section>
 
       <section className="card">
-        <h2>Latest events</h2>
+        <h2>Ultimele evenimente</h2>
         {timeline.map((item) => (
           <p key={item}>✓ {item}</p>
         ))}
