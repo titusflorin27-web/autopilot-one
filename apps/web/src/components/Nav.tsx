@@ -6,6 +6,7 @@ export function Nav() {
       <Link href="/" className="brand">Autopilot One</Link>
       <nav>
         <Link href="/pricing">Pricing</Link>
+        <Link href="/demo">Cere demo</Link>
         <Link href="/privacy">Confidențialitate</Link>
         <Link href="/login">Login</Link>
         <Link href="/register">Start</Link>
