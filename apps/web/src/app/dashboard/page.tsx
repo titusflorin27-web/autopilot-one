@@ -9,6 +9,7 @@ export default function DashboardPage() {
         <p>Centrul de comandă</p>
         <nav>
           <Link href="/dashboard">Bord</Link>
+          <Link href="/demo-requests">Cereri demo</Link>
           <Link href="/launch">Listă de verificare la lansări</Link>
           <Link href="/billing">Facturare</Link>
           <Link href="/notifications">Notificări</Link>
