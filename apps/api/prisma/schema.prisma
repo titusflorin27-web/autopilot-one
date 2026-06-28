@@ -59,6 +59,13 @@ enum LeadStatus {
   CONVERTED
 }
 
+enum DemoRequestStatus {
+  NEW
+  CONTACTED
+  QUALIFIED
+  CLOSED
+}
+
 enum TaskStatus {
   OPEN
   DONE
@@ -288,6 +295,24 @@ model Lead {
 
   @@index([organizationId])
   @@index([status])
+}
+
+model DemoRequest {
+  id        String            @id @default(cuid())
+  name      String
+  email     String
+  company   String?
+  phone     String?
+  website   String?
+  message   String
+  source    String            @default("demo_page")
+  status    DemoRequestStatus @default(NEW)
+  createdAt DateTime          @default(now())
+  updatedAt DateTime          @updatedAt
+
+  @@index([email])
+  @@index([status])
+  @@index([createdAt])
 }
 
 model Task {
