@@ -240,7 +240,13 @@ export function WidgetSettingsClient() {
               <option value="LEFT">Stânga</option>
             </select>
             <label className="field-label">Jeton widget</label>
-            <input name="widgetToken" type="password" defaultValue={settings.widgetToken ?? ""} placeholder="Jeton widget" />
+            <input
+              name="widgetToken"
+              type="password"
+              autoComplete="new-password"
+              defaultValue={settings.widgetToken ?? ""}
+              placeholder="Jeton widget"
+            />
             {settings.widgetToken ? <p className="helper-text">Jeton curent: {maskSecret(settings.widgetToken)}</p> : null}
             <textarea name="widgetAllowedOrigins" defaultValue={settings.widgetAllowedOrigins.join("\n")} placeholder="https://example.com\nhttps://www.example.com" />
             <div className="actions">
