@@ -4,6 +4,8 @@ import { useEffect, useMemo, useState } from "react";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:4000/api";
 
+type DemoRequestStatus = "NEW" | "CONTACTED" | "QUALIFIED" | "CLOSED";
+
 type DemoRequest = {
   id: string;
   name: string;
@@ -13,10 +15,16 @@ type DemoRequest = {
   website?: string | null;
   message: string;
   source: string;
-  status: string;
+  status: DemoRequestStatus;
   createdAt: string;
   updatedAt: string;
 };
+
+const statusActions: Array<{ status: DemoRequestStatus; label: string }> = [
+  { status: "CONTACTED", label: "Marchează contactat" },
+  { status: "QUALIFIED", label: "Califică" },
+  { status: "CLOSED", label: "Închide" },
+];
 
 function formatDate(value: string) {
   return new Intl.DateTimeFormat("ro-RO", {
@@ -41,6 +49,7 @@ export function DemoRequestsClient() {
   const [requests, setRequests] = useState<DemoRequest[]>([]);
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [isUpdating, setIsUpdating] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   const selected = useMemo(
@@ -52,16 +61,24 @@ export function DemoRequestsClient() {
     return window.localStorage.getItem("autopilot.accessToken");
   }
 
-  async function loadDemoRequests() {
+  async function apiFetch(path: string, init: RequestInit = {}) {
     const accessToken = getAccessToken();
 
     if (!accessToken) {
       throw new Error("Autentifică-te pentru a vedea cererile demo.");
     }
 
-    const response = await fetch(`${API_URL}/demo-requests`, {
-      headers: { Authorization: `Bearer ${accessToken}` },
+    return fetch(`${API_URL}${path}`, {
+      ...init,
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        ...(init.headers ?? {}),
+      },
     });
+  }
+
+  async function loadDemoRequests() {
+    const response = await apiFetch("/demo-requests");
     const data = await response.json();
 
     if (!response.ok) {
@@ -69,7 +86,34 @@ export function DemoRequestsClient() {
     }
 
     setRequests(data);
-    setSelectedId(data[0]?.id ?? null);
+    setSelectedId((currentSelectedId) => currentSelectedId ?? data[0]?.id ?? null);
+  }
+
+  async function updateStatus(status: DemoRequestStatus) {
+    if (!selected) return;
+
+    setIsUpdating(true);
+    setError(null);
+
+    try {
+      const response = await apiFetch(`/demo-requests/${selected.id}/status`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ status }),
+      });
+      const updatedRequest = await response.json();
+
+      if (!response.ok) {
+        throw new Error(updatedRequest.message ?? "Nu am putut actualiza statusul cererii demo.");
+      }
+
+      setRequests((currentRequests) => currentRequests.map((request) => request.id === updatedRequest.id ? updatedRequest : request));
+      setSelectedId(updatedRequest.id);
+    } catch (caughtError) {
+      setError(caughtError instanceof Error ? caughtError.message : "Nu am putut actualiza statusul cererii demo.");
+    } finally {
+      setIsUpdating(false);
+    }
   }
 
   useEffect(() => {
@@ -106,7 +150,7 @@ export function DemoRequestsClient() {
 
       <section className="inbox-grid">
         <aside className="card inbox-list">
-          <div className="inbox-header">
+          <div className="inbox-header compact-header">
             <div>
               <h2>{requests.length}</h2>
               <p>Cereri demo</p>
@@ -131,17 +175,31 @@ export function DemoRequestsClient() {
         <article className="card inbox-detail">
           {selected ? (
             <>
-              <div className="inbox-header">
+              <div className="inbox-header compact-header">
                 <div>
                   <span className="status-pill">{selected.status}</span>
                   <h2>{selected.name}</h2>
                   <p>{formatDate(selected.createdAt)}</p>
                 </div>
-                <div className="mini-actions">
+                <div className="mini-actions compact-actions">
                   <a className="button mini" href={`mailto:${selected.email}`}>Email</a>
                   {selected.phone ? <a className="button mini secondary" href={`tel:${selected.phone}`}>Telefon</a> : null}
                   {selectedWebsite ? <a className="button mini secondary" href={selectedWebsite} target="_blank" rel="noreferrer">Website</a> : null}
                 </div>
+              </div>
+
+              <div className="mini-actions status-actions">
+                {statusActions.map((action) => (
+                  <button
+                    className={`button mini ${action.status === selected.status ? "" : "secondary"}`}
+                    disabled={isUpdating || action.status === selected.status}
+                    key={action.status}
+                    type="button"
+                    onClick={() => updateStatus(action.status)}
+                  >
+                    {action.label}
+                  </button>
+                ))}
               </div>
 
               <div className="source-list">
