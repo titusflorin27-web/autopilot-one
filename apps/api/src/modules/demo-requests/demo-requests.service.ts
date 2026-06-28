@@ -35,4 +35,24 @@ export class DemoRequestsService {
       message: "Cererea demo a fost primită.",
     };
   }
+
+  list() {
+    return this.prisma.demoRequest.findMany({
+      orderBy: { createdAt: "desc" },
+      take: 100,
+      select: {
+        id: true,
+        name: true,
+        email: true,
+        company: true,
+        phone: true,
+        website: true,
+        message: true,
+        source: true,
+        status: true,
+        createdAt: true,
+        updatedAt: true,
+      },
+    });
+  }
 }
