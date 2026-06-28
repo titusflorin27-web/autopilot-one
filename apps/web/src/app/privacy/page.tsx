@@ -1,3 +1,4 @@
+import { Footer } from "../../components/Footer";
 import { Nav } from "../../components/Nav";
 
 export default function PrivacyPage() {
@@ -9,14 +10,14 @@ export default function PrivacyPage() {
           <div className="eyebrow">Confidențialitate / GDPR</div>
           <h1>Politica de confidențialitate</h1>
           <p>
-            Această pagină este un model operațional pentru lansarea pilot Autopilot One și trebuie revizuită juridic înainte de lansarea comercială completă.
+            Această pagină descrie modul în care Autopilot One tratează datele în faza de pilot. Documentul trebuie revizuit juridic înainte de lansarea comercială completă.
           </p>
         </section>
 
         <section className="card trust-layout">
           <h2>Operatorul datelor</h2>
-          <p>[Denumirea societății], CUI [CUI], cu sediul în [Adresă sediu], poate acționa ca operator pentru conturile clienților și ca persoană împuternicită pentru datele introduse de clienți în platformă.</p>
-          <p>Contact: [Email contact] sau contact@autopilot-one.com.</p>
+          <p>Operatorul comercial al serviciului este entitatea indicată în oferta sau contractul acceptat de client. Pentru întrebări operaționale poți folosi contact@autopilot-one.com.</p>
+          <p>În funcție de caz, Autopilot One poate acționa ca operator pentru conturile clienților și ca persoană împuternicită pentru datele introduse de clienți în platformă.</p>
 
           <h2>Date care pot fi prelucrate</h2>
           <ul className="check-list">
@@ -37,6 +38,7 @@ export default function PrivacyPage() {
           <p>Nu introduceți în asistentul AI informații sensibile sau inutile pentru scopul conversației. Clienții sunt responsabili să configureze baza de cunoștințe și instrucțiunile astfel încât să respecte legislația aplicabilă.</p>
         </section>
       </main>
+      <Footer />
     </>
   );
 }

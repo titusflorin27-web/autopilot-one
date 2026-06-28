@@ -1,3 +1,4 @@
+import { Footer } from "../../components/Footer";
 import { Nav } from "../../components/Nav";
 
 export default function ConsumerRightsPage() {
@@ -22,12 +23,13 @@ export default function ConsumerRightsPage() {
           <p>Pentru servicii digitale, configurări, activări sau consum efectiv al serviciului, dreptul de retragere și rambursarea pot depinde de situația concretă și de legislația aplicabilă.</p>
 
           <h2>Reclamații și soluționare</h2>
-          <p>Pentru întrebări, reclamații sau solicitări, contactează contact@autopilot-one.com sau [Email contact]. Consumatorii pot consulta și canalele ANPC sau platformele de soluționare online a litigiilor, după caz.</p>
+          <p>Pentru întrebări, reclamații sau solicitări, contactează contact@autopilot-one.com. Consumatorii pot consulta și canalele ANPC sau platformele de soluționare online a litigiilor, după caz.</p>
 
           <h2>Recomandare</h2>
           <p>Aceste informații nu reprezintă consultanță juridică. Înainte de lansarea comercială completă, documentele trebuie revizuite de un specialist juridic.</p>
         </section>
       </main>
+      <Footer />
     </>
   );
 }

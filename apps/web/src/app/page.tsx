@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { Footer } from "../components/Footer";
 import { Nav } from "../components/Nav";
 
 const audiences = [
@@ -11,9 +12,9 @@ const audiences = [
 ];
 
 const steps = [
-  ["1", "Conectezi site-ul", "Adaugi widgetul Autopilot One pe website și stabilești ce domenii au voie să-l folosească."],
+  ["1", "Conectezi site-ul", "Adaugi widgetul Autopilot One pe website și stabilești ce domenii au voie să îl folosească."],
   ["2", "Încarci baza de cunoștințe", "Adaugi servicii, prețuri, reguli, întrebări frecvente și proceduri interne."],
-  ["3", "AI-ul răspunde și califică", "Reception AI răspunde 24/7, colectează date de contact și escaladează cazurile importante."],
+  ["3", "AI-ul răspunde și califică", "Recepție AI răspunde 24/7, colectează date de contact și trimite cazurile importante către echipă."],
 ];
 
 const results = [
@@ -21,6 +22,13 @@ const results = [
   "Mai multe lead-uri captate din traficul existent",
   "Mai puține întrebări repetitive pentru echipă",
   "Conversații și evenimente urmărite într-un singur dashboard",
+];
+
+const metrics = [
+  ["24/7", "răspunsuri pentru vizitatori"],
+  ["CRM", "cereri demo și follow-up"],
+  ["Widget", "instalare pe website"],
+  ["AI", "bază de cunoștințe controlată"],
 ];
 
 export default function HomePage() {
@@ -31,30 +39,53 @@ export default function HomePage() {
         <section className="hero hero-split">
           <div>
             <div className="eyebrow">Angajați AI pentru IMM-uri</div>
-            <h1>Angajați AI care răspund, califică și urmăresc clienții 24/7.</h1>
+            <h1>Transformă vizitatorii site-ului în lead-uri urmărite.</h1>
             <p>
-              Autopilot One ajută afacerile mici și medii să transforme vizitatorii de pe website în conversații,
-              lead-uri și sarcini clare pentru echipă, fără să angajeze personal suplimentar pentru întrebări repetitive.
+              Autopilot One adaugă pe site-ul tău un angajat AI care răspunde la întrebări, colectează date de contact,
+              trimite conversațiile importante în inbox și îți arată rezultatele într-un dashboard simplu.
             </p>
             <div className="actions">
               <Link href="/demo" className="button">Cere demo</Link>
-              <Link href="/pricing" className="button secondary">Vezi pricing</Link>
+              <Link href="/pricing" className="button secondary">Vezi prețurile</Link>
+            </div>
+            <div className="launch-kicker">
+              <span>Fără instalare complicată</span>
+              <span>Pilot ghidat</span>
+              <span>Date urmărite în CRM Lite</span>
             </div>
           </div>
-          <article className="card hero-card">
-            <span className="status-pill">Pilot privat activ</span>
-            <h3>Reception AI</h3>
-            <p>Răspunde vizitatorilor, explică serviciile, cere datele de contact și trimite conversațiile importante către echipă.</p>
-            <div className="mini-metrics">
-              <strong>24/7</strong>
-              <span>răspunsuri automate</span>
+          <article className="card hero-card launch-panel">
+            <span className="status-pill">Pilot disponibil</span>
+            <h3>Recepție AI pentru website</h3>
+            <p>Răspunde vizitatorilor, explică serviciile, cere datele de contact și pregătește următorul pas pentru echipă.</p>
+            <div className="launch-panel-row">
+              <strong>01</strong>
+              <p>Vizitatorul întreabă despre servicii, program, prețuri sau disponibilitate.</p>
+            </div>
+            <div className="launch-panel-row">
+              <strong>02</strong>
+              <p>AI-ul răspunde folosind baza ta de cunoștințe și cere datele potrivite.</p>
+            </div>
+            <div className="launch-panel-row">
+              <strong>03</strong>
+              <p>Lead-ul ajunge în CRM, unde îl marchezi contactat, calificat sau închis.</p>
             </div>
           </article>
         </section>
 
-        <section className="card">
+        <section className="launch-strip">
+          {metrics.map(([value, label]) => (
+            <article key={label}>
+              <strong>{value}</strong>
+              <span>{label}</span>
+            </article>
+          ))}
+        </section>
+
+        <section className="card section-heading">
           <div className="eyebrow">Pentru cine este</div>
           <h2>Practic pentru afaceri care primesc cereri repetitive.</h2>
+          <p>Este potrivit pentru companii care primesc întrebări prin site, pierd lead-uri după program sau vor să vadă clar ce conversații merită urmărite.</p>
           <div className="badge-list">
             {audiences.map((audience) => <span key={audience}>{audience}</span>)}
           </div>
@@ -83,17 +114,27 @@ export default function HomePage() {
           </article>
           <article className="card">
             <div className="eyebrow">Centru de comandă</div>
-            <h2>Totul devine eveniment.</h2>
+            <h2>Lead-urile nu mai rămân pierdute în mesaje.</h2>
             <p>
-              Mesajele clienților, lead-urile, escaladările, sarcinile și setările widgetului ajung într-un dashboard
-              operațional. Astfel poți vedea ce s-a întâmplat, ce trebuie urmărit și unde se pierd oportunități.
+              Cererile demo, conversațiile, evenimentele widgetului și follow-up-urile ajung într-un flux intern clar.
+              Dashboardul arată ce s-a întâmplat și ce merită urmărit.
             </p>
             <div className="actions">
-              <Link href="/dashboard" className="button secondary">Vezi dashboard</Link>
+              <Link href="/demo" className="button secondary">Vezi cum ar funcționa la tine</Link>
             </div>
           </article>
         </section>
+
+        <section className="card cta-card">
+          <div>
+            <div className="eyebrow">Pregătit pentru pilot</div>
+            <h2>Începem cu un caz simplu și măsurabil.</h2>
+            <p>Spune-ne ce tip de afacere ai, iar noi îți propunem primul flux AI: întrebări frecvente, captare lead-uri și urmărire în CRM.</p>
+          </div>
+          <Link href="/demo" className="button">Cere demo</Link>
+        </section>
       </main>
+      <Footer />
     </>
   );
 }
