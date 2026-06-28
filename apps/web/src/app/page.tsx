@@ -37,7 +37,7 @@ export default function HomePage() {
               lead-uri și sarcini clare pentru echipă, fără să angajeze personal suplimentar pentru întrebări repetitive.
             </p>
             <div className="actions">
-              <Link href="/register" className="button">Începe pilotul</Link>
+              <Link href="/demo" className="button">Cere demo</Link>
               <Link href="/pricing" className="button secondary">Vezi pricing</Link>
             </div>
           </div>
@@ -77,6 +77,9 @@ export default function HomePage() {
             <ul className="check-list">
               {results.map((result) => <li key={result}>{result}</li>)}
             </ul>
+            <div className="actions">
+              <Link href="/demo" className="button">Discută un pilot</Link>
+            </div>
           </article>
           <article className="card">
             <div className="eyebrow">Centru de comandă</div>
