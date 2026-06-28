@@ -14,6 +14,7 @@ import { NotificationsModule } from "./modules/notifications/notifications.modul
 import { BillingModule } from "./modules/billing/billing.module";
 import { LaunchModule } from "./modules/launch/launch.module";
 import { DemoRequestsModule } from "./modules/demo-requests/demo-requests.module";
+import { DashboardModule } from "./modules/dashboard/dashboard.module";
 
 @Module({
   imports: [
@@ -32,6 +33,7 @@ import { DemoRequestsModule } from "./modules/demo-requests/demo-requests.module
     BillingModule,
     LaunchModule,
     DemoRequestsModule,
+    DashboardModule,
   ],
 })
 export class AppModule {}
