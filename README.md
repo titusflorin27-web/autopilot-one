@@ -4,9 +4,9 @@ AI-native Business Operating System for small and medium businesses.
 
 ## Current status
 
-### Build #044 — App security hardening
+### Build #046 — PostgreSQL backups
 
-Autopilot One is live on the production pilot domain with VPS Docker deployment, real dashboard metrics, public demo intake, demo request CRM workflow, widget analytics, optional email notification for new demo requests, and application-level security hardening.
+Autopilot One is live on the production pilot domain with VPS Docker deployment, real dashboard metrics, public demo intake, demo request CRM workflow, widget analytics, optional email notification for new demo requests, application-level security hardening, and VPS PostgreSQL backup scripts.
 
 Selected pilot domains:
 
@@ -44,6 +44,8 @@ The product includes:
 - Public website launch polish
 - API and web security headers
 - Rate limits for public intake, widget, and auth endpoints
+- VPS PostgreSQL backup and restore scripts
+- Daily backup cron installer
 
 ## Release and pilot docs
 
@@ -60,6 +62,7 @@ The product includes:
 - `docs/builds/026-vps-scripts.md`
 - `docs/builds/027-production-domain-update.md`
 - `docs/builds/028-widget-domain-fix.md`
+- `docs/builds/046-postgres-backups.md`
 
 ## Requirements
 
@@ -100,6 +103,8 @@ Then follow `docs/mvp-walkthrough.md`, `docs/pilot-readiness.md`, `docs/vps-dock
 sh scripts/vps-preflight.sh
 sh scripts/vps-deploy.sh
 sh scripts/vps-healthcheck.sh
+sh scripts/vps-backup-postgres.sh
+sh scripts/vps-install-backup-cron.sh
 ```
 
 Public healthcheck after DNS and VPS deploy:
@@ -107,6 +112,28 @@ Public healthcheck after DNS and VPS deploy:
 ```bash
 API_URL=https://api.autopilot-one.com/api/health APP_URL=https://app.autopilot-one.com sh scripts/vps-healthcheck.sh
 ```
+
+## VPS PostgreSQL backups
+
+Manual backup from `/opt/autopilot-one`:
+
+```bash
+sh scripts/vps-backup-postgres.sh
+```
+
+Install daily backup cron as root:
+
+```bash
+sh scripts/vps-install-backup-cron.sh
+```
+
+Default backup location:
+
+```text
+/root/autopilot-backups/postgres
+```
+
+Default retention: 14 days. Restore instructions are documented in `docs/builds/046-postgres-backups.md`.
 
 ## Security configuration
 
