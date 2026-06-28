@@ -23,6 +23,16 @@ export class PublicReceptionMessageDto {
 
   @IsOptional()
   @IsString()
+  @MaxLength(120)
+  visitorName?: string;
+
+  @IsOptional()
+  @IsEmail()
+  @MaxLength(200)
+  visitorEmail?: string;
+
+  @IsOptional()
+  @IsString()
   conversationId?: string;
 
   @IsOptional()
