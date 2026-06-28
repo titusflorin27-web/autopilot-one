@@ -4,9 +4,9 @@ AI-native Business Operating System for small and medium businesses.
 
 ## Current status
 
-### Build #028 — Widget Domain Fix
+### Build #042 — Demo request email notification
 
-Autopilot One is at MVP Release Candidate stage and now has VPS operational deploy scripts plus the selected production pilot domain configuration.
+Autopilot One is live on the production pilot domain with VPS Docker deployment, real dashboard metrics, public demo intake, demo request CRM workflow, widget analytics, and optional email notification for new demo requests.
 
 Selected pilot domains:
 
@@ -21,6 +21,9 @@ The product includes:
 - Reception AI
 - AI Gateway fallback support
 - Public website intake
+- Public demo request form
+- Demo requests inbox and CRM Lite workflow
+- Optional email notification for new demo requests
 - Embeddable website widget
 - Widget settings and runtime controls
 - Widget analytics and install health
@@ -102,9 +105,29 @@ Public healthcheck after DNS and VPS deploy:
 API_URL=https://api.autopilot-one.com/api/health APP_URL=https://app.autopilot-one.com sh scripts/vps-healthcheck.sh
 ```
 
+## Optional demo request email notification
+
+The public `/demo` form always saves incoming demo requests to the database. Email notification is optional and is enabled only when all of these API environment variables are present:
+
+```bash
+RESEND_API_KEY=...
+DEMO_REQUEST_NOTIFICATION_TO=owner@example.com
+DEMO_REQUEST_NOTIFICATION_FROM="Autopilot One <notifications@example.com>"
+APP_PUBLIC_URL=https://app.autopilot-one.com
+```
+
+Do not commit real secrets. Configure them only in `apps/api/.env` on the target environment.
+
 ## Core app routes
 
 - `/dashboard`
+- `/demo`
+- `/demo-requests`
+- `/pricing`
+- `/privacy`
+- `/terms`
+- `/refund-policy`
+- `/consumer-rights`
 - `/launch`
 - `/onboarding`
 - `/knowledge-base`
@@ -123,11 +146,16 @@ GET /api/health
 POST /api/auth/register
 POST /api/auth/login
 GET /api/users/me
+GET /api/dashboard/metrics
 GET /api/business-dna/:organizationId
 PUT /api/business-dna
 GET /api/knowledge-base/organization/:organizationId/sources
 POST /api/knowledge-base/search
 POST /api/reception-ai/message
+GET /api/demo-requests
+POST /api/demo-requests
+PATCH /api/demo-requests/:id/status
+PATCH /api/demo-requests/:id/crm
 GET /api/inbox/organization/:organizationId/conversations
 GET /api/notifications/organization/:organizationId
 GET /api/billing/organization/:organizationId
