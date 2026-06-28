@@ -4,9 +4,9 @@ AI-native Business Operating System for small and medium businesses.
 
 ## Current status
 
-### Build #046 — PostgreSQL backups
+### Build #048 — VPS security hardening scripts
 
-Autopilot One is live on the production pilot domain with VPS Docker deployment, real dashboard metrics, public demo intake, demo request CRM workflow, widget analytics, optional email notification for new demo requests, application-level security hardening, and VPS PostgreSQL backup scripts.
+Autopilot One is live on the production pilot domain with VPS Docker deployment, real dashboard metrics, public demo intake, demo request CRM workflow, widget analytics, optional email notification for new demo requests, application-level security hardening, VPS PostgreSQL backup scripts, and controlled VPS security hardening scripts.
 
 Selected pilot domains:
 
@@ -46,6 +46,7 @@ The product includes:
 - Rate limits for public intake, widget, and auth endpoints
 - VPS PostgreSQL backup and restore scripts
 - Daily backup cron installer
+- VPS security audit and hardening scripts
 
 ## Release and pilot docs
 
@@ -57,12 +58,15 @@ The product includes:
 - `docs/vps-docker-runbook.md`
 - `docs/go-live-vps.md`
 - `docs/pilot-readiness.md`
+- `docs/status/current-launch-status.md`
 - `docs/builds/024-smoke-tests.md`
 - `docs/builds/025-vps-target.md`
 - `docs/builds/026-vps-scripts.md`
 - `docs/builds/027-production-domain-update.md`
 - `docs/builds/028-widget-domain-fix.md`
 - `docs/builds/046-postgres-backups.md`
+- `docs/builds/047-launch-status-checkpoint.md`
+- `docs/builds/048-vps-security-hardening.md`
 
 ## Requirements
 
@@ -105,6 +109,8 @@ sh scripts/vps-deploy.sh
 sh scripts/vps-healthcheck.sh
 sh scripts/vps-backup-postgres.sh
 sh scripts/vps-install-backup-cron.sh
+sh scripts/vps-security-audit.sh
+sh scripts/vps-security-hardening.sh
 ```
 
 Public healthcheck after DNS and VPS deploy:
@@ -134,6 +140,28 @@ Default backup location:
 ```
 
 Default retention: 14 days. Restore instructions are documented in `docs/builds/046-postgres-backups.md`.
+
+## VPS security hardening
+
+Read-only audit from `/opt/autopilot-one`:
+
+```bash
+sh scripts/vps-security-audit.sh
+```
+
+Prepare security packages and firewall rules without enabling firewall:
+
+```bash
+sh scripts/vps-security-hardening.sh
+```
+
+Enable firewall only after confirming SSH access in a second session:
+
+```bash
+ENABLE_FIREWALL=YES sh scripts/vps-security-hardening.sh
+```
+
+Full instructions are documented in `docs/builds/048-vps-security-hardening.md`.
 
 ## Security configuration
 
