@@ -1,6 +1,7 @@
 import { Body, Controller, Get, Param, Patch, Post, UseGuards } from "@nestjs/common";
 import { JwtAuthGuard } from "../auth/guards/jwt-auth.guard";
 import { CreateDemoRequestDto } from "./dto/create-demo-request.dto";
+import { UpdateDemoRequestCrmDto } from "./dto/update-demo-request-crm.dto";
 import { UpdateDemoRequestStatusDto } from "./dto/update-demo-request-status.dto";
 import { DemoRequestsService } from "./demo-requests.service";
 
@@ -23,5 +24,11 @@ export class DemoRequestsController {
   @UseGuards(JwtAuthGuard)
   updateStatus(@Param("id") id: string, @Body() dto: UpdateDemoRequestStatusDto) {
     return this.demoRequests.updateStatus(id, dto.status);
+  }
+
+  @Patch(":id/crm")
+  @UseGuards(JwtAuthGuard)
+  updateCrm(@Param("id") id: string, @Body() dto: UpdateDemoRequestCrmDto) {
+    return this.demoRequests.updateCrm(id, dto);
   }
 }
