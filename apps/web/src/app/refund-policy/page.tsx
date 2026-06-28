@@ -1,3 +1,4 @@
+import { Footer } from "../../components/Footer";
 import { Nav } from "../../components/Nav";
 
 export default function RefundPolicyPage() {
@@ -23,7 +24,7 @@ export default function RefundPolicyPage() {
 
           <h2>Cum soliciți o rambursare</h2>
           <ul className="check-list">
-            <li>trimite un e-mail la contact@autopilot-one.com sau [Email contact];</li>
+            <li>trimite un e-mail la contact@autopilot-one.com;</li>
             <li>include numele companiei, e-mailul contului și motivul cererii;</li>
             <li>menționează data activării și planul folosit;</li>
             <li>echipa analizează cererea și răspunde cu opțiunile disponibile.</li>
@@ -33,6 +34,7 @@ export default function RefundPolicyPage() {
           <p>Rambursările pot fi refuzate în caz de abuz, utilizare substanțială, încălcarea termenilor sau servicii custom deja prestate.</p>
         </section>
       </main>
+      <Footer />
     </>
   );
 }
