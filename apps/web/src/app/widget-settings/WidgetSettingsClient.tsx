@@ -67,7 +67,7 @@ export function WidgetSettingsClient() {
     const accessToken = getAccessToken();
 
     if (!accessToken) {
-      throw new Error("Please log in before managing widget settings.");
+      throw new Error("Autentifică-te înainte să gestionezi setările widgetului.");
     }
 
     return fetch(`${API_URL}${path}`, {
@@ -84,7 +84,7 @@ export function WidgetSettingsClient() {
     const data = await response.json();
 
     if (!response.ok) {
-      throw new Error(data.message ?? "Could not load widget settings");
+      throw new Error(data.message ?? "Nu am putut încărca setările widgetului");
     }
 
     setSettings(data);
@@ -94,7 +94,7 @@ export function WidgetSettingsClient() {
     const accessToken = getAccessToken();
 
     if (!accessToken) {
-      setError("Please log in before managing widget settings.");
+      setError("Autentifică-te înainte să gestionezi setările widgetului.");
       setIsLoading(false);
       return;
     }
@@ -106,7 +106,7 @@ export function WidgetSettingsClient() {
         const data = await response.json();
 
         if (!response.ok) {
-          throw new Error(data.message ?? "Could not load user session");
+          throw new Error(data.message ?? "Nu am putut încărca sesiunea utilizatorului");
         }
 
         setUser(data);
@@ -117,7 +117,7 @@ export function WidgetSettingsClient() {
         }
       })
       .catch((caughtError) => {
-        setError(caughtError instanceof Error ? caughtError.message : "Could not load widget settings");
+        setError(caughtError instanceof Error ? caughtError.message : "Nu am putut încărca setările widgetului");
       })
       .finally(() => setIsLoading(false));
   }, []);
@@ -128,7 +128,7 @@ export function WidgetSettingsClient() {
     setSuccess(null);
 
     if (!primaryMembership) {
-      setError("No organization found for this account.");
+      setError("Nu există organizație pentru acest cont.");
       return;
     }
 
@@ -154,13 +154,13 @@ export function WidgetSettingsClient() {
       const data = await response.json();
 
       if (!response.ok) {
-        throw new Error(data.message ?? "Could not save widget settings");
+        throw new Error(data.message ?? "Nu am putut salva setările widgetului");
       }
 
       setSettings(data);
       setSuccess("Setările widgetului au fost salvate.");
     } catch (caughtError) {
-      setError(caughtError instanceof Error ? caughtError.message : "Could not save widget settings");
+      setError(caughtError instanceof Error ? caughtError.message : "Nu am putut salva setările widgetului");
     } finally {
       setIsSaving(false);
     }
@@ -171,7 +171,7 @@ export function WidgetSettingsClient() {
     setSuccess(null);
 
     if (!primaryMembership) {
-      setError("No organization found for this account.");
+      setError("Nu există organizație pentru acest cont.");
       return;
     }
 
@@ -182,13 +182,13 @@ export function WidgetSettingsClient() {
       const data = await response.json();
 
       if (!response.ok) {
-        throw new Error(data.message ?? "Could not regenerate token");
+        throw new Error(data.message ?? "Nu am putut regenera jetonul");
       }
 
       setSettings(data);
       setSuccess("Jetonul widgetului a fost regenerat. Copiază din nou fragmentul de instalare.");
     } catch (caughtError) {
-      setError(caughtError instanceof Error ? caughtError.message : "Could not regenerate token");
+      setError(caughtError instanceof Error ? caughtError.message : "Nu am putut regenera jetonul");
     }
   }
 
@@ -233,8 +233,11 @@ export function WidgetSettingsClient() {
             <label>
               <input name="widgetEnabled" type="checkbox" defaultChecked={settings.widgetEnabled} /> Activează widgetul
             </label>
+            <label className="field-label">Titlu widget</label>
             <input name="widgetTitle" defaultValue={settings.widgetTitle} placeholder="Titlu widget" />
+            <label className="field-label">Culoare principală</label>
             <input name="widgetPrimaryColor" defaultValue={settings.widgetPrimaryColor} placeholder="#8ee6c9" />
+            <label className="field-label">Poziție widget</label>
             <select name="widgetPosition" defaultValue={settings.widgetPosition}>
               <option value="RIGHT">Dreapta</option>
               <option value="LEFT">Stânga</option>
@@ -248,6 +251,7 @@ export function WidgetSettingsClient() {
               placeholder="Jeton widget"
             />
             {settings.widgetToken ? <p className="helper-text">Jeton curent: {maskSecret(settings.widgetToken)}</p> : null}
+            <label className="field-label">Domenii permise</label>
             <textarea name="widgetAllowedOrigins" defaultValue={settings.widgetAllowedOrigins.join("\n")} placeholder="https://example.com\nhttps://www.example.com" />
             <div className="actions">
               <button className="button" type="submit" disabled={isSaving}>{isSaving ? "Se salvează..." : "Salvează setările"}</button>
@@ -258,8 +262,13 @@ export function WidgetSettingsClient() {
           <article className="card">
             <h2>Instalare în producție</h2>
             <p>Widgetul încarcă configurația live înainte de randare.</p>
-            <p className="helper-text">Tokenul este mascat pentru siguranță. Fragmentul copiat conține tokenul real.</p>
-            {settings.publicConfigEndpoint ? <p>Configurație publică: <code>{settings.publicConfigEndpoint}</code></p> : null}
+            <p className="helper-text">Jetonul este mascat pentru siguranță. Fragmentul copiat conține jetonul real.</p>
+            {settings.publicConfigEndpoint ? (
+              <p>
+                <span>Configurație publică: </span>
+                <code>{settings.publicConfigEndpoint}</code>
+              </p>
+            ) : null}
             <pre className="code-block">{maskedSnippet}</pre>
             <button className="button" type="button" onClick={copySnippet}>Copiază fragmentul</button>
           </article>
