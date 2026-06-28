@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useMemo, useState } from "react";
+import { ReactNode, useEffect, useMemo, useState } from "react";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:4000/api";
 
@@ -20,6 +20,8 @@ type DashboardMetric = {
   label: string;
   value: number;
   helper?: string;
+  href?: string;
+  ctaLabel?: string;
 };
 
 type DashboardTimelineEvent = {
@@ -28,6 +30,7 @@ type DashboardTimelineEvent = {
   title: string;
   description: string;
   createdAt: string;
+  href?: string;
 };
 
 type DashboardMetrics = {
@@ -44,6 +47,40 @@ function formatDate(value: string) {
     dateStyle: "medium",
     timeStyle: "short",
   }).format(new Date(value));
+}
+
+function MetricCard({ metric }: { metric: DashboardMetric }) {
+  const content = (
+    <>
+      <div className="metric">{formatMetric(metric.value)}</div>
+      <p>{metric.label}</p>
+      {metric.helper ? <p className="helper-text">{metric.helper}</p> : null}
+      {metric.ctaLabel ? <span className="card-link-label">{metric.ctaLabel} →</span> : null}
+    </>
+  );
+
+  if (metric.href) {
+    return <Link className="card metric-card" href={metric.href}>{content}</Link>;
+  }
+
+  return <article className="card metric-card">{content}</article>;
+}
+
+function TimelineItem({ item }: { item: DashboardTimelineEvent }) {
+  const content: ReactNode = (
+    <>
+      <strong>{item.title}</strong>
+      <span>{formatDate(item.createdAt)}</span>
+      <p>{item.description}</p>
+      {item.href ? <span className="card-link-label">Deschide detalii →</span> : null}
+    </>
+  );
+
+  if (item.href) {
+    return <Link className="source-item timeline-link" href={item.href}>{content}</Link>;
+  }
+
+  return <article className="source-item">{content}</article>;
 }
 
 export function DashboardClient() {
@@ -117,25 +154,13 @@ export function DashboardClient() {
       </p>
 
       <section className="grid">
-        {dashboard?.metrics.map((metric) => (
-          <article className="card" key={metric.label}>
-            <div className="metric">{formatMetric(metric.value)}</div>
-            <p>{metric.label}</p>
-            {metric.helper ? <p className="helper-text">{metric.helper}</p> : null}
-          </article>
-        ))}
+        {dashboard?.metrics.map((metric) => <MetricCard key={metric.label} metric={metric} />)}
       </section>
 
       <section className="card">
         <h2>Ultimele evenimente</h2>
         <div className="source-list">
-          {timeline.map((item) => (
-            <article className="source-item" key={`${item.type}-${item.id}`}>
-              <strong>{item.title}</strong>
-              <span>{formatDate(item.createdAt)}</span>
-              <p>{item.description}</p>
-            </article>
-          ))}
+          {timeline.map((item) => <TimelineItem item={item} key={`${item.type}-${item.id}`} />)}
         </div>
       </section>
     </>
