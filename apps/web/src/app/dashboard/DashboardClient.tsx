@@ -1,22 +1,9 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:4000/api";
-
-const metrics = [
-  ["Clienți potențiali captați", "18"],
-  ["Ore economisite", "42"],
-  ["Evenimente procesate", "316"],
-  ["Angajați cu inteligență artificială", "3"],
-];
-
-const timeline = [
-  "Recepția AI a răspuns la un mesaj nou al unui client.",
-  "AI-ul de vânzări a pregătit o sarcină ulterioară.",
-  "AI-ul CEO a detectat un timp de răspuns mai lent decât de obicei.",
-];
 
 type CurrentUser = {
   email: string;
@@ -29,10 +16,44 @@ type CurrentUser = {
   }>;
 };
 
+type DashboardMetric = {
+  label: string;
+  value: number;
+  helper?: string;
+};
+
+type DashboardTimelineEvent = {
+  id: string;
+  type: string;
+  title: string;
+  description: string;
+  createdAt: string;
+};
+
+type DashboardMetrics = {
+  metrics: DashboardMetric[];
+  timeline: DashboardTimelineEvent[];
+};
+
+function formatMetric(value: number) {
+  return new Intl.NumberFormat("ro-RO").format(value);
+}
+
+function formatDate(value: string) {
+  return new Intl.DateTimeFormat("ro-RO", {
+    dateStyle: "medium",
+    timeStyle: "short",
+  }).format(new Date(value));
+}
+
 export function DashboardClient() {
   const [user, setUser] = useState<CurrentUser | null>(null);
+  const [dashboard, setDashboard] = useState<DashboardMetrics | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+
+  const primaryMembership = user?.memberships[0];
+  const timeline = useMemo(() => dashboard?.timeline ?? [], [dashboard]);
 
   useEffect(() => {
     const accessToken = window.localStorage.getItem("autopilot.accessToken");
@@ -43,19 +64,28 @@ export function DashboardClient() {
       return;
     }
 
-    fetch(`${API_URL}/users/me`, {
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-      },
-    })
-      .then(async (response) => {
-        const data = await response.json();
+    const headers = {
+      Authorization: `Bearer ${accessToken}`,
+    };
 
-        if (!response.ok) {
-          throw new Error(data.message ?? "Sesiunea a expirat");
+    Promise.all([
+      fetch(`${API_URL}/users/me`, { headers }),
+      fetch(`${API_URL}/dashboard/metrics`, { headers }),
+    ])
+      .then(async ([userResponse, dashboardResponse]) => {
+        const userData = await userResponse.json();
+        const dashboardData = await dashboardResponse.json();
+
+        if (!userResponse.ok) {
+          throw new Error(userData.message ?? "Sesiunea a expirat");
         }
 
-        setUser(data);
+        if (!dashboardResponse.ok) {
+          throw new Error(dashboardData.message ?? "Nu am putut încărca metricile dashboardului");
+        }
+
+        setUser(userData);
+        setDashboard(dashboardData);
       })
       .catch((caughtError) => {
         setError(caughtError instanceof Error ? caughtError.message : "Sesiunea a expirat");
@@ -77,8 +107,6 @@ export function DashboardClient() {
     );
   }
 
-  const primaryMembership = user?.memberships[0];
-
   return (
     <>
       <div className="eyebrow">Cronologie de afaceri</div>
@@ -89,19 +117,26 @@ export function DashboardClient() {
       </p>
 
       <section className="grid">
-        {metrics.map(([label, value]) => (
-          <article className="card" key={label}>
-            <div className="metric">{value}</div>
-            <p>{label}</p>
+        {dashboard?.metrics.map((metric) => (
+          <article className="card" key={metric.label}>
+            <div className="metric">{formatMetric(metric.value)}</div>
+            <p>{metric.label}</p>
+            {metric.helper ? <p className="helper-text">{metric.helper}</p> : null}
           </article>
         ))}
       </section>
 
       <section className="card">
         <h2>Ultimele evenimente</h2>
-        {timeline.map((item) => (
-          <p key={item}>✓ {item}</p>
-        ))}
+        <div className="source-list">
+          {timeline.map((item) => (
+            <article className="source-item" key={`${item.type}-${item.id}`}>
+              <strong>{item.title}</strong>
+              <span>{formatDate(item.createdAt)}</span>
+              <p>{item.description}</p>
+            </article>
+          ))}
+        </div>
       </section>
     </>
   );
