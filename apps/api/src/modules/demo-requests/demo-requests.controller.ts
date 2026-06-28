@@ -1,4 +1,5 @@
 import { Body, Controller, Get, Param, Patch, Post, UseGuards } from "@nestjs/common";
+import { RateLimit } from "../../common/security/rate-limit.decorator";
 import { JwtAuthGuard } from "../auth/guards/jwt-auth.guard";
 import { CreateDemoRequestDto } from "./dto/create-demo-request.dto";
 import { UpdateDemoRequestCrmDto } from "./dto/update-demo-request-crm.dto";
@@ -10,6 +11,7 @@ export class DemoRequestsController {
   constructor(private readonly demoRequests: DemoRequestsService) {}
 
   @Post()
+  @RateLimit({ name: "demo-request-create", limit: 5, windowSeconds: 600 })
   create(@Body() dto: CreateDemoRequestDto) {
     return this.demoRequests.create(dto);
   }
