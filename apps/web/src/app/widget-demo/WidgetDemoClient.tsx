@@ -3,6 +3,7 @@
 import { FormEvent, useEffect, useState } from "react";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:4000/api";
+const APP_URL = process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000";
 
 type PublicReceptionResponse = {
   conversationId: string;
@@ -33,7 +34,7 @@ function createVisitorId() {
 }
 
 export function WidgetDemoClient() {
-  const [organizationSlug, setOrganizationSlug] = useState("demo-company");
+  const [organizationSlug, setOrganizationSlug] = useState("autopilot-one");
   const [customerName, setCustomerName] = useState("");
   const [customerEmail, setCustomerEmail] = useState("");
   const [widgetToken, setWidgetToken] = useState("");
@@ -44,7 +45,9 @@ export function WidgetDemoClient() {
   const [isSending, setIsSending] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const embedSnippet = `<script\n  src="http://localhost:3000/autopilot-widget.js"\n  data-organization-slug="${organizationSlug}"\n  data-api-url="${API_URL}"\n  data-title="Reception AI"${widgetToken ? `\n  data-widget-token="${widgetToken}"` : ""}\n  async\n></script>`;
+  const cleanOrganizationSlug = organizationSlug.trim();
+  const cleanWidgetToken = widgetToken.trim();
+  const embedSnippet = `<script\n  src="${APP_URL}/autopilot-widget.js"\n  data-organization-slug="${cleanOrganizationSlug}"\n  data-api-url="${API_URL}"\n  data-title="Reception AI"${cleanWidgetToken ? `\n  data-widget-token="${cleanWidgetToken}"` : ""}\n  async\n></script>`;
 
   useEffect(() => {
     const storageKey = "autopilot.publicVisitorId";
@@ -57,10 +60,11 @@ export function WidgetDemoClient() {
 
   async function onSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
+    const form = event.currentTarget;
     setError(null);
     setIsSending(true);
 
-    const formData = new FormData(event.currentTarget);
+    const formData = new FormData(form);
     const message = String(formData.get("message") ?? "").trim();
 
     if (!message) {
@@ -74,12 +78,12 @@ export function WidgetDemoClient() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          organizationSlug,
-          customerName: customerName || undefined,
-          customerEmail: customerEmail || undefined,
+          organizationSlug: cleanOrganizationSlug,
+          customerName: customerName.trim() || undefined,
+          customerEmail: customerEmail.trim() || undefined,
           conversationId: conversationId ?? undefined,
           visitorId: visitorId || undefined,
-          widgetToken: widgetToken || undefined,
+          widgetToken: cleanWidgetToken || undefined,
           websiteUrl: typeof window !== "undefined" ? window.location.href : undefined,
           message,
         }),
@@ -97,7 +101,7 @@ export function WidgetDemoClient() {
         { sender: "customer", content: message },
         { sender: "ai", content: data.reply },
       ]);
-      event.currentTarget.reset();
+      form.reset();
     } catch (caughtError) {
       setError(caughtError instanceof Error ? caughtError.message : "Reception AI could not answer.");
     } finally {
@@ -119,7 +123,7 @@ export function WidgetDemoClient() {
           <input value={organizationSlug} onChange={(event) => setOrganizationSlug(event.target.value)} placeholder="Organization slug" />
           <input value={customerName} onChange={(event) => setCustomerName(event.target.value)} placeholder="Customer name" />
           <input value={customerEmail} onChange={(event) => setCustomerEmail(event.target.value)} placeholder="Customer email" type="email" />
-          <input value={widgetToken} onChange={(event) => setWidgetToken(event.target.value)} placeholder="Widget token, optional" />
+          <input value={widgetToken} onChange={(event) => setWidgetToken(event.target.value)} placeholder="Widget token required when token protection is enabled" />
           <p>Visitor id: {visitorId || "creating..."}</p>
           <p>Paste the snippet below before the closing body tag on a customer website.</p>
         </article>
@@ -173,7 +177,9 @@ export function WidgetDemoClient() {
   "message": "Customer question",
   "conversationId": "Optional follow-up conversation id",
   "visitorId": "Stable anonymous visitor id",
-  "widgetToken": "Optional public widget token",
+  "customerName": "Optional customer name",
+  "customerEmail": "Optional customer email",
+  "widgetToken": "Required when widget token protection is enabled",
   "websiteUrl": "https://customer-site.example"
 }`}</pre>
         </article>
