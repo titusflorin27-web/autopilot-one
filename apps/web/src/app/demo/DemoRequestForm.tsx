@@ -40,7 +40,7 @@ export function DemoRequestForm() {
 
       form.reset();
       setSubmitState("success");
-      setMessage("Cererea a fost trimisă. Revenim cu un răspuns cât mai rapid.");
+      setMessage("Cererea a fost trimisă. O găsești în CRM și revenim cu următorul pas cât mai rapid.");
     } catch (caughtError) {
       setSubmitState("error");
       setMessage(caughtError instanceof Error ? caughtError.message : "Nu am putut trimite cererea demo.");
@@ -49,26 +49,27 @@ export function DemoRequestForm() {
 
   return (
     <form className="card form-section" onSubmit={onSubmit}>
+      <div className="eyebrow">Start pilot</div>
       <h2>Cere demo</h2>
-      <p>Spune-ne pe scurt ce tip de afacere ai și ce vrei să automatizezi prima dată.</p>
+      <p>Spune-ne ce tip de afacere ai și ce vrei să automatizezi prima dată. Cererea ajunge direct în CRM.</p>
 
       {submitState === "error" && message ? <p className="form-error">{message}</p> : null}
       {submitState === "success" && message ? <p className="form-success">{message}</p> : null}
 
       <label className="field-label">Nume</label>
-      <input name="name" required minLength={2} maxLength={120} placeholder="Nume complet" />
+      <input name="name" required minLength={2} maxLength={120} placeholder="Nume complet" autoComplete="name" />
 
       <label className="field-label">Email</label>
-      <input name="email" required type="email" maxLength={180} placeholder="nume@companie.ro" />
+      <input name="email" required type="email" maxLength={180} placeholder="nume@companie.ro" autoComplete="email" />
 
       <label className="field-label">Companie</label>
-      <input name="company" maxLength={160} placeholder="Numele companiei" />
+      <input name="company" maxLength={160} placeholder="Numele companiei" autoComplete="organization" />
 
       <label className="field-label">Telefon</label>
-      <input name="phone" maxLength={60} placeholder="Opțional" />
+      <input name="phone" maxLength={60} placeholder="Opțional" autoComplete="tel" />
 
       <label className="field-label">Website</label>
-      <input name="website" maxLength={240} placeholder="https://companie.ro" />
+      <input name="website" maxLength={240} placeholder="https://companie.ro" inputMode="url" />
 
       <label className="field-label">Ce vrei să automatizezi?</label>
       <textarea name="message" required minLength={10} maxLength={2000} placeholder="Ex: vreau un AI care răspunde la întrebări despre servicii, captează date de contact și trimite lead-urile către echipă." />
