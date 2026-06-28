@@ -40,6 +40,10 @@ export default function PricingPage() {
           <p>
             Începe cu un plan potrivit pentru volumul actual, validează valoarea și extinde automatizările după ce vezi rezultate.
           </p>
+          <div className="actions">
+            <Link href="/demo" className="button">Cere demo</Link>
+            <Link href="/terms" className="button secondary">Vezi termenii</Link>
+          </div>
         </section>
 
         <section className="pricing-grid">
@@ -52,6 +56,9 @@ export default function PricingPage() {
               <ul className="check-list">
                 {plan.features.map((feature) => <li key={feature}>{feature}</li>)}
               </ul>
+              <div className="actions">
+                <Link href="/demo" className="button secondary">Discută planul</Link>
+              </div>
             </article>
           ))}
         </section>
@@ -63,7 +70,7 @@ export default function PricingPage() {
             Pentru companii cu fluxuri speciale, integrări sau volum mare, planul Custom se stabilește după o discuție scurtă despre obiective și datele disponibile.
           </p>
           <div className="actions">
-            <Link href="/register" className="button">Începe pilotul</Link>
+            <Link href="/demo" className="button">Cere ofertă</Link>
             <Link href="/terms" className="button secondary">Vezi termenii</Link>
           </div>
         </section>
