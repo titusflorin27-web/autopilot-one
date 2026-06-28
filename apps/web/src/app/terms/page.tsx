@@ -1,3 +1,4 @@
+import { Footer } from "../../components/Footer";
 import { Nav } from "../../components/Nav";
 
 export default function TermsPage() {
@@ -13,7 +14,7 @@ export default function TermsPage() {
 
         <section className="card trust-layout">
           <h2>Furnizor</h2>
-          <p>Serviciul este furnizat de [Denumirea societății], CUI [CUI], sediu [Adresă sediu]. Contact: [Email contact] sau contact@autopilot-one.com.</p>
+          <p>Serviciul este furnizat de entitatea comercială indicată în oferta sau contractul acceptat de client. Contact operațional: contact@autopilot-one.com.</p>
 
           <h2>Serviciul</h2>
           <p>Autopilot One oferă instrumente software pentru widget web, bază de cunoștințe, conversații asistate de AI, captare lead-uri și management operațional.</p>
@@ -37,6 +38,7 @@ export default function TermsPage() {
           <p>Accesul poate fi suspendat în caz de abuz, risc de securitate, neplată sau încălcarea termenilor.</p>
         </section>
       </main>
+      <Footer />
     </>
   );
 }
