@@ -2,10 +2,16 @@ import { DemoRequestStatus } from "@prisma/client";
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { PrismaService } from "../../common/prisma.service";
 import { CreateDemoRequestDto } from "./dto/create-demo-request.dto";
+import { UpdateDemoRequestCrmDto } from "./dto/update-demo-request-crm.dto";
 
 function cleanOptional(value?: string) {
   const cleaned = value?.trim();
   return cleaned || undefined;
+}
+
+function cleanNullable(value?: string | null) {
+  const cleaned = value?.trim();
+  return cleaned || null;
 }
 
 const demoRequestSelect = {
@@ -18,6 +24,9 @@ const demoRequestSelect = {
   message: true,
   source: true,
   status: true,
+  internalNote: true,
+  nextStep: true,
+  followUpAt: true,
   createdAt: true,
   updatedAt: true,
 };
@@ -64,6 +73,22 @@ export class DemoRequestsService {
       return await this.prisma.demoRequest.update({
         where: { id },
         data: { status },
+        select: demoRequestSelect,
+      });
+    } catch {
+      throw new NotFoundException("Cererea demo nu a fost găsită.");
+    }
+  }
+
+  async updateCrm(id: string, dto: UpdateDemoRequestCrmDto) {
+    try {
+      return await this.prisma.demoRequest.update({
+        where: { id },
+        data: {
+          internalNote: cleanNullable(dto.internalNote),
+          nextStep: cleanNullable(dto.nextStep),
+          followUpAt: dto.followUpAt ? new Date(dto.followUpAt) : null,
+        },
         select: demoRequestSelect,
       });
     } catch {
