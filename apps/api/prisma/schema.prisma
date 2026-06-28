@@ -298,20 +298,24 @@ model Lead {
 }
 
 model DemoRequest {
-  id        String            @id @default(cuid())
-  name      String
-  email     String
-  company   String?
-  phone     String?
-  website   String?
-  message   String
-  source    String            @default("demo_page")
-  status    DemoRequestStatus @default(NEW)
-  createdAt DateTime          @default(now())
-  updatedAt DateTime          @updatedAt
+  id           String            @id @default(cuid())
+  name         String
+  email        String
+  company      String?
+  phone        String?
+  website      String?
+  message      String
+  source       String            @default("demo_page")
+  status       DemoRequestStatus @default(NEW)
+  internalNote String?
+  nextStep     String?
+  followUpAt   DateTime?
+  createdAt    DateTime          @default(now())
+  updatedAt    DateTime          @updatedAt
 
   @@index([email])
   @@index([status])
+  @@index([followUpAt])
   @@index([createdAt])
 }
 

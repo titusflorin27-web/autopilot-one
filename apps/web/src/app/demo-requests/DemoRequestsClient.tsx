@@ -5,6 +5,7 @@ import { useEffect, useMemo, useState } from "react";
 const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:4000/api";
 
 type DemoRequestStatus = "NEW" | "CONTACTED" | "QUALIFIED" | "CLOSED";
+type DemoRequestStatusFilter = "ALL" | DemoRequestStatus;
 
 type DemoRequest = {
   id: string;
@@ -16,9 +17,27 @@ type DemoRequest = {
   message: string;
   source: string;
   status: DemoRequestStatus;
+  internalNote?: string | null;
+  nextStep?: string | null;
+  followUpAt?: string | null;
   createdAt: string;
   updatedAt: string;
 };
+
+const statusLabels: Record<DemoRequestStatus, string> = {
+  NEW: "Nou",
+  CONTACTED: "Contactat",
+  QUALIFIED: "Calificat",
+  CLOSED: "Închis",
+};
+
+const statusFilters: Array<{ value: DemoRequestStatusFilter; label: string }> = [
+  { value: "ALL", label: "Toate" },
+  { value: "NEW", label: "Nou" },
+  { value: "CONTACTED", label: "Contactat" },
+  { value: "QUALIFIED", label: "Calificat" },
+  { value: "CLOSED", label: "Închis" },
+];
 
 const statusActions: Array<{ status: DemoRequestStatus; label: string }> = [
   { status: "CONTACTED", label: "Marchează contactat" },
@@ -31,6 +50,14 @@ function formatDate(value: string) {
     dateStyle: "medium",
     timeStyle: "short",
   }).format(new Date(value));
+}
+
+function toDateTimeLocal(value?: string | null) {
+  if (!value) return "";
+  const date = new Date(value);
+  const offset = date.getTimezoneOffset();
+  const localDate = new Date(date.getTime() - offset * 60_000);
+  return localDate.toISOString().slice(0, 16);
 }
 
 function safeWebsiteUrl(value?: string | null) {
@@ -48,14 +75,38 @@ function safeWebsiteUrl(value?: string | null) {
 export function DemoRequestsClient() {
   const [requests, setRequests] = useState<DemoRequest[]>([]);
   const [selectedId, setSelectedId] = useState<string | null>(null);
+  const [statusFilter, setStatusFilter] = useState<DemoRequestStatusFilter>("ALL");
+  const [internalNote, setInternalNote] = useState("");
+  const [nextStep, setNextStep] = useState("");
+  const [followUpAt, setFollowUpAt] = useState("");
   const [isLoading, setIsLoading] = useState(true);
   const [isUpdating, setIsUpdating] = useState(false);
+  const [isSavingCrm, setIsSavingCrm] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [successMessage, setSuccessMessage] = useState<string | null>(null);
+
+  const filteredRequests = useMemo(
+    () => statusFilter === "ALL" ? requests : requests.filter((request) => request.status === statusFilter),
+    [requests, statusFilter],
+  );
 
   const selected = useMemo(
-    () => requests.find((request) => request.id === selectedId) ?? requests[0] ?? null,
-    [requests, selectedId],
+    () => (selectedId ? filteredRequests.find((request) => request.id === selectedId) : null) ?? filteredRequests[0] ?? null,
+    [filteredRequests, selectedId],
   );
+
+  useEffect(() => {
+    if (!selected) {
+      setInternalNote("");
+      setNextStep("");
+      setFollowUpAt("");
+      return;
+    }
+
+    setInternalNote(selected.internalNote ?? "");
+    setNextStep(selected.nextStep ?? "");
+    setFollowUpAt(toDateTimeLocal(selected.followUpAt));
+  }, [selected?.id, selected?.internalNote, selected?.nextStep, selected?.followUpAt]);
 
   function getAccessToken() {
     return window.localStorage.getItem("autopilot.accessToken");
@@ -77,6 +128,11 @@ export function DemoRequestsClient() {
     });
   }
 
+  function replaceRequest(updatedRequest: DemoRequest) {
+    setRequests((currentRequests) => currentRequests.map((request) => request.id === updatedRequest.id ? updatedRequest : request));
+    setSelectedId(updatedRequest.id);
+  }
+
   async function loadDemoRequests() {
     const response = await apiFetch("/demo-requests");
     const data = await response.json();
@@ -86,7 +142,7 @@ export function DemoRequestsClient() {
     }
 
     setRequests(data);
-    setSelectedId((currentSelectedId) => currentSelectedId ?? data[0]?.id ?? null);
+    setSelectedId((currentSelectedId) => data.some((request: DemoRequest) => request.id === currentSelectedId) ? currentSelectedId : data[0]?.id ?? null);
   }
 
   async function updateStatus(status: DemoRequestStatus) {
@@ -94,6 +150,7 @@ export function DemoRequestsClient() {
 
     setIsUpdating(true);
     setError(null);
+    setSuccessMessage(null);
 
     try {
       const response = await apiFetch(`/demo-requests/${selected.id}/status`, {
@@ -107,12 +164,44 @@ export function DemoRequestsClient() {
         throw new Error(updatedRequest.message ?? "Nu am putut actualiza statusul cererii demo.");
       }
 
-      setRequests((currentRequests) => currentRequests.map((request) => request.id === updatedRequest.id ? updatedRequest : request));
-      setSelectedId(updatedRequest.id);
+      replaceRequest(updatedRequest);
+      setSuccessMessage("Statusul a fost actualizat.");
     } catch (caughtError) {
       setError(caughtError instanceof Error ? caughtError.message : "Nu am putut actualiza statusul cererii demo.");
     } finally {
       setIsUpdating(false);
+    }
+  }
+
+  async function saveCrmFields() {
+    if (!selected) return;
+
+    setIsSavingCrm(true);
+    setError(null);
+    setSuccessMessage(null);
+
+    try {
+      const response = await apiFetch(`/demo-requests/${selected.id}/crm`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          internalNote: internalNote || null,
+          nextStep: nextStep || null,
+          followUpAt: followUpAt ? new Date(followUpAt).toISOString() : null,
+        }),
+      });
+      const updatedRequest = await response.json();
+
+      if (!response.ok) {
+        throw new Error(updatedRequest.message ?? "Nu am putut salva detaliile CRM.");
+      }
+
+      replaceRequest(updatedRequest);
+      setSuccessMessage("Detaliile CRM au fost salvate.");
+    } catch (caughtError) {
+      setError(caughtError instanceof Error ? caughtError.message : "Nu am putut salva detaliile CRM.");
+    } finally {
+      setIsSavingCrm(false);
     }
   }
 
@@ -143,32 +232,40 @@ export function DemoRequestsClient() {
       <section className="card">
         <div className="eyebrow">Cereri demo</div>
         <h1>Lead-uri venite din formularul public.</h1>
-        <p>Vezi rapid cine a cerut o discuție despre Autopilot One. Cererile sunt păstrate în DB și nu pot fi șterse din această interfață.</p>
+        <p>Vezi cine a cerut o discuție, filtrează după status și notează următorul pas. Cererile sunt păstrate în DB și nu pot fi șterse din această interfață.</p>
       </section>
 
       {error ? <p className="form-error">{error}</p> : null}
+      {successMessage ? <p className="form-success">{successMessage}</p> : null}
 
       <section className="inbox-grid">
         <aside className="card inbox-list">
           <div className="inbox-header compact-header">
             <div>
-              <h2>{requests.length}</h2>
-              <p>Cereri demo</p>
+              <h2>{filteredRequests.length}</h2>
+              <p>{statusFilter === "ALL" ? `${requests.length} cereri demo` : `${statusLabels[statusFilter]} · ${requests.length} total`}</p>
             </div>
             <button className="button mini secondary" type="button" onClick={() => loadDemoRequests().catch((caughtError) => setError(String(caughtError)))}>
               Reîncarcă
             </button>
           </div>
 
+          <label className="field-label">Filtru status</label>
+          <select value={statusFilter} onChange={(event) => { setStatusFilter(event.target.value as DemoRequestStatusFilter); setSelectedId(null); }}>
+            {statusFilters.map((filter) => <option key={filter.value} value={filter.value}>{filter.label}</option>)}
+          </select>
+
           <div className="source-list">
-            {requests.length ? requests.map((request) => (
+            {filteredRequests.length ? filteredRequests.map((request) => (
               <button className="source-item ghost-button" key={request.id} type="button" onClick={() => setSelectedId(request.id)}>
                 <strong>{request.name}</strong>
                 <span>{request.email}</span>
-                <span>{request.company || "Fără companie"} · {request.status}</span>
+                <span>{request.company || "Fără companie"} · {statusLabels[request.status]}</span>
+                {request.nextStep ? <span>Următorul pas: {request.nextStep}</span> : null}
+                {request.followUpAt ? <span>Follow-up: {formatDate(request.followUpAt)}</span> : null}
                 <p>{request.message.slice(0, 140)}</p>
               </button>
-            )) : <p>Nu există cereri demo încă.</p>}
+            )) : <p>Nu există cereri demo pentru filtrul selectat.</p>}
           </div>
         </aside>
 
@@ -177,7 +274,7 @@ export function DemoRequestsClient() {
             <>
               <div className="inbox-header compact-header">
                 <div>
-                  <span className="status-pill">{selected.status}</span>
+                  <span className="status-pill">{statusLabels[selected.status]}</span>
                   <h2>{selected.name}</h2>
                   <p>{formatDate(selected.createdAt)}</p>
                 </div>
@@ -203,6 +300,22 @@ export function DemoRequestsClient() {
               </div>
 
               <div className="source-list">
+                <article className="source-item">
+                  <strong>CRM Lite</strong>
+                  <label className="field-label">Notă internă</label>
+                  <textarea value={internalNote} maxLength={2000} onChange={(event) => setInternalNote(event.target.value)} placeholder="Ex: client interesat de widget pentru clinici, vrea demo săptămâna viitoare." />
+
+                  <label className="field-label">Următorul pas</label>
+                  <input value={nextStep} maxLength={500} onChange={(event) => setNextStep(event.target.value)} placeholder="Ex: sună clientul / trimite ofertă / pregătește demo" />
+
+                  <label className="field-label">Dată follow-up</label>
+                  <input type="datetime-local" value={followUpAt} onChange={(event) => setFollowUpAt(event.target.value)} />
+
+                  <button className="button mini" type="button" disabled={isSavingCrm} onClick={saveCrmFields}>
+                    {isSavingCrm ? "Se salvează..." : "Salvează detaliile CRM"}
+                  </button>
+                </article>
+
                 <article className="source-item">
                   <strong>Email</strong>
                   <span>{selected.email}</span>
