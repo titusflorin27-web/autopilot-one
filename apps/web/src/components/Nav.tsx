@@ -5,12 +5,10 @@ export function Nav() {
     <header className="nav">
       <Link href="/" className="brand">Autopilot One</Link>
       <nav>
-        <Link href="/pricing">Pricing</Link>
-        <Link href="/demo">Cere demo</Link>
+        <Link href="/pricing">Prețuri</Link>
+        <Link href="/demo" className="nav-cta">Cere demo</Link>
         <Link href="/privacy">Confidențialitate</Link>
-        <Link href="/login">Login</Link>
-        <Link href="/register">Start</Link>
-        <Link href="/dashboard">Dashboard</Link>
+        <Link href="/login">Intră în cont</Link>
       </nav>
     </header>
   );
