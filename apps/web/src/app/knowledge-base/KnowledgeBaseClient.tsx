@@ -115,6 +115,7 @@ export function KnowledgeBaseClient() {
 
   async function onTextSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
+    const form = event.currentTarget;
     setMessage(null);
     setError(null);
 
@@ -124,7 +125,7 @@ export function KnowledgeBaseClient() {
     }
 
     setIsSaving(true);
-    const formData = new FormData(event.currentTarget);
+    const formData = new FormData(form);
 
     try {
       const response = await apiFetch("/knowledge-base/text", {
@@ -143,7 +144,7 @@ export function KnowledgeBaseClient() {
         throw new Error(data.message ?? "Could not index text source");
       }
 
-      event.currentTarget.reset();
+      form.reset();
       await loadSources(primaryMembership.organization.id);
       setMessage("TXT source indexed.");
     } catch (caughtError) {
@@ -155,6 +156,7 @@ export function KnowledgeBaseClient() {
 
   async function onWebsiteSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
+    const form = event.currentTarget;
     setMessage(null);
     setError(null);
 
@@ -164,7 +166,7 @@ export function KnowledgeBaseClient() {
     }
 
     setIsSaving(true);
-    const formData = new FormData(event.currentTarget);
+    const formData = new FormData(form);
 
     try {
       const response = await apiFetch("/knowledge-base/website", {
@@ -182,7 +184,7 @@ export function KnowledgeBaseClient() {
         throw new Error(data.message ?? "Could not index website");
       }
 
-      event.currentTarget.reset();
+      form.reset();
       await loadSources(primaryMembership.organization.id);
       setMessage("Website indexed.");
     } catch (caughtError) {
@@ -194,6 +196,7 @@ export function KnowledgeBaseClient() {
 
   async function onFileSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
+    const form = event.currentTarget;
     setMessage(null);
     setError(null);
 
@@ -203,7 +206,7 @@ export function KnowledgeBaseClient() {
     }
 
     setIsSaving(true);
-    const formData = new FormData(event.currentTarget);
+    const formData = new FormData(form);
     formData.set("organizationId", primaryMembership.organization.id);
 
     try {
@@ -217,7 +220,7 @@ export function KnowledgeBaseClient() {
         throw new Error(data.message ?? "Could not upload file");
       }
 
-      event.currentTarget.reset();
+      form.reset();
       await loadSources(primaryMembership.organization.id);
       setMessage("File uploaded and indexed.");
     } catch (caughtError) {
