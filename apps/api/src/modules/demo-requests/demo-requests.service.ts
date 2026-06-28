@@ -1,6 +1,7 @@
 import { DemoRequestStatus } from "@prisma/client";
-import { Injectable, NotFoundException } from "@nestjs/common";
+import { Injectable, Logger, NotFoundException } from "@nestjs/common";
 import { PrismaService } from "../../common/prisma.service";
+import { DemoRequestEmailService } from "./demo-request-email.service";
 import { CreateDemoRequestDto } from "./dto/create-demo-request.dto";
 import { UpdateDemoRequestCrmDto } from "./dto/update-demo-request-crm.dto";
 
@@ -33,7 +34,12 @@ const demoRequestSelect = {
 
 @Injectable()
 export class DemoRequestsService {
-  constructor(private readonly prisma: PrismaService) {}
+  private readonly logger = new Logger(DemoRequestsService.name);
+
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly emailNotifications: DemoRequestEmailService,
+  ) {}
 
   async create(dto: CreateDemoRequestDto) {
     const demoRequest = await this.prisma.demoRequest.create({
@@ -46,16 +52,20 @@ export class DemoRequestsService {
         message: dto.message.trim(),
         source: cleanOptional(dto.source) ?? "demo_page",
       },
-      select: {
-        id: true,
-        status: true,
-        createdAt: true,
-      },
+      select: demoRequestSelect,
+    });
+
+    void this.emailNotifications.sendNewDemoRequestNotification(demoRequest).catch((error) => {
+      this.logger.error(`Demo request email notification failed for ${demoRequest.id}`, error instanceof Error ? error.stack : undefined);
     });
 
     return {
       ok: true,
-      demoRequest,
+      demoRequest: {
+        id: demoRequest.id,
+        status: demoRequest.status,
+        createdAt: demoRequest.createdAt,
+      },
       message: "Cererea demo a fost primită.",
     };
   }
