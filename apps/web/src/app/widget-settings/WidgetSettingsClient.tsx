@@ -1,6 +1,6 @@
 "use client";
 
-import { FormEvent, useEffect, useState } from "react";
+import { FormEvent, useEffect, useMemo, useState } from "react";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:4000/api";
 
@@ -32,6 +32,22 @@ type WidgetSettings = {
   installSnippet: string;
 };
 
+function maskSecret(value?: string | null) {
+  if (!value) {
+    return "";
+  }
+
+  if (value.length <= 12) {
+    return "••••••••";
+  }
+
+  return `${value.slice(0, 7)}••••••••••••${value.slice(-5)}`;
+}
+
+function maskSnippet(snippet: string) {
+  return snippet.replace(/data-widget-token="[^"]*"/g, 'data-widget-token="••••••••••••••••"');
+}
+
 export function WidgetSettingsClient() {
   const [user, setUser] = useState<CurrentUser | null>(null);
   const [settings, setSettings] = useState<WidgetSettings | null>(null);
@@ -41,6 +57,7 @@ export function WidgetSettingsClient() {
   const [success, setSuccess] = useState<string | null>(null);
 
   const primaryMembership = user?.memberships[0];
+  const maskedSnippet = useMemo(() => settings ? maskSnippet(settings.installSnippet) : "", [settings]);
 
   function getAccessToken() {
     return window.localStorage.getItem("autopilot.accessToken");
@@ -141,7 +158,7 @@ export function WidgetSettingsClient() {
       }
 
       setSettings(data);
-      setSuccess("Widget settings saved.");
+      setSuccess("Setările widgetului au fost salvate.");
     } catch (caughtError) {
       setError(caughtError instanceof Error ? caughtError.message : "Could not save widget settings");
     } finally {
@@ -169,7 +186,7 @@ export function WidgetSettingsClient() {
       }
 
       setSettings(data);
-      setSuccess("Widget token regenerated.");
+      setSuccess("Jetonul widgetului a fost regenerat. Copiază din nou fragmentul de instalare.");
     } catch (caughtError) {
       setError(caughtError instanceof Error ? caughtError.message : "Could not regenerate token");
     }
@@ -181,19 +198,19 @@ export function WidgetSettingsClient() {
     }
 
     await navigator.clipboard.writeText(settings.installSnippet);
-    setSuccess("Install snippet copied.");
+    setSuccess("Fragmentul de instalare a fost copiat. Conține jetonul real, chiar dacă pe ecran este mascat.");
   }
 
   if (isLoading) {
-    return <p>Loading widget settings...</p>;
+    return <p>Se încarcă setările widgetului...</p>;
   }
 
   if (error && !user) {
     return (
       <section className="card">
-        <h1>Authentication required.</h1>
+        <h1>Autentificare necesară.</h1>
         <p>{error}</p>
-        <a href="/login" className="button">Go to login</a>
+        <a href="/login" className="button">Mergi la login</a>
       </section>
     );
   }
@@ -201,9 +218,9 @@ export function WidgetSettingsClient() {
   return (
     <div className="widget-demo-layout">
       <section className="card">
-        <div className="eyebrow">BUILD #013 Widget Runtime Enforcement</div>
-        <h1>Manage widget runtime.</h1>
-        <p>{settings ? `Workspace: ${settings.name}` : "No widget settings loaded."}</p>
+        <div className="eyebrow">Setări widget</div>
+        <h1>Controlează instalarea widgetului.</h1>
+        <p>{settings ? `Spațiu de lucru: ${settings.name}` : "Nu există setări încărcate."}</p>
       </section>
 
       {error ? <p className="form-error">{error}</p> : null}
@@ -212,30 +229,33 @@ export function WidgetSettingsClient() {
       {settings ? (
         <section className="grid two-columns">
           <form className="card form-section" onSubmit={onSubmit}>
-            <h2>Widget settings</h2>
+            <h2>Setări widget</h2>
             <label>
-              <input name="widgetEnabled" type="checkbox" defaultChecked={settings.widgetEnabled} /> Enable widget
+              <input name="widgetEnabled" type="checkbox" defaultChecked={settings.widgetEnabled} /> Activează widgetul
             </label>
-            <input name="widgetTitle" defaultValue={settings.widgetTitle} placeholder="Widget title" />
+            <input name="widgetTitle" defaultValue={settings.widgetTitle} placeholder="Titlu widget" />
             <input name="widgetPrimaryColor" defaultValue={settings.widgetPrimaryColor} placeholder="#8ee6c9" />
             <select name="widgetPosition" defaultValue={settings.widgetPosition}>
-              <option value="RIGHT">Right</option>
-              <option value="LEFT">Left</option>
+              <option value="RIGHT">Dreapta</option>
+              <option value="LEFT">Stânga</option>
             </select>
-            <input name="widgetToken" defaultValue={settings.widgetToken ?? ""} placeholder="Widget token, optional" />
+            <label className="field-label">Jeton widget</label>
+            <input name="widgetToken" type="password" defaultValue={settings.widgetToken ?? ""} placeholder="Jeton widget" />
+            {settings.widgetToken ? <p className="helper-text">Jeton curent: {maskSecret(settings.widgetToken)}</p> : null}
             <textarea name="widgetAllowedOrigins" defaultValue={settings.widgetAllowedOrigins.join("\n")} placeholder="https://example.com\nhttps://www.example.com" />
             <div className="actions">
-              <button className="button" type="submit" disabled={isSaving}>{isSaving ? "Saving..." : "Save settings"}</button>
-              <button className="button secondary" type="button" onClick={regenerateToken}>Regenerate token</button>
+              <button className="button" type="submit" disabled={isSaving}>{isSaving ? "Se salvează..." : "Salvează setările"}</button>
+              <button className="button secondary" type="button" onClick={regenerateToken}>Regenerează jetonul</button>
             </div>
           </form>
 
           <article className="card">
-            <h2>Runtime install</h2>
-            <p>The widget now loads live configuration before rendering.</p>
-            {settings.publicConfigEndpoint ? <p>Public config: <code>{settings.publicConfigEndpoint}</code></p> : null}
-            <pre className="code-block">{settings.installSnippet}</pre>
-            <button className="button" type="button" onClick={copySnippet}>Copy snippet</button>
+            <h2>Instalare în producție</h2>
+            <p>Widgetul încarcă configurația live înainte de randare.</p>
+            <p className="helper-text">Tokenul este mascat pentru siguranță. Fragmentul copiat conține tokenul real.</p>
+            {settings.publicConfigEndpoint ? <p>Configurație publică: <code>{settings.publicConfigEndpoint}</code></p> : null}
+            <pre className="code-block">{maskedSnippet}</pre>
+            <button className="button" type="button" onClick={copySnippet}>Copiază fragmentul</button>
           </article>
         </section>
       ) : null}
