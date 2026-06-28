@@ -7,7 +7,34 @@ type TimelineEvent = {
   title: string;
   description: string;
   createdAt: Date;
+  href?: string;
 };
+
+const demoRequestStatusLabels: Record<string, string> = {
+  NEW: "Nou",
+  CONTACTED: "Contactat",
+  QUALIFIED: "Calificat",
+  CLOSED: "Închis",
+};
+
+const conversationStatusLabels: Record<string, string> = {
+  OPEN: "Deschisă",
+  WAITING_FOR_HUMAN: "Așteaptă intervenție umană",
+  CLOSED: "Închisă",
+};
+
+const widgetEventLabels: Record<string, string> = {
+  CONFIG_LOADED: "Configurație încărcată",
+  LOADED: "Widget încărcat",
+  OPENED: "Widget deschis",
+  MESSAGE_SENT: "Mesaj trimis",
+  MESSAGE_RECEIVED: "Mesaj primit",
+  ERROR: "Eroare widget",
+};
+
+function statusLabel(value: string, labels: Record<string, string>) {
+  return labels[value] ?? value;
+}
 
 @Injectable()
 export class DashboardService {
@@ -80,6 +107,7 @@ export class DashboardService {
     const timeline = this.buildTimeline(latestDemoRequests, latestConversations, latestWidgetEvents);
     const eventsProcessed = eventCount + widgetEventCount + conversationCount + taskCount + demoRequestCount;
     const capturedLeads = demoRequestCount + leadCount;
+    const activeAiEmployees = membership.organization.widgetEnabled ? 3 : 2;
 
     return {
       metrics: [
@@ -87,21 +115,29 @@ export class DashboardService {
           label: "Clienți potențiali captați",
           value: capturedLeads,
           helper: `${demoRequestCount} cereri demo · ${leadCount} lead-uri widget`,
+          href: "/demo-requests",
+          ctaLabel: "Vezi cererile demo",
         },
         {
           label: "Ore economisite",
           value: this.estimateSavedHours(eventsProcessed, capturedLeads),
           helper: "Estimare operațională bazată pe activitatea procesată",
+          href: "/dashboard",
+          ctaLabel: "Actualizat din date reale",
         },
         {
           label: "Evenimente procesate",
           value: eventsProcessed,
           helper: `${widgetEventCount} evenimente widget · ${conversationCount} conversații · ${demoRequestCount} cereri demo`,
+          href: "/widget-analytics",
+          ctaLabel: "Vezi analiza widgetului",
         },
         {
           label: "Angajați cu inteligență artificială",
-          value: membership.organization.widgetEnabled ? 3 : 2,
-          helper: membership.organization.widgetEnabled ? "Reception AI, Sales AI, CEO AI" : "Sales AI, CEO AI",
+          value: activeAiEmployees,
+          helper: membership.organization.widgetEnabled ? "Recepție AI, Vânzări AI, CEO AI" : "Vânzări AI, CEO AI",
+          href: "/reception-ai",
+          ctaLabel: "Vezi Recepție AI",
         },
       ],
       timeline,
@@ -121,24 +157,27 @@ export class DashboardService {
       id: request.id,
       type: "demo_request",
       title: `Cerere demo nouă: ${request.name}`,
-      description: `${request.company ?? request.email} · ${request.status}`,
+      description: `${request.company ?? request.email} · ${statusLabel(request.status, demoRequestStatusLabels)}`,
       createdAt: request.createdAt,
+      href: "/demo-requests",
     }));
 
     const conversationEvents: TimelineEvent[] = conversations.map((conversation) => ({
       id: conversation.id,
       type: "conversation",
-      title: `Conversație Reception AI: ${conversation.customerName ?? conversation.customerEmail ?? "vizitator"}`,
-      description: `Status conversație: ${conversation.status}`,
+      title: `Conversație Recepție AI: ${conversation.customerName ?? conversation.customerEmail ?? "vizitator"}`,
+      description: `Status conversație: ${statusLabel(conversation.status, conversationStatusLabels)}`,
       createdAt: conversation.createdAt,
+      href: "/inbox",
     }));
 
     const widgetTimelineEvents: TimelineEvent[] = widgetEvents.map((event) => ({
       id: event.id,
       type: "widget_event",
-      title: `Eveniment widget: ${event.type}`,
+      title: `Eveniment widget: ${statusLabel(event.type, widgetEventLabels)}`,
       description: event.websiteUrl ?? "Website nespecificat",
       createdAt: event.createdAt,
+      href: "/widget-analytics",
     }));
 
     const timeline = [...demoEvents, ...conversationEvents, ...widgetTimelineEvents]
@@ -156,6 +195,7 @@ export class DashboardService {
         title: "Nu există evenimente recente încă.",
         description: "Trimite o cerere demo sau testează widgetul pentru a popula dashboardul.",
         createdAt: new Date(),
+        href: "/demo",
       },
     ];
   }
