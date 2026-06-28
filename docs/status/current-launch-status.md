@@ -1,6 +1,6 @@
 # Autopilot One — Current launch status
 
-This document is the operating checkpoint after BUILD #046.
+This document is the operating checkpoint after BUILD #048 scripts were added.
 
 No secrets, API keys, passwords or widget tokens are stored here.
 
@@ -123,19 +123,34 @@ No secrets, API keys, passwords or widget tokens are stored here.
 - Default schedule: daily at 03:17 server time
 - Backup log: `/var/log/autopilot-postgres-backup.log`
 
+### BUILD #047 — Launch status checkpoint
+
+- Added this operational checkpoint document
+- Saved validated baseline and remaining work
+- Documentation-only build
+
+### BUILD #048 — VPS security hardening scripts
+
+- Added read-only VPS security audit script
+- Added controlled VPS security hardening script
+- Added documentation for firewall/fail2ban/unattended-upgrades workflow
+- Firewall must be enabled only after SSH is confirmed in a second active session
+
 ## Current launch readiness verdict
 
 Autopilot One is live and suitable for a controlled pilot.
 
-It is not yet considered ready for broad public launch or heavy paid traffic until the remaining hardening items are completed.
+It is not yet considered ready for broad public launch or heavy paid traffic until the remaining hardening items are completed and validated on the VPS.
 
-Estimated launch readiness: 75–80%.
+Estimated launch readiness: 80–85% after VPS hardening scripts are added; final percentage depends on successful VPS execution and validation.
 
 ## Remaining P0/P1 work
 
 ### P0
 
-- VPS Security Hardening: firewall, fail2ban, SSH checks, unattended security updates
+- Run VPS security audit on production VPS
+- Run VPS hardening package setup
+- Enable firewall only after SSH access is verified in a second session
 - Confirm that daily backup runs successfully after the scheduled time
 - Healthcheck after every security or infrastructure change
 
@@ -159,7 +174,7 @@ Estimated launch readiness: 75–80%.
 
 ## Recommended next build order
 
-1. BUILD #048 — VPS Security Hardening
+1. Validate BUILD #048 on the VPS
 2. BUILD #049 — Monitoring and uptime checks
 3. BUILD #050 — Off-server backups and restore test
 4. BUILD #051 — Legal/ANPC/refund/GDPR final polish
@@ -197,3 +212,4 @@ curl -I https://app.autopilot-one.com
 - Never regenerate the widget token without a clear reason
 - Do not run destructive restore commands without `CONFIRM_RESTORE=YES` and an explicit operator decision
 - Do not enable firewall rules until SSH access has been verified and the allow rules are in place
+- Keep the current SSH session open while testing a second SSH session before enabling UFW
