@@ -2,6 +2,7 @@ import "reflect-metadata";
 import { NestFactory } from "@nestjs/core";
 import { Logger, ValidationPipe } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
+import { NestExpressApplication } from "@nestjs/platform-express";
 import { json, NextFunction, Request, Response, urlencoded } from "express";
 import { AppModule } from "./app.module";
 
@@ -30,7 +31,7 @@ function redactUrl(url: string) {
 }
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule, { bodyParser: false });
+  const app = await NestFactory.create<NestExpressApplication>(AppModule, { bodyParser: false });
   const config = app.get(ConfigService);
   const logger = new Logger("Bootstrap");
   const bodyLimit = config.get<string>("API_BODY_LIMIT") ?? "256kb";
