@@ -1,4 +1,5 @@
-import { Injectable } from "@nestjs/common";
+import { DemoRequestStatus } from "@prisma/client";
+import { Injectable, NotFoundException } from "@nestjs/common";
 import { PrismaService } from "../../common/prisma.service";
 import { CreateDemoRequestDto } from "./dto/create-demo-request.dto";
 
@@ -6,6 +7,20 @@ function cleanOptional(value?: string) {
   const cleaned = value?.trim();
   return cleaned || undefined;
 }
+
+const demoRequestSelect = {
+  id: true,
+  name: true,
+  email: true,
+  company: true,
+  phone: true,
+  website: true,
+  message: true,
+  source: true,
+  status: true,
+  createdAt: true,
+  updatedAt: true,
+};
 
 @Injectable()
 export class DemoRequestsService {
@@ -40,19 +55,19 @@ export class DemoRequestsService {
     return this.prisma.demoRequest.findMany({
       orderBy: { createdAt: "desc" },
       take: 100,
-      select: {
-        id: true,
-        name: true,
-        email: true,
-        company: true,
-        phone: true,
-        website: true,
-        message: true,
-        source: true,
-        status: true,
-        createdAt: true,
-        updatedAt: true,
-      },
+      select: demoRequestSelect,
     });
+  }
+
+  async updateStatus(id: string, status: DemoRequestStatus) {
+    try {
+      return await this.prisma.demoRequest.update({
+        where: { id },
+        data: { status },
+        select: demoRequestSelect,
+      });
+    } catch {
+      throw new NotFoundException("Cererea demo nu a fost găsită.");
+    }
   }
 }
