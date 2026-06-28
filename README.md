@@ -4,9 +4,9 @@ AI-native Business Operating System for small and medium businesses.
 
 ## Current status
 
-### Build #042 — Demo request email notification
+### Build #044 — App security hardening
 
-Autopilot One is live on the production pilot domain with VPS Docker deployment, real dashboard metrics, public demo intake, demo request CRM workflow, widget analytics, and optional email notification for new demo requests.
+Autopilot One is live on the production pilot domain with VPS Docker deployment, real dashboard metrics, public demo intake, demo request CRM workflow, widget analytics, optional email notification for new demo requests, and application-level security hardening.
 
 Selected pilot domains:
 
@@ -41,6 +41,9 @@ The product includes:
 - VPS deploy scripts
 - Production pilot domain defaults
 - Production widget install snippet defaults
+- Public website launch polish
+- API and web security headers
+- Rate limits for public intake, widget, and auth endpoints
 
 ## Release and pilot docs
 
@@ -104,6 +107,17 @@ Public healthcheck after DNS and VPS deploy:
 ```bash
 API_URL=https://api.autopilot-one.com/api/health APP_URL=https://app.autopilot-one.com sh scripts/vps-healthcheck.sh
 ```
+
+## Security configuration
+
+The API applies a default body limit of `256kb`, strict production CORS defaults, security headers, and endpoint-level rate limits. Production deployments can override these values through environment variables:
+
+```bash
+API_BODY_LIMIT=256kb
+API_CORS_ORIGINS=https://app.autopilot-one.com,https://autopilot-one.com,https://www.autopilot-one.com
+```
+
+When adding a new customer domain for the embedded widget, add the same origin to the organization widget allowed origins and to `API_CORS_ORIGINS` before public launch on that domain.
 
 ## Optional demo request email notification
 
