@@ -37,6 +37,7 @@ async function bootstrap() {
   const bodyLimit = config.get<string>("API_BODY_LIMIT") ?? "256kb";
   const corsOrigins = unique([...DEFAULT_CORS_ORIGINS, ...parseCsv(config.get<string>("API_CORS_ORIGINS"))]);
 
+  app.disable("x-powered-by");
   app.set("trust proxy", 1);
   app.use(json({ limit: bodyLimit }));
   app.use(urlencoded({ extended: true, limit: bodyLimit }));
@@ -66,6 +67,7 @@ async function bootstrap() {
   });
 
   app.use((request: Request, response: Response, next: NextFunction) => {
+    response.removeHeader("X-Powered-By");
     response.setHeader("X-Content-Type-Options", "nosniff");
     response.setHeader("X-Frame-Options", "DENY");
     response.setHeader("Referrer-Policy", "no-referrer");
