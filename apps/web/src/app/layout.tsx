@@ -3,12 +3,12 @@ import type { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "Autopilot One",
-  description: "AI-native operating system for modern businesses.",
+  description: "Angajați AI pentru companii moderne.",
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en">
+    <html lang="ro">
       <body>{children}</body>
     </html>
   );
