@@ -1,6 +1,6 @@
 # Autopilot One — Current launch status
 
-This document is the operating checkpoint after BUILD #049 monitoring was validated on the VPS.
+This document is the operating checkpoint after BUILD #050 scripts were added.
 
 No secrets, API keys, passwords or widget tokens are stored here.
 
@@ -161,21 +161,35 @@ No secrets, API keys, passwords or widget tokens are stored here.
 - Latest validated check confirmed API 200, Web 200, all Docker services running, security services active, recent PostgreSQL backup, healthy disk and memory usage
 - This build adds local monitoring only; external alerting is still pending
 
+### BUILD #050 — Off-server backups and restore test
+
+- Added `rclone` installer script
+- Added off-server backup sync script
+- Added off-server backup cron installer
+- Added non-destructive PostgreSQL backup verification script
+- Added restore-test runbook for isolated restore environments
+- No off-server credentials are stored in the repository
+- VPS execution and off-server sync validation are still pending
+
 ## Current launch readiness verdict
 
 Autopilot One is live and suitable for a controlled pilot.
 
 The production VPS now has a basic hardening and monitoring layer: UFW, fail2ban, unattended security upgrades, cron backups and local monitoring are active.
 
-It is not yet considered ready for broad public launch or heavy paid traffic until off-server backups, restore testing, legal final polish, SEO launch polish and final QA are completed.
+It is not yet considered ready for broad public launch or heavy paid traffic until off-server backup sync is configured and validated, restore testing is completed, legal final polish, SEO launch polish and final QA are completed.
 
-Estimated launch readiness: 88%.
+Estimated launch readiness: 88–90% after BUILD #050 scripts are added; final percentage depends on successful off-server backup configuration and validation.
 
 ## Remaining P0/P1 work
 
 ### P0
 
-- Confirm that the local monitoring cron continues to write fresh status reports
+- Validate BUILD #050 on the VPS
+- Configure private off-server backup remote outside the repository
+- Run dry-run and real off-server backup sync
+- Confirm that off-server backup files are visible in the remote
+- Confirm that local monitoring cron continues to write fresh status reports
 - Confirm that daily backup runs successfully after the scheduled time
 - Healthcheck after every security or infrastructure change
 - Keep current firewall rules under review before changing SSH settings
@@ -183,8 +197,7 @@ Estimated launch readiness: 88%.
 ### P1
 
 - External uptime monitoring and alerting for API/Web
-- Off-server backup storage
-- Restore test in a separate environment
+- Full restore test in a separate environment
 - Backup failure alerting
 - Legal final polish: GDPR, ANPC/SAL, refund/return policy, consumer rights, terms
 - SEO technical launch: robots.txt, sitemap.xml, canonical URLs, Open Graph metadata, favicon/app icons
@@ -201,7 +214,7 @@ Estimated launch readiness: 88%.
 
 ## Recommended next build order
 
-1. BUILD #050 — Off-server backups and restore test
+1. Validate BUILD #050 on the VPS
 2. BUILD #051 — Legal/ANPC/refund/GDPR final polish
 3. BUILD #052 — SEO, sitemap, robots and metadata
 4. BUILD #053 — Final Launch QA
@@ -238,3 +251,4 @@ curl -I https://app.autopilot-one.com
 - Do not run destructive restore commands without `CONFIRM_RESTORE=YES` and an explicit operator decision
 - Do not change SSH settings until key-based access is confirmed and tested
 - Do not expose Postgres or Redis publicly
+- Do not store off-server backup credentials in the repository

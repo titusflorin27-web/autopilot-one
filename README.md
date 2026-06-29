@@ -4,9 +4,9 @@ AI-native Business Operating System for small and medium businesses.
 
 ## Current status
 
-### Build #049 — Monitoring and uptime checks
+### Build #050 — Off-server backups and restore test
 
-Autopilot One is live on the production pilot domain with VPS Docker deployment, real dashboard metrics, public demo intake, demo request CRM workflow, widget analytics, optional email notification for new demo requests, application-level security hardening, VPS PostgreSQL backup scripts, controlled VPS security hardening, and local VPS monitoring scripts.
+Autopilot One is live on the production pilot domain with VPS Docker deployment, real dashboard metrics, public demo intake, demo request CRM workflow, widget analytics, optional email notification for new demo requests, application-level security hardening, VPS PostgreSQL backup scripts, controlled VPS security hardening, local VPS monitoring scripts, and off-server backup sync scripts.
 
 Selected pilot domains:
 
@@ -48,6 +48,7 @@ The product includes:
 - Daily backup cron installer
 - VPS security audit and hardening scripts
 - VPS monitoring and uptime check scripts
+- Off-server backup sync scripts
 
 ## Release and pilot docs
 
@@ -69,6 +70,7 @@ The product includes:
 - `docs/builds/047-launch-status-checkpoint.md`
 - `docs/builds/048-vps-security-hardening.md`
 - `docs/builds/049-monitoring-uptime-checks.md`
+- `docs/builds/050-offserver-backups-restore-test.md`
 
 ## Requirements
 
@@ -115,6 +117,10 @@ sh scripts/vps-security-audit.sh
 sh scripts/vps-security-hardening.sh
 sh scripts/vps-monitoring-check.sh
 sh scripts/vps-install-monitoring-cron.sh
+sh scripts/vps-install-rclone.sh
+sh scripts/vps-verify-postgres-backup.sh
+sh scripts/vps-sync-backups-offsite.sh
+sh scripts/vps-install-offsite-backup-cron.sh
 ```
 
 Public healthcheck after DNS and VPS deploy:
@@ -194,6 +200,46 @@ Default status file:
 ```
 
 Full instructions are documented in `docs/builds/049-monitoring-uptime-checks.md`.
+
+## Off-server backups
+
+Install rclone:
+
+```bash
+sh scripts/vps-install-rclone.sh
+```
+
+Configure a private remote on the VPS:
+
+```bash
+rclone config
+```
+
+Verify the latest local backup without restoring it:
+
+```bash
+sh scripts/vps-verify-postgres-backup.sh
+```
+
+Run a dry-run sync:
+
+```bash
+DRY_RUN=YES OFFSITE_REMOTE=autopilot-offsite:autopilot-one/postgres sh scripts/vps-sync-backups-offsite.sh
+```
+
+Run a real sync:
+
+```bash
+OFFSITE_REMOTE=autopilot-offsite:autopilot-one/postgres sh scripts/vps-sync-backups-offsite.sh
+```
+
+Install the off-server backup cron after manual sync succeeds:
+
+```bash
+OFFSITE_REMOTE=autopilot-offsite:autopilot-one/postgres sh scripts/vps-install-offsite-backup-cron.sh
+```
+
+Full instructions are documented in `docs/builds/050-offserver-backups-restore-test.md`.
 
 ## Security configuration
 
