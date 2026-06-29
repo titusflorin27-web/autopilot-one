@@ -1,6 +1,6 @@
 # Autopilot One — Current launch status
 
-This document is the operating checkpoint after BUILD #048 was validated on the VPS.
+This document is the operating checkpoint after BUILD #049 scripts were added.
 
 No secrets, API keys, passwords or widget tokens are stored here.
 
@@ -148,29 +148,37 @@ No secrets, API keys, passwords or widget tokens are stored here.
 - cron is active
 - API and Web remained `HTTP/2 200` after hardening
 
+### BUILD #049 — Monitoring and uptime checks
+
+- Added local VPS monitoring check script
+- Added local VPS monitoring cron installer
+- Monitoring checks cover API, Web, Docker services, UFW, fail2ban, unattended-upgrades, cron, backup age, disk and memory
+- This build adds local monitoring only; external alerting is still pending
+
 ## Current launch readiness verdict
 
 Autopilot One is live and suitable for a controlled pilot.
 
 The production VPS now has a basic hardening layer: UFW, fail2ban and unattended security upgrades are active.
 
-It is not yet considered ready for broad public launch or heavy paid traffic until monitoring, off-server backups, legal final polish, SEO launch polish and final QA are completed.
+It is not yet considered ready for broad public launch or heavy paid traffic until monitoring is validated on the VPS, off-server backups, legal final polish, SEO launch polish and final QA are completed.
 
-Estimated launch readiness: 85%.
+Estimated launch readiness: 85–88% after BUILD #049 scripts are added; final percentage depends on successful VPS monitoring validation.
 
 ## Remaining P0/P1 work
 
 ### P0
 
+- Validate BUILD #049 monitoring on the VPS
 - Confirm that daily backup runs successfully after the scheduled time
 - Healthcheck after every security or infrastructure change
 - Keep current firewall rules under review before changing SSH settings
 
 ### P1
 
+- External uptime monitoring and alerting for API/Web
 - Off-server backup storage
 - Restore test in a separate environment
-- Uptime monitoring and alerting for API/Web
 - Backup failure alerting
 - Legal final polish: GDPR, ANPC/SAL, refund/return policy, consumer rights, terms
 - SEO technical launch: robots.txt, sitemap.xml, canonical URLs, Open Graph metadata, favicon/app icons
@@ -187,7 +195,7 @@ Estimated launch readiness: 85%.
 
 ## Recommended next build order
 
-1. BUILD #049 — Monitoring and uptime checks
+1. Validate BUILD #049 on the VPS
 2. BUILD #050 — Off-server backups and restore test
 3. BUILD #051 — Legal/ANPC/refund/GDPR final polish
 4. BUILD #052 — SEO, sitemap, robots and metadata
