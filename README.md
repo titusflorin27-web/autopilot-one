@@ -4,9 +4,9 @@ AI-native Business Operating System for small and medium businesses.
 
 ## Current status
 
-### Build #048 — VPS security hardening scripts
+### Build #049 — Monitoring and uptime checks
 
-Autopilot One is live on the production pilot domain with VPS Docker deployment, real dashboard metrics, public demo intake, demo request CRM workflow, widget analytics, optional email notification for new demo requests, application-level security hardening, VPS PostgreSQL backup scripts, and controlled VPS security hardening scripts.
+Autopilot One is live on the production pilot domain with VPS Docker deployment, real dashboard metrics, public demo intake, demo request CRM workflow, widget analytics, optional email notification for new demo requests, application-level security hardening, VPS PostgreSQL backup scripts, controlled VPS security hardening, and local VPS monitoring scripts.
 
 Selected pilot domains:
 
@@ -47,6 +47,7 @@ The product includes:
 - VPS PostgreSQL backup and restore scripts
 - Daily backup cron installer
 - VPS security audit and hardening scripts
+- VPS monitoring and uptime check scripts
 
 ## Release and pilot docs
 
@@ -67,6 +68,7 @@ The product includes:
 - `docs/builds/046-postgres-backups.md`
 - `docs/builds/047-launch-status-checkpoint.md`
 - `docs/builds/048-vps-security-hardening.md`
+- `docs/builds/049-monitoring-uptime-checks.md`
 
 ## Requirements
 
@@ -111,6 +113,8 @@ sh scripts/vps-backup-postgres.sh
 sh scripts/vps-install-backup-cron.sh
 sh scripts/vps-security-audit.sh
 sh scripts/vps-security-hardening.sh
+sh scripts/vps-monitoring-check.sh
+sh scripts/vps-install-monitoring-cron.sh
 ```
 
 Public healthcheck after DNS and VPS deploy:
@@ -162,6 +166,34 @@ ENABLE_FIREWALL=YES sh scripts/vps-security-hardening.sh
 ```
 
 Full instructions are documented in `docs/builds/048-vps-security-hardening.md`.
+
+## VPS monitoring
+
+Manual monitoring check from `/opt/autopilot-one`:
+
+```bash
+sh scripts/vps-monitoring-check.sh
+```
+
+Install local monitoring cron as root:
+
+```bash
+sh scripts/vps-install-monitoring-cron.sh
+```
+
+Default log file:
+
+```text
+/var/log/autopilot-monitoring.log
+```
+
+Default status file:
+
+```text
+/var/log/autopilot-monitoring-status.txt
+```
+
+Full instructions are documented in `docs/builds/049-monitoring-uptime-checks.md`.
 
 ## Security configuration
 
