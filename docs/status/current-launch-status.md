@@ -1,6 +1,6 @@
 # Autopilot One — Current launch status
 
-This document is the operating checkpoint after BUILD #049 scripts were added.
+This document is the operating checkpoint after BUILD #049 monitoring was validated on the VPS.
 
 No secrets, API keys, passwords or widget tokens are stored here.
 
@@ -153,23 +153,29 @@ No secrets, API keys, passwords or widget tokens are stored here.
 - Added local VPS monitoring check script
 - Added local VPS monitoring cron installer
 - Monitoring checks cover API, Web, Docker services, UFW, fail2ban, unattended-upgrades, cron, backup age, disk and memory
+- Monitoring check ran successfully on the VPS with zero warnings
+- Monitoring cron was installed at `/etc/cron.d/autopilot-monitoring`
+- Monitoring schedule is every 5 minutes
+- Monitoring status file is `/var/log/autopilot-monitoring-status.txt`
+- Monitoring log file is `/var/log/autopilot-monitoring.log`
+- Latest validated check confirmed API 200, Web 200, all Docker services running, security services active, recent PostgreSQL backup, healthy disk and memory usage
 - This build adds local monitoring only; external alerting is still pending
 
 ## Current launch readiness verdict
 
 Autopilot One is live and suitable for a controlled pilot.
 
-The production VPS now has a basic hardening layer: UFW, fail2ban and unattended security upgrades are active.
+The production VPS now has a basic hardening and monitoring layer: UFW, fail2ban, unattended security upgrades, cron backups and local monitoring are active.
 
-It is not yet considered ready for broad public launch or heavy paid traffic until monitoring is validated on the VPS, off-server backups, legal final polish, SEO launch polish and final QA are completed.
+It is not yet considered ready for broad public launch or heavy paid traffic until off-server backups, restore testing, legal final polish, SEO launch polish and final QA are completed.
 
-Estimated launch readiness: 85–88% after BUILD #049 scripts are added; final percentage depends on successful VPS monitoring validation.
+Estimated launch readiness: 88%.
 
 ## Remaining P0/P1 work
 
 ### P0
 
-- Validate BUILD #049 monitoring on the VPS
+- Confirm that the local monitoring cron continues to write fresh status reports
 - Confirm that daily backup runs successfully after the scheduled time
 - Healthcheck after every security or infrastructure change
 - Keep current firewall rules under review before changing SSH settings
@@ -195,11 +201,10 @@ Estimated launch readiness: 85–88% after BUILD #049 scripts are added; final p
 
 ## Recommended next build order
 
-1. Validate BUILD #049 on the VPS
-2. BUILD #050 — Off-server backups and restore test
-3. BUILD #051 — Legal/ANPC/refund/GDPR final polish
-4. BUILD #052 — SEO, sitemap, robots and metadata
-5. BUILD #053 — Final Launch QA
+1. BUILD #050 — Off-server backups and restore test
+2. BUILD #051 — Legal/ANPC/refund/GDPR final polish
+3. BUILD #052 — SEO, sitemap, robots and metadata
+4. BUILD #053 — Final Launch QA
 
 ## Standard safe VPS deploy pattern
 
