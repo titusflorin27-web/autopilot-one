@@ -62,6 +62,15 @@ check_docker_service() {
   fi
 }
 
+resolve_backup_path() {
+  backup_path="$1"
+  if command -v readlink >/dev/null 2>&1; then
+    readlink -f "$backup_path" 2>/dev/null || printf '%s\n' "$backup_path"
+  else
+    printf '%s\n' "$backup_path"
+  fi
+}
+
 section "Autopilot One monitoring check"
 add_line "Timestamp UTC: $(date -u +%Y-%m-%dT%H:%M:%SZ)"
 add_line "Host: $(hostname)"
@@ -109,11 +118,17 @@ elif [ -d "$BACKUP_DIR" ]; then
   LATEST_BACKUP="$(find "$BACKUP_DIR" -type f -name 'autopilot_postgres_*.dump' -printf '%T@ %p\n' 2>/dev/null | sort -nr | awk 'NR == 1 { print $2 }')"
 fi
 
-if [ -n "$LATEST_BACKUP" ] && [ -s "$LATEST_BACKUP" ]; then
+if [ -n "$LATEST_BACKUP" ]; then
+  RESOLVED_BACKUP="$(resolve_backup_path "$LATEST_BACKUP")"
+else
+  RESOLVED_BACKUP=""
+fi
+
+if [ -n "$RESOLVED_BACKUP" ] && [ -s "$RESOLVED_BACKUP" ]; then
   NOW_SECONDS="$(date +%s)"
-  BACKUP_SECONDS="$(stat -c %Y "$LATEST_BACKUP")"
+  BACKUP_SECONDS="$(stat -c %Y "$RESOLVED_BACKUP")"
   AGE_HOURS="$(( (NOW_SECONDS - BACKUP_SECONDS) / 3600 ))"
-  BACKUP_SIZE="$(du -h "$LATEST_BACKUP" | awk '{print $1}')"
+  BACKUP_SIZE="$(du -h "$RESOLVED_BACKUP" | awk '{print $1}')"
   if [ "$AGE_HOURS" -le "$MAX_BACKUP_AGE_HOURS" ]; then
     ok "Latest backup is recent: ${AGE_HOURS}h old, size $BACKUP_SIZE"
   else
