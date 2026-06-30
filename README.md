@@ -4,9 +4,9 @@ AI-native Business Operating System for small and medium businesses.
 
 ## Current status
 
-### Build #050 — Off-server backups and restore test
+### Build #050B — Off-server backups validated on VPS
 
-Autopilot One is live on the production pilot domain with VPS Docker deployment, real dashboard metrics, public demo intake, demo request CRM workflow, widget analytics, optional email notification for new demo requests, application-level security hardening, VPS PostgreSQL backup scripts, controlled VPS security hardening, local VPS monitoring scripts, and off-server backup sync scripts.
+Autopilot One is live on the production pilot domain with VPS Docker deployment, real dashboard metrics, public demo intake, demo request CRM workflow, widget analytics, optional email notification for new demo requests, application-level security hardening, VPS PostgreSQL backup scripts, controlled VPS security hardening, local VPS monitoring scripts, and validated off-server PostgreSQL backup sync.
 
 Selected pilot domains:
 
@@ -48,7 +48,7 @@ The product includes:
 - Daily backup cron installer
 - VPS security audit and hardening scripts
 - VPS monitoring and uptime check scripts
-- Off-server backup sync scripts
+- Validated off-server backup sync scripts
 
 ## Release and pilot docs
 
@@ -71,6 +71,7 @@ The product includes:
 - `docs/builds/048-vps-security-hardening.md`
 - `docs/builds/049-monitoring-uptime-checks.md`
 - `docs/builds/050-offserver-backups-restore-test.md`
+- `docs/builds/050b-offserver-backups-validated.md`
 
 ## Requirements
 
@@ -239,7 +240,7 @@ Install the off-server backup cron after manual sync succeeds:
 OFFSITE_REMOTE=autopilot-offsite:autopilot-one/postgres sh scripts/vps-install-offsite-backup-cron.sh
 ```
 
-Full instructions are documented in `docs/builds/050-offserver-backups-restore-test.md`.
+Full instructions are documented in `docs/builds/050-offserver-backups-restore-test.md` and `docs/builds/050b-offserver-backups-validated.md`.
 
 ## Security configuration
 
