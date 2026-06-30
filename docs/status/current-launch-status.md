@@ -1,6 +1,6 @@
 # Autopilot One — Current launch status
 
-This document is the operating checkpoint after BUILD #050 scripts were added.
+This document is the operating checkpoint after BUILD #050B off-server backup validation.
 
 No secrets, API keys, passwords or widget tokens are stored here.
 
@@ -169,28 +169,38 @@ No secrets, API keys, passwords or widget tokens are stored here.
 - Added non-destructive PostgreSQL backup verification script
 - Added restore-test runbook for isolated restore environments
 - No off-server credentials are stored in the repository
-- VPS execution and off-server sync validation are still pending
+
+### BUILD #050B — Off-server backups validated on VPS
+
+- Local backup verifier passed on the VPS with `pg_restore --list`
+- `rclone` installed and configured on the VPS
+- DigitalOcean Spaces private backup bucket configured outside the repository
+- Dry-run off-server sync passed
+- Real off-server sync passed
+- Remote backup files are visible under `autopilot-one-backups/autopilot-one/postgres`
+- `latest.txt` is present remotely and points to the latest dump file
+- Off-server backup cron installed at `/etc/cron.d/autopilot-offsite-backup`
+- Off-server backup schedule is daily at `03:47` server time
+- `cron` service confirmed active
+- Exposed setup keys were revoked; no secrets are stored in the repository
 
 ## Current launch readiness verdict
 
 Autopilot One is live and suitable for a controlled pilot.
 
-The production VPS now has a basic hardening and monitoring layer: UFW, fail2ban, unattended security upgrades, cron backups and local monitoring are active.
+The production VPS now has a basic hardening and monitoring layer: UFW, fail2ban, unattended security upgrades, cron backups, local monitoring, local PostgreSQL backups and off-server PostgreSQL backup sync are active.
 
-It is not yet considered ready for broad public launch or heavy paid traffic until off-server backup sync is configured and validated, restore testing is completed, legal final polish, SEO launch polish and final QA are completed.
+It is not yet considered ready for broad public launch or heavy paid traffic until a full restore test in a separate environment, external alerting, legal final polish, SEO launch polish and final QA are completed.
 
-Estimated launch readiness: 88–90% after BUILD #050 scripts are added; final percentage depends on successful off-server backup configuration and validation.
+Estimated launch readiness: 90–92% after BUILD #050B validation.
 
 ## Remaining P0/P1 work
 
 ### P0
 
-- Validate BUILD #050 on the VPS
-- Configure private off-server backup remote outside the repository
-- Run dry-run and real off-server backup sync
-- Confirm that off-server backup files are visible in the remote
+- Confirm that the next scheduled off-server backup cron run succeeds after `03:47` server time
 - Confirm that local monitoring cron continues to write fresh status reports
-- Confirm that daily backup runs successfully after the scheduled time
+- Confirm that daily local backup runs successfully after the scheduled time
 - Healthcheck after every security or infrastructure change
 - Keep current firewall rules under review before changing SSH settings
 
@@ -214,7 +224,7 @@ Estimated launch readiness: 88–90% after BUILD #050 scripts are added; final p
 
 ## Recommended next build order
 
-1. Validate BUILD #050 on the VPS
+1. Confirm the next scheduled off-server backup cron run
 2. BUILD #051 — Legal/ANPC/refund/GDPR final polish
 3. BUILD #052 — SEO, sitemap, robots and metadata
 4. BUILD #053 — Final Launch QA
