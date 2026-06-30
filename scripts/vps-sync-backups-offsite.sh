@@ -67,19 +67,20 @@ else
   RCLONE_DRY_RUN=""
 fi
 
-rclone mkdir "$OFFSITE_REMOTE" >> "$LOG_FILE" 2>&1 || true
-
 # Copy only real dump files. Do not depend on the local latest.dump symlink.
 rclone copy "$BACKUP_DIR" "$OFFSITE_REMOTE" \
-  --include 'autopilot_postgres_*.dump' \
-  --exclude '*' \
+  --filter '+ autopilot_postgres_*.dump' \
+  --filter '- *' \
   --checksum \
   --transfers 2 \
   --checkers 4 \
   $RCLONE_DRY_RUN >> "$LOG_FILE" 2>&1
 
 # Copy a tiny marker file with the latest backup filename for quick restore lookup.
-rclone copyto "$LATEST_MARKER" "$OFFSITE_REMOTE/latest.txt" $RCLONE_DRY_RUN >> "$LOG_FILE" 2>&1
+LATEST_MARKER_DIR="$(mktemp -d)"
+cp "$LATEST_MARKER" "$LATEST_MARKER_DIR/latest.txt"
+rclone copy "$LATEST_MARKER_DIR" "$OFFSITE_REMOTE" $RCLONE_DRY_RUN >> "$LOG_FILE" 2>&1
+rm -rf "$LATEST_MARKER_DIR"
 
 if [ "$DRY_RUN" != "YES" ]; then
   rclone lsf "$OFFSITE_REMOTE" --files-only >> "$LOG_FILE" 2>&1 || true
