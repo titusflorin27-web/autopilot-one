@@ -1,7 +1,16 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { Footer } from "../../components/Footer";
 import { Nav } from "../../components/Nav";
+import { createPageMetadata } from "../../lib/seo";
 import { DemoRequestForm } from "./DemoRequestForm";
+
+export const metadata: Metadata = createPageMetadata({
+  title: "Cere demo Autopilot One",
+  description:
+    "Programează o discuție pentru un pilot Autopilot One: recepție AI pe website, captare lead-uri, întrebări frecvente și urmărire în CRM.",
+  path: "/demo",
+});
 
 const outcomes = [
   "Aflăm ce întrebări repetitive primește afacerea ta și unde se pierd lead-uri.",
