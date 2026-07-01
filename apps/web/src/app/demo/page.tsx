@@ -13,9 +13,9 @@ export const metadata: Metadata = createPageMetadata({
 });
 
 const outcomes = [
-  "Aflăm ce întrebări repetitive primește afacerea ta și unde se pierd lead-uri.",
-  "Stabilim ce informații trebuie puse în baza de cunoștințe pentru răspunsuri corecte.",
-  "Îți propunem un pilot simplu: widget, răspunsuri, lead capture, CRM și dashboard.",
+  "Identificăm întrebările repetitive și locurile unde se pierd lead-uri.",
+  "Stabilim baza de cunoștințe: servicii, reguli, prețuri, program și răspunsuri permise.",
+  "Propunem un pilot clar: widget AI, captare lead-uri, CRM Lite și dashboard de urmărire.",
 ];
 
 const trustItems = [
@@ -29,13 +29,12 @@ export default function DemoPage() {
     <>
       <Nav />
       <main className="container page-stack">
-        <section className="grid two-columns">
+        <section className="grid two-columns demo-layout">
           <article className="card hero-card">
             <div className="eyebrow">Cerere demo</div>
-            <h1>Vezi cum ar funcționa Autopilot One pe site-ul tău.</h1>
-            <p>
-              Completează formularul și pregătim o discuție scurtă despre primul flux AI potrivit: recepție web,
-              captare lead-uri, întrebări frecvente și urmărire în CRM.
+            <h1><span className="gradient-text">Vezi Autopilot One</span> pe cazul tău real.</h1>
+            <p className="lead-text">
+              Completează formularul și pregătim o discuție scurtă despre primul flux AI potrivit pentru afacerea ta: recepție web, lead capture, întrebări frecvente sau follow-up.
             </p>
             <ul className="check-list">
               {outcomes.map((outcome) => <li key={outcome}>{outcome}</li>)}
