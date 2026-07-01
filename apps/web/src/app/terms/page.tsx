@@ -1,5 +1,14 @@
+import type { Metadata } from "next";
 import { Footer } from "../../components/Footer";
 import { Nav } from "../../components/Nav";
+import { createPageMetadata } from "../../lib/seo";
+
+export const metadata: Metadata = createPageMetadata({
+  title: "Termeni și condiții Autopilot One",
+  description:
+    "Termenii operaționali Autopilot One pentru faza pilot: acces, conturi, utilizare acceptabilă, limitări AI și disponibilitate.",
+  path: "/terms",
+});
 
 export default function TermsPage() {
   return (
