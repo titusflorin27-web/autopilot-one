@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 180 180" role="img" aria-label="Autopilot One">
+  <rect width="180" height="180" rx="42" fill="#0f172a" />
+  <path d="M50 120 90 36l40 84-40-20-40 20Z" fill="#f8fafc" />
+  <path d="M90 36v64" stroke="#38bdf8" stroke-width="12" stroke-linecap="round" />
+  <circle cx="90" cy="134" r="15" fill="#38bdf8" />
+</svg>

@@ -1,5 +1,14 @@
+import type { Metadata } from "next";
 import { Footer } from "../../components/Footer";
 import { Nav } from "../../components/Nav";
+import { createPageMetadata } from "../../lib/seo";
+
+export const metadata: Metadata = createPageMetadata({
+  title: "Politica de rambursare Autopilot One",
+  description:
+    "Politica de rambursare Autopilot One pentru abonamente, servicii digitale activate, faza pilot și solicitări de refund.",
+  path: "/refund-policy",
+});
 
 export default function RefundPolicyPage() {
   return (

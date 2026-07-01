@@ -1,6 +1,15 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { Footer } from "../../components/Footer";
 import { Nav } from "../../components/Nav";
+import { createPageMetadata } from "../../lib/seo";
+
+export const metadata: Metadata = createPageMetadata({
+  title: "Prețuri Autopilot One",
+  description:
+    "Vezi planurile Autopilot One pentru widget AI, captare lead-uri, CRM Lite și automatizare ghidată pentru IMM-uri.",
+  path: "/pricing",
+});
 
 const plans = [
   {

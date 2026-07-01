@@ -1,6 +1,6 @@
 # Autopilot One — Current launch status
 
-This document is the operating checkpoint after BUILD #050B off-server backup validation.
+This document is the operating checkpoint after BUILD #052 SEO launch polish.
 
 No secrets, API keys, passwords or widget tokens are stored here.
 
@@ -38,6 +38,7 @@ No secrets, API keys, passwords or widget tokens are stored here.
 - Widget analytics
 - Reception AI public widget response
 - Public widget event tracking
+- SEO metadata routes for public launch surface
 - Auth/login
 - API health
 - Web health
@@ -181,8 +182,21 @@ No secrets, API keys, passwords or widget tokens are stored here.
 - `latest.txt` is present remotely and points to the latest dump file
 - Off-server backup cron installed at `/etc/cron.d/autopilot-offsite-backup`
 - Off-server backup schedule is daily at `03:47` server time
+- Scheduled off-server cron run was confirmed with the next daily backup file
 - `cron` service confirmed active
 - Exposed setup keys were revoked; no secrets are stored in the repository
+
+### BUILD #052 — SEO launch polish
+
+- Added shared SEO metadata helper
+- Added route-level canonical metadata for public pages
+- Added Open Graph and Twitter metadata
+- Added `robots.txt` metadata route
+- Added `sitemap.xml` metadata route
+- Added app manifest metadata route
+- Added SVG app icons
+- Added dynamic Open Graph image route
+- Legal final copy remains intentionally deferred until company details and CAEN changes are finalized
 
 ## Current launch readiness verdict
 
@@ -190,15 +204,14 @@ Autopilot One is live and suitable for a controlled pilot.
 
 The production VPS now has a basic hardening and monitoring layer: UFW, fail2ban, unattended security upgrades, cron backups, local monitoring, local PostgreSQL backups and off-server PostgreSQL backup sync are active.
 
-It is not yet considered ready for broad public launch or heavy paid traffic until a full restore test in a separate environment, external alerting, legal final polish, SEO launch polish and final QA are completed.
+The public web surface now has launch SEO metadata, robots and sitemap support. It is not yet considered ready for broad public launch or heavy paid traffic until a full restore test in a separate environment, external alerting, legal final polish and final QA are completed.
 
-Estimated launch readiness: 90–92% after BUILD #050B validation.
+Estimated launch readiness: 92–94% after BUILD #052 validation.
 
 ## Remaining P0/P1 work
 
 ### P0
 
-- Confirm that the next scheduled off-server backup cron run succeeds after `03:47` server time
 - Confirm that local monitoring cron continues to write fresh status reports
 - Confirm that daily local backup runs successfully after the scheduled time
 - Healthcheck after every security or infrastructure change
@@ -210,7 +223,6 @@ Estimated launch readiness: 90–92% after BUILD #050B validation.
 - Full restore test in a separate environment
 - Backup failure alerting
 - Legal final polish: GDPR, ANPC/SAL, refund/return policy, consumer rights, terms
-- SEO technical launch: robots.txt, sitemap.xml, canonical URLs, Open Graph metadata, favicon/app icons
 - Public endpoint audit
 
 ### P2
@@ -224,10 +236,9 @@ Estimated launch readiness: 90–92% after BUILD #050B validation.
 
 ## Recommended next build order
 
-1. Confirm the next scheduled off-server backup cron run
-2. BUILD #051 — Legal/ANPC/refund/GDPR final polish
-3. BUILD #052 — SEO, sitemap, robots and metadata
-4. BUILD #053 — Final Launch QA
+1. BUILD #053 — Final Launch QA
+2. BUILD #051 — Legal/ANPC/refund/GDPR final polish after company details and CAEN changes are ready
+3. External alerting and full isolated restore test
 
 ## Standard safe VPS deploy pattern
 

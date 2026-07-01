@@ -1,22 +1,44 @@
 import "./globals.css";
 import "./launch.css";
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
+import { createPageMetadata, siteConfig } from "../lib/seo";
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://app.autopilot-one.com"),
+  metadataBase: new URL(siteConfig.url),
+  applicationName: siteConfig.name,
+  creator: siteConfig.name,
+  publisher: siteConfig.name,
+  keywords: [
+    "Autopilot One",
+    "angajat AI",
+    "recepție AI",
+    "widget AI",
+    "captare lead-uri",
+    "CRM Lite",
+    "automatizare IMM",
+    "asistent AI website",
+  ],
+  category: "business software",
+  icons: {
+    icon: "/icon.svg",
+    apple: "/apple-icon.svg",
+  },
+  manifest: "/manifest.webmanifest",
+  ...createPageMetadata({
+    title: "Autopilot One — angajați AI pentru IMM-uri",
+    description:
+      "Autopilot One ajută IMM-urile să capteze lead-uri, să răspundă vizitatorilor 24/7 și să urmărească cererile într-un CRM simplu.",
+    path: "/",
+  }),
   title: {
     default: "Autopilot One — angajați AI pentru IMM-uri",
     template: "%s | Autopilot One",
   },
-  description: "Autopilot One ajută IMM-urile să capteze lead-uri, să răspundă vizitatorilor 24/7 și să urmărească cererile într-un CRM simplu.",
-  openGraph: {
-    title: "Autopilot One — angajați AI pentru IMM-uri",
-    description: "Widget AI, captare lead-uri, inbox și CRM Lite pentru afaceri mici și medii.",
-    url: "https://app.autopilot-one.com",
-    siteName: "Autopilot One",
-    locale: "ro_RO",
-    type: "website",
-  },
+};
+
+export const viewport: Viewport = {
+  themeColor: "#0f172a",
+  colorScheme: "light",
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

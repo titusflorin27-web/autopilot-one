@@ -1,5 +1,14 @@
+import type { Metadata } from "next";
 import { Footer } from "../../components/Footer";
 import { Nav } from "../../components/Nav";
+import { createPageMetadata } from "../../lib/seo";
+
+export const metadata: Metadata = createPageMetadata({
+  title: "Politica de confidențialitate Autopilot One",
+  description:
+    "Politica de confidențialitate Autopilot One pentru faza pilot: date prelucrate, scopuri, drepturi GDPR și utilizarea AI.",
+  path: "/privacy",
+});
 
 export default function PrivacyPage() {
   return (

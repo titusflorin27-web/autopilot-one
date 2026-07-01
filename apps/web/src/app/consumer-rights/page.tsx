@@ -1,5 +1,14 @@
+import type { Metadata } from "next";
 import { Footer } from "../../components/Footer";
 import { Nav } from "../../components/Nav";
+import { createPageMetadata } from "../../lib/seo";
+
+export const metadata: Metadata = createPageMetadata({
+  title: "Drepturile consumatorului Autopilot One",
+  description:
+    "Informații Autopilot One pentru consumatori: B2C/B2B, drept de retragere, servicii digitale, reclamații și soluționare.",
+  path: "/consumer-rights",
+});
 
 export default function ConsumerRightsPage() {
   return (
