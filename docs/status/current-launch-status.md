@@ -1,6 +1,6 @@
 # Autopilot One — Current launch status
 
-This document is the operating checkpoint after BUILD #052 SEO launch polish.
+This document is the operating checkpoint after BUILD #053 final launch QA tooling.
 
 No secrets, API keys, passwords or widget tokens are stored here.
 
@@ -196,7 +196,15 @@ No secrets, API keys, passwords or widget tokens are stored here.
 - Added app manifest metadata route
 - Added SVG app icons
 - Added dynamic Open Graph image route
+- SEO routes were deployed and returned public 200 responses on the VPS
 - Legal final copy remains intentionally deferred until company details and CAEN changes are finalized
+
+### BUILD #053 — Final Launch QA tooling
+
+- Added non-destructive VPS final launch QA script
+- Script checks public web pages, SEO routes, API health, Docker services, security services, monitoring freshness, local backup freshness, off-server backup marker, disk and memory
+- Script writes local QA report to `/var/log/autopilot-final-launch-qa.txt`
+- VPS execution is the next validation step
 
 ## Current launch readiness verdict
 
@@ -204,14 +212,15 @@ Autopilot One is live and suitable for a controlled pilot.
 
 The production VPS now has a basic hardening and monitoring layer: UFW, fail2ban, unattended security upgrades, cron backups, local monitoring, local PostgreSQL backups and off-server PostgreSQL backup sync are active.
 
-The public web surface now has launch SEO metadata, robots and sitemap support. It is not yet considered ready for broad public launch or heavy paid traffic until a full restore test in a separate environment, external alerting, legal final polish and final QA are completed.
+The public web surface has launch SEO metadata, robots and sitemap support. It is not yet considered ready for broad public launch or heavy paid traffic until final QA is run successfully on the VPS, legal final polish is completed, external alerting is configured and a full restore test is completed in a separate environment.
 
-Estimated launch readiness: 92–94% after BUILD #052 validation.
+Estimated launch readiness: 92–94% before BUILD #053 VPS validation; expected 94–95% if final QA passes without failures.
 
 ## Remaining P0/P1 work
 
 ### P0
 
+- Run BUILD #053 final launch QA script on the VPS
 - Confirm that local monitoring cron continues to write fresh status reports
 - Confirm that daily local backup runs successfully after the scheduled time
 - Healthcheck after every security or infrastructure change
@@ -236,7 +245,7 @@ Estimated launch readiness: 92–94% after BUILD #052 validation.
 
 ## Recommended next build order
 
-1. BUILD #053 — Final Launch QA
+1. Validate BUILD #053 on the VPS
 2. BUILD #051 — Legal/ANPC/refund/GDPR final polish after company details and CAEN changes are ready
 3. External alerting and full isolated restore test
 
