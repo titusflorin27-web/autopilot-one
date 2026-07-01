@@ -13,9 +13,9 @@ export const metadata: Metadata = createPageMetadata({
 
 const metrics = [
   ["24/7", "recepție AI pentru vizitatori"],
-  ["CRM", "lead-uri urmărite până la follow-up"],
-  ["Widget", "instalare rapidă pe website"],
-  ["AI", "răspunsuri din baza ta de cunoștințe"],
+  ["< 1 min", "lead pregătit pentru follow-up"],
+  ["CRM", "status, notă internă, next step"],
+  ["Pilot", "lansare controlată pe website"],
 ];
 
 const features = [
@@ -46,15 +46,20 @@ const trustItems = [
   ["Final QA", "Homepage, API, SEO, backup și monitoring validate pe VPS."],
 ];
 
+const beforeAfter = [
+  ["Înainte", "Lead-uri pierdute în inbox, răspunsuri întârziate și întrebări repetitive care consumă timpul echipei."],
+  ["După", "AI-ul răspunde imediat, cere datele importante și trimite conversația într-un CRM simplu de urmărit."],
+];
+
 export default function HomePage() {
   return (
     <>
       <Nav />
       <main className="container">
-        <section className="hero hero-split">
+        <section className="hero hero-split premium-hero">
           <div>
             <div className="eyebrow">AI receptionist + CRM Lite</div>
-            <h1><span className="gradient-text">Un angajat AI</span> care nu lasă lead-urile să se piardă.</h1>
+            <h1><span className="gradient-text">Un angajat AI</span> care transformă vizitatorii în lead-uri urmărite.</h1>
             <p className="lead-text">
               Autopilot One transformă website-ul într-un canal activ de vânzare: răspunde vizitatorilor, colectează datele importante și trimite conversațiile în CRM pentru follow-up.
             </p>
@@ -70,26 +75,47 @@ export default function HomePage() {
             </div>
           </div>
 
-          <article className="card hero-card launch-panel">
-            <span className="status-pill">Pilot live</span>
-            <h2>Recepție AI pentru website</h2>
-            <p>Experiență modernă pentru vizitatori și control operațional pentru echipă.</p>
-            <div className="launch-panel-row">
-              <strong>01</strong>
-              <p>Vizitatorul întreabă despre servicii, program, disponibilitate sau ofertă.</p>
+          <aside className="product-showcase" aria-label="Autopilot One preview">
+            <div className="showcase-topbar">
+              <div className="console-dots"><span /><span /><span /></div>
+              <span>LIVE PILOT</span>
             </div>
-            <div className="launch-panel-row">
-              <strong>02</strong>
-              <p>AI-ul răspunde din baza ta de cunoștințe și cere datele potrivite.</p>
+            <div className="showcase-grid">
+              <section className="ai-window">
+                <div className="ai-window-header">
+                  <div>
+                    <strong>Reception AI</strong>
+                    <span>Website conversation</span>
+                  </div>
+                  <em>online</em>
+                </div>
+                <div className="chat-bubble visitor">Bună, vreau o programare și câteva detalii despre servicii.</div>
+                <div className="chat-bubble ai">Sigur. Îți pot explica serviciile și pot trimite cererea către echipă. Pentru ce zi ai prefera programarea?</div>
+                <div className="chat-bubble visitor compact">Mâine după ora 15:00.</div>
+              </section>
+
+              <section className="crm-window">
+                <div className="crm-card active">
+                  <span>New lead</span>
+                  <strong>Programare cerută</strong>
+                  <p>Status: calificat</p>
+                </div>
+                <div className="crm-card">
+                  <span>Next step</span>
+                  <strong>Sună clientul</strong>
+                  <p>Follow-up: azi</p>
+                </div>
+              </section>
             </div>
-            <div className="launch-panel-row">
-              <strong>03</strong>
-              <p>Lead-ul ajunge în CRM, cu status și următorul pas pentru echipă.</p>
+            <div className="showcase-footer">
+              <span>Lead capture</span>
+              <span>CRM Lite</span>
+              <span>Analytics</span>
             </div>
-          </article>
+          </aside>
         </section>
 
-        <section className="launch-strip">
+        <section className="launch-strip premium-strip">
           {metrics.map(([value, label]) => (
             <article key={label}>
               <strong>{value}</strong>
@@ -98,7 +124,7 @@ export default function HomePage() {
           ))}
         </section>
 
-        <section className="card section-heading">
+        <section className="card section-heading statement-card">
           <div className="eyebrow">De ce contează</div>
           <h2>Un website frumos nu ajunge dacă lead-urile nu sunt urmărite.</h2>
           <p>
@@ -108,12 +134,46 @@ export default function HomePage() {
 
         <section className="grid three-columns">
           {features.map(([icon, title, description]) => (
-            <article className="card feature-card" key={title}>
+            <article className="card feature-card elevated-card" key={title}>
               <div className="feature-icon">{icon}</div>
               <h3>{title}</h3>
               <p>{description}</p>
             </article>
           ))}
+        </section>
+
+        <section className="before-after-grid">
+          {beforeAfter.map(([title, description]) => (
+            <article className="card before-after-card" key={title}>
+              <div className="eyebrow">{title}</div>
+              <p>{description}</p>
+            </article>
+          ))}
+        </section>
+
+        <section className="card dashboard-preview">
+          <div>
+            <div className="eyebrow">Dashboard preview</div>
+            <h2>Tot ce contează ajunge într-un flux clar.</h2>
+            <p>Conversații, lead-uri, statusuri, activitate widget și follow-up-uri într-un singur loc, fără să pierzi contextul comercial.</p>
+          </div>
+          <div className="dashboard-board">
+            <article>
+              <span>Conversații</span>
+              <strong>38</strong>
+              <p>ultimele 7 zile</p>
+            </article>
+            <article>
+              <span>Lead-uri</span>
+              <strong>12</strong>
+              <p>pregătite pentru contact</p>
+            </article>
+            <article>
+              <span>Follow-up</span>
+              <strong>5</strong>
+              <p>acțiuni deschise</p>
+            </article>
+          </div>
         </section>
 
         <section className="card story-card">
@@ -158,7 +218,7 @@ export default function HomePage() {
           ))}
         </section>
 
-        <section className="trust-band">
+        <section className="trust-band premium-trust">
           {trustItems.map(([title, description]) => (
             <article key={title}>
               <strong>{title}</strong>
@@ -167,7 +227,7 @@ export default function HomePage() {
           ))}
         </section>
 
-        <section className="card cta-card">
+        <section className="card cta-card final-cta-card">
           <div>
             <div className="eyebrow">Pregătit pentru pilot</div>
             <h2>Hai să alegem primul flux AI pentru afacerea ta.</h2>
