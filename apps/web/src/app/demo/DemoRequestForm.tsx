@@ -51,7 +51,7 @@ export function DemoRequestForm() {
     <form className="card form-section" onSubmit={onSubmit}>
       <div className="eyebrow">Start pilot</div>
       <h2>Cere demo</h2>
-      <p>Spune-ne ce tip de afacere ai și ce vrei să automatizezi prima dată. Cererea ajunge direct în CRM.</p>
+      <p>Spune-ne ce afacere ai și ce conversații vrei să preia primul angajat AI. Cererea ajunge direct în CRM.</p>
 
       {submitState === "error" && message ? <p className="form-error">{message}</p> : null}
       {submitState === "success" && message ? <p className="form-success">{message}</p> : null}
