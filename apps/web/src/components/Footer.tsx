@@ -4,6 +4,7 @@ const productLinks = [
   { href: "/", label: "Acasă" },
   { href: "/pricing", label: "Prețuri" },
   { href: "/demo", label: "Cere demo" },
+  { href: "/widget-demo", label: "Widget demo" },
   { href: "/login", label: "Intră în cont" },
 ];
 
@@ -19,9 +20,12 @@ export function Footer() {
     <footer className="site-footer">
       <div className="container footer-grid">
         <section>
-          <Link href="/" className="brand">Autopilot One</Link>
-          <p>Angajați AI pentru IMM-uri: recepție web, captare lead-uri, urmărire în dashboard și CRM Lite pentru cererile demo.</p>
-          <p className="helper-text">Pilot activ. Pentru ofertă comercială sau configurare, folosește formularul de demo.</p>
+          <Link href="/" className="brand">
+            <span className="brand-mark">A1</span>
+            <span>Autopilot One</span>
+          </Link>
+          <p>Platformă AI pentru IMM-uri care vor să răspundă rapid, să capteze lead-uri și să urmărească cererile într-un flux operațional clar.</p>
+          <p className="helper-text">Pilot controlat. Configurare ghidată, date urmărite în CRM Lite și validare înainte de folosirea cu clienți reali.</p>
         </section>
 
         <section>
@@ -41,7 +45,7 @@ export function Footer() {
         <section>
           <h3>Contact</h3>
           <p>contact@autopilot-one.com</p>
-          <p className="helper-text">Răspunsurile AI trebuie configurate și verificate pentru fiecare afacere înainte de folosirea cu clienți reali.</p>
+          <p className="helper-text">Pentru demo, pilot sau ofertă, trimite o cerere și îți propunem primul flux AI potrivit pentru afacerea ta.</p>
         </section>
       </div>
     </footer>

@@ -15,21 +15,21 @@ const plans = [
   {
     name: "Starter",
     price: "49 €",
-    note: "pentru validare și pilot mic",
-    features: ["1 widget activ", "Bază de cunoștințe de început", "Lead capture simplu", "CRM Lite pentru cereri demo", "Suport pentru configurare inițială"],
+    note: "pentru validare și primul flux AI",
+    features: ["1 widget activ", "Bază de cunoștințe de început", "Lead capture simplu", "CRM Lite pentru cereri demo", "Setup inițial ghidat"],
   },
   {
     name: "Growth",
     price: "99 €",
-    note: "pentru afaceri active",
+    note: "pentru afaceri care vor să urmărească lead-uri real",
     featured: true,
-    features: ["Widget pentru site activ", "Mai multe surse de cunoștințe", "Conversații și escaladări", "Analiză widget și lead-uri", "Dashboard cu metrici reale"],
+    features: ["Widget activ pe website", "Bază de cunoștințe extinsă", "Conversații și escaladări", "Widget analytics", "Dashboard cu metrici reale"],
   },
   {
     name: "Pro",
     price: "199 €",
-    note: "pentru echipe care vor automatizare serioasă",
-    features: ["Fluxuri operaționale extinse", "Prioritizare lead-uri", "Rapoarte și task-uri", "Follow-up-uri în CRM", "Suport prioritar pentru pilot"],
+    note: "pentru echipe care vor automatizare operațională",
+    features: ["Fluxuri AI extinse", "Prioritizare lead-uri", "Rapoarte și task-uri", "Follow-up-uri în CRM", "Suport prioritar pentru pilot"],
   },
   {
     name: "Custom",
@@ -39,16 +39,22 @@ const plans = [
   },
 ];
 
+const principles = [
+  ["Fără surprize", "Începem cu un caz clar și confirmăm planul final înainte de activare."],
+  ["Pilot măsurabil", "Urmărim conversații, lead-uri, statusuri și pașii următori."],
+  ["Scalare treptată", "Extindem doar după ce primul flux produce valoare."],
+];
+
 export default function PricingPage() {
   return (
     <>
       <Nav />
       <main className="container page-stack">
-        <section className="card hero-card">
+        <section className="card hero-card pricing-hero">
           <div className="eyebrow">Prețuri</div>
-          <h1>Planuri simple pentru primul angajat AI.</h1>
-          <p>
-            Începe cu un pilot potrivit pentru volumul actual, validează valoarea și extinde automatizările după ce vezi lead-uri și conversații reale în dashboard.
+          <h1><span className="gradient-text">Planuri clare</span> pentru primul tău angajat AI.</h1>
+          <p className="lead-text">
+            Alege un punct de pornire, validează în pilot și extinde doar după ce vezi lead-uri, conversații și rezultate urmărite în dashboard.
           </p>
           <div className="actions">
             <Link href="/demo" className="button">Cere demo</Link>
@@ -57,7 +63,7 @@ export default function PricingPage() {
           <div className="launch-kicker">
             <span>Demo fără card</span>
             <span>Setup ghidat</span>
-            <span>Planul final se confirmă în ofertă</span>
+            <span>Plan confirmat în ofertă</span>
           </div>
         </section>
 
@@ -67,7 +73,7 @@ export default function PricingPage() {
               {plan.featured ? <span className="status-pill">Recomandat</span> : null}
               <h2>{plan.name}</h2>
               <div className="price">{plan.price}<span>{plan.price.includes("€") ? "/lună" : ""}</span></div>
-              <p>{plan.note}</p>
+              <p className="plan-note">{plan.note}</p>
               <ul className="check-list">
                 {plan.features.map((feature) => <li key={feature}>{feature}</li>)}
               </ul>
@@ -78,9 +84,19 @@ export default function PricingPage() {
           ))}
         </section>
 
+        <section className="grid three-columns">
+          {principles.map(([title, description]) => (
+            <article className="card" key={title}>
+              <h3>{title}</h3>
+              <p>{description}</p>
+            </article>
+          ))}
+        </section>
+
         <section className="card cta-card">
           <div>
-            <h2>Nu știi ce plan ți se potrivește?</h2>
+            <div className="eyebrow">Nu știi ce plan ți se potrivește?</div>
+            <h2>Începem cu ce aduce valoare cel mai repede.</h2>
             <p>Trimite o cerere demo și stabilim împreună dacă primul caz de utilizare ar trebui să fie recepția AI, captarea lead-urilor sau urmărirea conversațiilor.</p>
           </div>
           <Link href="/demo" className="button">Cere recomandare</Link>
