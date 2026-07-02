@@ -1,6 +1,9 @@
 "use client";
 
-import { FormEvent, useEffect, useState } from "react";
+import type { FormEvent } from "react";
+import { useEffect, useState } from "react";
+import { notificationsInboxCopy } from "../../lib/i18n";
+import { useAppLanguage } from "../../lib/useAppLanguage";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:4000/api";
 
@@ -44,7 +47,52 @@ type ConversationDetail = InboxConversation & {
   messages: InboxMessage[];
 };
 
+type InboxCopy = typeof notificationsInboxCopy["ro"]["inbox"];
+
+function formatDate(value: string, locale: string, copy: InboxCopy) {
+  const parsedDate = new Date(value);
+
+  if (Number.isNaN(parsedDate.getTime())) {
+    return copy.dateUnavailable;
+  }
+
+  return parsedDate.toLocaleString(locale);
+}
+
+function statusLabel(status: string, copy: InboxCopy) {
+  switch (status) {
+    case "OPEN":
+      return copy.open;
+    case "WAITING_FOR_HUMAN":
+      return copy.waitingForHuman;
+    case "CLOSED":
+      return copy.closed;
+    default:
+      return status;
+  }
+}
+
+function senderLabel(sender: string, copy: InboxCopy) {
+  switch (sender) {
+    case "CUSTOMER":
+      return copy.senderCustomer;
+    case "AI":
+      return copy.senderAi;
+    case "HUMAN":
+      return copy.senderHuman;
+    case "SYSTEM":
+      return copy.senderSystem;
+    default:
+      return sender;
+  }
+}
+
 export function InboxClient() {
+  const language = useAppLanguage();
+  const copy = notificationsInboxCopy[language].inbox;
+  const commonCopy = notificationsInboxCopy[language].common;
+  const locale = language === "ro" ? "ro-RO" : "en-US";
+
   const [user, setUser] = useState<CurrentUser | null>(null);
   const [conversations, setConversations] = useState<InboxConversation[]>([]);
   const [selected, setSelected] = useState<ConversationDetail | null>(null);
@@ -62,7 +110,7 @@ export function InboxClient() {
   async function apiFetch(path: string, init: RequestInit = {}) {
     const accessToken = token();
 
-    if (!accessToken) throw new Error("Autentifică-te înainte să folosești inboxul.");
+    if (!accessToken) throw new Error(copy.loginRequired);
 
     return fetch(`${API_URL}${path}`, {
       ...init,
@@ -83,7 +131,7 @@ export function InboxClient() {
     const response = await apiFetch(`/inbox/organization/${organizationId}/conversations?${params.toString()}`);
     const data = await response.json();
 
-    if (!response.ok) throw new Error(data.message ?? "Nu am putut încărca inboxul");
+    if (!response.ok) throw new Error(data.message ?? copy.loadInboxError);
 
     setConversations(data);
     if (!selected && data[0]) await loadConversation(data[0].id);
@@ -95,7 +143,7 @@ export function InboxClient() {
     const response = await apiFetch(`/inbox/organization/${organizationId}/conversations/${conversationId}`);
     const data = await response.json();
 
-    if (!response.ok) throw new Error(data.message ?? "Nu am putut încărca conversația");
+    if (!response.ok) throw new Error(data.message ?? copy.loadConversationError);
 
     setSelected(data);
   }
@@ -110,7 +158,7 @@ export function InboxClient() {
     });
     const data = await response.json();
 
-    if (!response.ok) throw new Error(data.message ?? "Nu am putut actualiza conversația");
+    if (!response.ok) throw new Error(data.message ?? copy.updateConversationError);
 
     setSelected(data);
     await loadConversations();
@@ -131,7 +179,7 @@ export function InboxClient() {
     });
     const data = await response.json();
 
-    if (!response.ok) throw new Error(data.message ?? "Nu am putut trimite răspunsul");
+    if (!response.ok) throw new Error(data.message ?? copy.sendReplyError);
 
     event.currentTarget.reset();
     setSelected(data);
@@ -142,7 +190,7 @@ export function InboxClient() {
     const accessToken = token();
 
     if (!accessToken) {
-      setError("Autentifică-te înainte să folosești inboxul.");
+      setError(copy.loginRequired);
       setIsLoading(false);
       return;
     }
@@ -152,26 +200,26 @@ export function InboxClient() {
     })
       .then(async (response) => {
         const data = await response.json();
-        if (!response.ok) throw new Error(data.message ?? "Nu am putut încărca sesiunea");
+        if (!response.ok) throw new Error(data.message ?? copy.loadSessionError);
         setUser(data);
       })
-      .catch((caughtError) => setError(caughtError instanceof Error ? caughtError.message : "Nu am putut încărca sesiunea"))
+      .catch((caughtError) => setError(caughtError instanceof Error ? caughtError.message : copy.loadSessionError))
       .finally(() => setIsLoading(false));
-  }, []);
+  }, [copy.loadSessionError, copy.loginRequired]);
 
   useEffect(() => {
     if (!organizationId) return;
-    loadConversations().catch((caughtError) => setError(caughtError instanceof Error ? caughtError.message : "Nu am putut încărca inboxul"));
+    loadConversations().catch((caughtError) => setError(caughtError instanceof Error ? caughtError.message : copy.loadInboxError));
   }, [organizationId]);
 
-  if (isLoading) return <p>Se încarcă inboxul...</p>;
+  if (isLoading) return <p>{copy.loading}</p>;
 
   if (error && !user) {
     return (
       <section className="card">
-        <h1>Autentificare necesară.</h1>
+        <h1>{commonCopy.authTitle}</h1>
         <p>{error}</p>
-        <a href="/login" className="button">Mergi la login</a>
+        <a href="/login" className="button">{commonCopy.loginCta}</a>
       </section>
     );
   }
@@ -179,9 +227,9 @@ export function InboxClient() {
   return (
     <div className="inbox-layout">
       <section className="card">
-        <div className="eyebrow">Inbox operator</div>
-        <h1>Inbox pentru conversații și transferuri umane.</h1>
-        <p>Revizuiești conversațiile din website, escaladările AI, leadurile și răspunsurile umane într-un singur loc.</p>
+        <div className="eyebrow">{copy.eyebrow}</div>
+        <h1>{copy.title}</h1>
+        <p>{copy.description}</p>
       </section>
 
       {error ? <p className="form-error">{error}</p> : null}
@@ -190,29 +238,29 @@ export function InboxClient() {
         <aside className="card inbox-list">
           <div className="inbox-filters">
             <select value={status} onChange={(event) => { setStatus(event.target.value); loadConversations(event.target.value, source).catch(console.error); }}>
-              <option value="">Toate statusurile</option>
-              <option value="OPEN">Deschis</option>
-              <option value="WAITING_FOR_HUMAN">Așteaptă operator</option>
-              <option value="CLOSED">Închis</option>
+              <option value="">{copy.allStatuses}</option>
+              <option value="OPEN">{copy.open}</option>
+              <option value="WAITING_FOR_HUMAN">{copy.waitingForHuman}</option>
+              <option value="CLOSED">{copy.closed}</option>
             </select>
             <select value={source} onChange={(event) => { setSource(event.target.value); loadConversations(status, event.target.value).catch(console.error); }}>
-              <option value="">Toate sursele</option>
-              <option value="public-web">Widget website</option>
-              <option value="web">Web intern</option>
+              <option value="">{copy.allSources}</option>
+              <option value="public-web">{copy.websiteWidget}</option>
+              <option value="web">{copy.internalWeb}</option>
             </select>
           </div>
 
           <div className="source-list">
             {conversations.length ? conversations.map((conversation) => {
-              const preview = conversation.messages[0]?.content ?? "Nu există mesaje încă.";
+              const preview = conversation.messages[0]?.content ?? copy.noMessages;
               return (
                 <button className="source-item ghost-button" key={conversation.id} onClick={() => loadConversation(conversation.id).catch(console.error)}>
-                  <strong>{conversation.customerName || conversation.customerEmail || "Vizitator anonim"}</strong>
-                  <span>{conversation.status} · {conversation.channel}</span>
+                  <strong>{conversation.customerName || conversation.customerEmail || copy.anonymousVisitor}</strong>
+                  <span>{statusLabel(conversation.status, copy)} · {conversation.channel} · {formatDate(conversation.updatedAt, locale, copy)}</span>
                   <p>{preview.slice(0, 140)}</p>
                 </button>
               );
-            }) : <p>Nu există conversații.</p>}
+            }) : <p>{copy.noConversations}</p>}
           </div>
         </aside>
 
@@ -221,34 +269,34 @@ export function InboxClient() {
             <>
               <div className="inbox-header">
                 <div>
-                  <h2>{selected.customerName || selected.customerEmail || "Vizitator anonim"}</h2>
-                  <p>{selected.status} · {selected.channel}</p>
-                  {selected.escalationReason ? <p>Escaladare: {selected.escalationReason}</p> : null}
-                  {selected.lead ? <p>Lead: {selected.lead.status} · scor {selected.lead.score}</p> : null}
+                  <h2>{selected.customerName || selected.customerEmail || copy.anonymousVisitor}</h2>
+                  <p>{statusLabel(selected.status, copy)} · {selected.channel}</p>
+                  {selected.escalationReason ? <p>{copy.escalation}: {selected.escalationReason}</p> : null}
+                  {selected.lead ? <p>{copy.lead}: {selected.lead.status} · {copy.score} {selected.lead.score}</p> : null}
                 </div>
                 <div className="mini-actions">
-                  <button className="button mini" type="button" onClick={() => updateConversation("OPEN").catch((caughtError) => setError(String(caughtError)))}>Deschis</button>
-                  <button className="button mini secondary" type="button" onClick={() => updateConversation("WAITING_FOR_HUMAN").catch((caughtError) => setError(String(caughtError)))}>Transfer uman</button>
-                  <button className="button mini secondary" type="button" onClick={() => updateConversation("CLOSED").catch((caughtError) => setError(String(caughtError)))}>Închide</button>
+                  <button className="button mini" type="button" onClick={() => updateConversation("OPEN").catch((caughtError) => setError(String(caughtError)))}>{copy.open}</button>
+                  <button className="button mini secondary" type="button" onClick={() => updateConversation("WAITING_FOR_HUMAN").catch((caughtError) => setError(String(caughtError)))}>{copy.humanTransfer}</button>
+                  <button className="button mini secondary" type="button" onClick={() => updateConversation("CLOSED").catch((caughtError) => setError(String(caughtError)))}>{copy.close}</button>
                 </div>
               </div>
 
               <div className="inbox-messages">
                 {selected.messages.map((message) => (
                   <div className={`widget-message ${message.sender === "CUSTOMER" ? "customer" : "ai"}`} key={message.id}>
-                    <strong>{message.sender}</strong>
+                    <strong>{senderLabel(message.sender, copy)}</strong>
                     <p>{message.content}</p>
-                    <span>{new Date(message.createdAt).toLocaleString()}</span>
+                    <span>{formatDate(message.createdAt, locale, copy)}</span>
                   </div>
                 ))}
               </div>
 
               <form className="widget-input" onSubmit={sendHumanReply}>
-                <input name="content" placeholder="Scrie un răspuns uman..." />
-                <button className="button mini" type="submit">Trimite</button>
+                <input name="content" placeholder={copy.replyPlaceholder} />
+                <button className="button mini" type="submit">{copy.send}</button>
               </form>
             </>
-          ) : <p>Selectează o conversație.</p>}
+          ) : <p>{copy.selectConversation}</p>}
         </article>
       </section>
     </div>
