@@ -2,7 +2,7 @@ export type AppLanguage = "ro" | "en";
 
 export function detectBrowserLanguage(): AppLanguage {
   if (typeof window === "undefined") {
-    return "en";
+    return "ro";
   }
 
   const browserLanguages = window.navigator.languages?.length
@@ -11,7 +11,7 @@ export function detectBrowserLanguage(): AppLanguage {
 
   const primaryLanguage = browserLanguages.find(Boolean)?.toLowerCase() ?? "";
 
-  return primaryLanguage.startsWith("ro") ? "ro" : "en";
+  return "ro";
 }
 
 export const authCopy = {
