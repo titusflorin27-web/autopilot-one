@@ -85,7 +85,7 @@ export function NotificationsClient() {
       <section className="card">
         <div className="eyebrow">Notificări</div>
         <h1>Centru de notificări.</h1>
-        <p>{organization ? `Workspace: ${organization.name}` : "No organization found."}</p>
+        <p>{organization ? `Spațiu de lucru: ${organization.name}` : "Nu a fost găsită nicio organizație."}</p>
       </section>
 
       {error ? <p className="form-error">{error}</p> : null}

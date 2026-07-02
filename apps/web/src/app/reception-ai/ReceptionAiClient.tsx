@@ -184,7 +184,7 @@ export function ReceptionAiClient() {
     setError(null);
 
     if (!primaryMembership) {
-      setError("No organization found for this account.");
+      setError("Nu a fost găsită nicio organizație pentru acest cont.");
       return;
     }
 
@@ -312,7 +312,7 @@ export function ReceptionAiClient() {
       <section className="card">
         <div className="eyebrow">Recepționer AI</div>
         <h1>Recepționerul AI este conectat la gateway-ul de model.</h1>
-        <p>{primaryMembership ? `Workspace: ${primaryMembership.organization.name}` : "Nu a fost găsită nicio organizație."}</p>
+        <p>{primaryMembership ? `Spațiu de lucru: ${primaryMembership.organization.name}` : "Nu a fost găsită nicio organizație."}</p>
       </section>
 
       <section className="grid">

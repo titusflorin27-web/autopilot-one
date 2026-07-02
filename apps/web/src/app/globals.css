@@ -779,7 +779,7 @@ input[type="file"] {
 }
 
 
-/* BUILD #056 AUTH PREMIUM POLISH */
+/* AUTH PREMIUM POLISH */
 .auth-page-shell {
   min-height: calc(100vh - 96px);
   display: grid;
@@ -949,7 +949,7 @@ input[type="file"] {
 }
 
 
-/* BUILD #057 DASHBOARD QUICK POLISH */
+/* DASHBOARD QUICK POLISH */
 .dashboard-premium {
   min-height: 100vh;
   background:
@@ -1197,7 +1197,7 @@ input[type="file"] {
   }
 }
 
-/* BUILD #060 BILINGUAL FOUNDATION */
+/* BILINGUAL FOUNDATION */
 .language-switcher {
   position: fixed;
   top: 18px;
