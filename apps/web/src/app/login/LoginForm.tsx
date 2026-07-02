@@ -51,7 +51,7 @@ export function LoginForm() {
   }
 
   return (
-    <form className="form card" onSubmit={onSubmit}>
+    <form className="form card auth-card" onSubmit={onSubmit}>
       <div className="eyebrow">{copy.eyebrow}</div>
       <h2>{copy.title}</h2>
       <p>{copy.subtitle}</p>
