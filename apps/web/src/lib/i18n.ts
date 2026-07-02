@@ -561,3 +561,183 @@ export const billingLaunchCopy = {
     script: Array<{ title: string; body: string }>;
   };
 }>;
+
+
+export const notificationsInboxCopy = {
+  en: {
+    common: {
+      authTitle: "Authentication required.",
+      loginCta: "Go to login",
+    },
+    notifications: {
+      loginRequired: "Sign in before viewing notifications.",
+      loadNotificationsError: "Could not load notifications",
+      loadSessionError: "Could not load session",
+      loading: "Loading notifications...",
+      eyebrow: "Notifications",
+      title: "Notification center.",
+      workspacePrefix: "Workspace",
+      organizationMissing: "No organization was found.",
+      total: "Total",
+      highPriority: "High priority",
+      emailReady: "Ready for email",
+      activeNotifications: "Active notifications",
+      noActiveNotifications: "No active notifications.",
+      emailPayloadsTitle: "Ready for email",
+      noEmailPayloads: "No email payloads ready.",
+      dateUnavailable: "Date unavailable",
+    },
+    inbox: {
+      loginRequired: "Sign in before using Inbox.",
+      loadInboxError: "Could not load inbox",
+      loadConversationError: "Could not load conversation",
+      updateConversationError: "Could not update conversation",
+      sendReplyError: "Could not send reply",
+      loadSessionError: "Could not load session",
+      loading: "Loading inbox...",
+      eyebrow: "Operator inbox",
+      title: "Inbox for conversations and human handoffs.",
+      description: "Review website conversations, AI escalations, leads and human replies in one place.",
+      allStatuses: "All statuses",
+      open: "Open",
+      waitingForHuman: "Waiting for human",
+      closed: "Closed",
+      allSources: "All sources",
+      websiteWidget: "Website widget",
+      internalWeb: "Internal web",
+      noMessages: "No messages yet.",
+      noConversations: "No conversations found.",
+      anonymousVisitor: "Anonymous visitor",
+      escalation: "Escalation",
+      lead: "Lead",
+      score: "score",
+      humanTransfer: "Human transfer",
+      close: "Close",
+      replyPlaceholder: "Write a human reply...",
+      send: "Send",
+      selectConversation: "Select a conversation.",
+      dateUnavailable: "Date unavailable",
+      senderCustomer: "Customer",
+      senderAi: "AI",
+      senderHuman: "Operator",
+      senderSystem: "System",
+    },
+  },
+  ro: {
+    common: {
+      authTitle: "Autentificare necesară.",
+      loginCta: "Mergi la login",
+    },
+    notifications: {
+      loginRequired: "Autentifică-te înainte să vezi notificările.",
+      loadNotificationsError: "Nu am putut încărca notificările",
+      loadSessionError: "Nu am putut încărca sesiunea",
+      loading: "Se încarcă notificările...",
+      eyebrow: "Notificări",
+      title: "Centru de notificări.",
+      workspacePrefix: "Spațiu de lucru",
+      organizationMissing: "Nu a fost găsită nicio organizație.",
+      total: "Total",
+      highPriority: "Prioritate mare",
+      emailReady: "Pregătite pentru email",
+      activeNotifications: "Notificări active",
+      noActiveNotifications: "Nu există notificări active.",
+      emailPayloadsTitle: "Mesaje pregătite pentru email",
+      noEmailPayloads: "Nu există mesaje email pregătite.",
+      dateUnavailable: "Dată indisponibilă",
+    },
+    inbox: {
+      loginRequired: "Autentifică-te înainte să folosești inboxul.",
+      loadInboxError: "Nu am putut încărca inboxul",
+      loadConversationError: "Nu am putut încărca conversația",
+      updateConversationError: "Nu am putut actualiza conversația",
+      sendReplyError: "Nu am putut trimite răspunsul",
+      loadSessionError: "Nu am putut încărca sesiunea",
+      loading: "Se încarcă inboxul...",
+      eyebrow: "Inbox operator",
+      title: "Inbox pentru conversații și transferuri umane.",
+      description: "Revizuiești conversațiile din website, escaladările AI, leadurile și răspunsurile umane într-un singur loc.",
+      allStatuses: "Toate statusurile",
+      open: "Deschis",
+      waitingForHuman: "Așteaptă operator",
+      closed: "Închis",
+      allSources: "Toate sursele",
+      websiteWidget: "Widget website",
+      internalWeb: "Web intern",
+      noMessages: "Nu există mesaje încă.",
+      noConversations: "Nu există conversații.",
+      anonymousVisitor: "Vizitator anonim",
+      escalation: "Escaladare",
+      lead: "Lead",
+      score: "scor",
+      humanTransfer: "Transfer uman",
+      close: "Închide",
+      replyPlaceholder: "Scrie un răspuns uman...",
+      send: "Trimite",
+      selectConversation: "Selectează o conversație.",
+      dateUnavailable: "Dată indisponibilă",
+      senderCustomer: "Client",
+      senderAi: "AI",
+      senderHuman: "Operator",
+      senderSystem: "Sistem",
+    },
+  },
+} satisfies Record<AppLanguage, {
+  common: {
+    authTitle: string;
+    loginCta: string;
+  };
+  notifications: {
+    loginRequired: string;
+    loadNotificationsError: string;
+    loadSessionError: string;
+    loading: string;
+    eyebrow: string;
+    title: string;
+    workspacePrefix: string;
+    organizationMissing: string;
+    total: string;
+    highPriority: string;
+    emailReady: string;
+    activeNotifications: string;
+    noActiveNotifications: string;
+    emailPayloadsTitle: string;
+    noEmailPayloads: string;
+    dateUnavailable: string;
+  };
+  inbox: {
+    loginRequired: string;
+    loadInboxError: string;
+    loadConversationError: string;
+    updateConversationError: string;
+    sendReplyError: string;
+    loadSessionError: string;
+    loading: string;
+    eyebrow: string;
+    title: string;
+    description: string;
+    allStatuses: string;
+    open: string;
+    waitingForHuman: string;
+    closed: string;
+    allSources: string;
+    websiteWidget: string;
+    internalWeb: string;
+    noMessages: string;
+    noConversations: string;
+    anonymousVisitor: string;
+    escalation: string;
+    lead: string;
+    score: string;
+    humanTransfer: string;
+    close: string;
+    replyPlaceholder: string;
+    send: string;
+    selectConversation: string;
+    dateUnavailable: string;
+    senderCustomer: string;
+    senderAi: string;
+    senderHuman: string;
+    senderSystem: string;
+  };
+}>;
