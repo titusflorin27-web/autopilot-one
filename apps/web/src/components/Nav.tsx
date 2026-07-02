@@ -1,17 +1,23 @@
+"use client";
+
 import Link from "next/link";
+import { shellCopy } from "../lib/i18n";
+import { useAppLanguage } from "../lib/useAppLanguage";
 
 export function Nav() {
+  const copy = shellCopy[useAppLanguage()];
+
   return (
     <header className="nav">
-      <Link href="/" className="brand" aria-label="Autopilot One acasă">
+      <Link href="/" className="brand" aria-label={copy.homeAria}>
         <span className="brand-mark">A1</span>
         <span>Autopilot One</span>
       </Link>
-      <nav aria-label="Navigație principală">
-        <Link href="/pricing">Prețuri</Link>
-        <Link href="/demo">Cere demo</Link>
-        <Link href="/register" className="nav-cta">Creează cont</Link>
-        <Link href="/login">Intră în cont</Link>
+      <nav aria-label={copy.navAria}>
+        <Link href="/pricing">{copy.pricing}</Link>
+        <Link href="/demo">{copy.demo}</Link>
+        <Link href="/register" className="nav-cta">{copy.createAccount}</Link>
+        <Link href="/login">{copy.login}</Link>
       </nav>
     </header>
   );

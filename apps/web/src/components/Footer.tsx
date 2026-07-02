@@ -1,21 +1,27 @@
+"use client";
+
 import Link from "next/link";
-
-const productLinks = [
-  { href: "/", label: "Acasă" },
-  { href: "/pricing", label: "Prețuri" },
-  { href: "/demo", label: "Cere demo" },
-  { href: "/widget-demo", label: "Demo widget" },
-  { href: "/login", label: "Intră în cont" },
-];
-
-const legalLinks = [
-  { href: "/privacy", label: "Confidențialitate" },
-  { href: "/terms", label: "Termeni" },
-  { href: "/refund-policy", label: "Rambursări" },
-  { href: "/consumer-rights", label: "Consumatori" },
-];
+import { shellCopy } from "../lib/i18n";
+import { useAppLanguage } from "../lib/useAppLanguage";
 
 export function Footer() {
+  const copy = shellCopy[useAppLanguage()];
+
+  const productLinks = [
+    { href: "/", label: copy.home },
+    { href: "/pricing", label: copy.pricing },
+    { href: "/demo", label: copy.demo },
+    { href: "/widget-demo", label: copy.widgetDemo },
+    { href: "/login", label: copy.login },
+  ];
+
+  const legalLinks = [
+    { href: "/privacy", label: copy.privacy },
+    { href: "/terms", label: copy.terms },
+    { href: "/refund-policy", label: copy.refunds },
+    { href: "/consumer-rights", label: copy.consumers },
+  ];
+
   return (
     <footer className="site-footer">
       <div className="container footer-grid">
@@ -24,28 +30,28 @@ export function Footer() {
             <span className="brand-mark">A1</span>
             <span>Autopilot One</span>
           </Link>
-          <p>Platformă AI pentru IMM-uri care vor să răspundă rapid, să capteze lead-uri și să urmărească cererile într-un flux operațional clar.</p>
-          <p className="helper-text">Pilot controlat. Configurare ghidată, date urmărite în CRM Lite și validare înainte de folosirea cu clienți reali.</p>
+          <p>{copy.footerDescription}</p>
+          <p className="helper-text">{copy.footerPilot}</p>
         </section>
 
         <section>
-          <h3>Produs</h3>
+          <h3>{copy.product}</h3>
           <div className="footer-links-column">
             {productLinks.map((link) => <Link href={link.href} key={link.href}>{link.label}</Link>)}
           </div>
         </section>
 
         <section>
-          <h3>Legal</h3>
+          <h3>{copy.legal}</h3>
           <div className="footer-links-column">
             {legalLinks.map((link) => <Link href={link.href} key={link.href}>{link.label}</Link>)}
           </div>
         </section>
 
         <section>
-          <h3>Contact</h3>
+          <h3>{copy.contact}</h3>
           <p>contact@autopilot-one.com</p>
-          <p className="helper-text">Pentru demo, pilot sau ofertă, trimite o cerere și îți propunem primul flux AI potrivit pentru afacerea ta.</p>
+          <p className="helper-text">{copy.contactNote}</p>
         </section>
       </div>
     </footer>
