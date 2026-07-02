@@ -1,12 +1,20 @@
 "use client";
 
-import { FormEvent, useState } from "react";
+import { FormEvent, useEffect, useState } from "react";
+import { authCopy, detectBrowserLanguage, type AppLanguage } from "../../lib/i18n";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:4000/api";
 
 export function RegisterForm() {
   const [error, setError] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [language, setLanguage] = useState<AppLanguage>("en");
+
+  useEffect(() => {
+    setLanguage(detectBrowserLanguage());
+  }, []);
+
+  const copy = authCopy[language].register;
 
   async function onSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -33,14 +41,14 @@ export function RegisterForm() {
       const data = await response.json();
 
       if (!response.ok) {
-        throw new Error(data.message ?? "Registration failed");
+        throw new Error(data.message ?? copy.error);
       }
 
       window.localStorage.setItem("autopilot.accessToken", data.accessToken);
       window.localStorage.setItem("autopilot.refreshToken", data.refreshToken);
       window.location.href = "/dashboard";
     } catch (caughtError) {
-      setError(caughtError instanceof Error ? caughtError.message : "Registration failed");
+      setError(caughtError instanceof Error ? caughtError.message : copy.error);
     } finally {
       setIsSubmitting(false);
     }
@@ -48,21 +56,21 @@ export function RegisterForm() {
 
   return (
     <form className="form card" onSubmit={onSubmit}>
-      <div className="eyebrow">Build #003 Identity</div>
-      <h2>Create account</h2>
-      <p>Create the owner account and first organization workspace.</p>
+      <div className="eyebrow">{copy.eyebrow}</div>
+      <h2>{copy.title}</h2>
+      <p>{copy.subtitle}</p>
 
-      <input name="email" placeholder="Work email" type="email" autoComplete="email" required />
-      <input name="password" placeholder="Password" type="password" autoComplete="new-password" minLength={8} required />
-      <input name="firstName" placeholder="First name" autoComplete="given-name" />
-      <input name="lastName" placeholder="Last name" autoComplete="family-name" />
-      <input name="organizationName" placeholder="Company name" required />
-      <input name="organizationSlug" placeholder="company-slug" pattern="[a-z0-9-]+" />
+      <input name="email" placeholder={copy.emailPlaceholder} type="email" autoComplete="email" required />
+      <input name="password" placeholder={copy.passwordPlaceholder} type="password" autoComplete="new-password" minLength={8} required />
+      <input name="firstName" placeholder={copy.firstNamePlaceholder} autoComplete="given-name" />
+      <input name="lastName" placeholder={copy.lastNamePlaceholder} autoComplete="family-name" />
+      <input name="organizationName" placeholder={copy.organizationNamePlaceholder} required />
+      <input name="organizationSlug" placeholder={copy.organizationSlugPlaceholder} pattern="[a-z0-9-]+" />
 
       {error ? <p className="form-error">{error}</p> : null}
 
       <button className="button" type="submit" disabled={isSubmitting}>
-        {isSubmitting ? "Creating..." : "Create workspace"}
+        {isSubmitting ? copy.submitting : copy.submit}
       </button>
     </form>
   );
