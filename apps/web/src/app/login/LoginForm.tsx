@@ -2,17 +2,18 @@
 
 import { FormEvent, useEffect, useState } from "react";
 import Link from "next/link";
-import { authCopy, detectBrowserLanguage, type AppLanguage } from "../../lib/i18n";
+import { authCopy, detectBrowserLanguage, subscribeToLanguageChanges, type AppLanguage } from "../../lib/i18n";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:4000/api";
 
 export function LoginForm() {
   const [error, setError] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [language, setLanguage] = useState<AppLanguage>("ro");
+  const [language, setLanguage] = useState<AppLanguage>(() => detectBrowserLanguage());
 
   useEffect(() => {
     setLanguage(detectBrowserLanguage());
+    return subscribeToLanguageChanges(setLanguage);
   }, []);
 
   const copy = authCopy[language].login;
