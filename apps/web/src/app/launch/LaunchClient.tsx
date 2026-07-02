@@ -1,6 +1,8 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { billingLaunchCopy } from "../../lib/i18n";
+import { useAppLanguage } from "../../lib/useAppLanguage";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:4000/api";
 
@@ -18,6 +20,11 @@ type LaunchChecklist = {
 };
 
 export function LaunchClient() {
+  const language = useAppLanguage();
+  const copy = billingLaunchCopy[language].launch;
+  const commonCopy = billingLaunchCopy[language].common;
+  const locale = language === "ro" ? "ro-RO" : "en-US";
+
   const [user, setUser] = useState<CurrentUser | null>(null);
   const [checklist, setChecklist] = useState<LaunchChecklist | null>(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -29,19 +36,19 @@ export function LaunchClient() {
 
   async function loadChecklist(organizationId: string) {
     const accessToken = token();
-    if (!accessToken) throw new Error("Autentifică-te înainte să vezi checklistul de lansare.");
+    if (!accessToken) throw new Error(copy.loginRequired);
     const response = await fetch(`${API_URL}/launch/organization/${organizationId}/checklist`, {
       headers: { Authorization: `Bearer ${accessToken}` },
     });
     const json = await response.json();
-    if (!response.ok) throw new Error(json.message ?? "Nu am putut încărca checklistul de lansare");
+    if (!response.ok) throw new Error(json.message ?? copy.loadChecklistError);
     setChecklist(json);
   }
 
   useEffect(() => {
     const accessToken = token();
     if (!accessToken) {
-      setError("Autentifică-te înainte să vezi checklistul de lansare.");
+      setError(copy.loginRequired);
       setIsLoading(false);
       return;
     }
@@ -49,23 +56,23 @@ export function LaunchClient() {
     fetch(`${API_URL}/users/me`, { headers: { Authorization: `Bearer ${accessToken}` } })
       .then(async (response) => {
         const json = await response.json();
-        if (!response.ok) throw new Error(json.message ?? "Nu am putut încărca sesiunea");
+        if (!response.ok) throw new Error(json.message ?? copy.loadSessionError);
         setUser(json);
         const primary = json.memberships?.[0]?.organization;
         if (primary) await loadChecklist(primary.id);
       })
-      .catch((caughtError) => setError(caughtError instanceof Error ? caughtError.message : "Nu am putut încărca checklistul de lansare"))
+      .catch((caughtError) => setError(caughtError instanceof Error ? caughtError.message : copy.loadChecklistError))
       .finally(() => setIsLoading(false));
-  }, []);
+  }, [copy.loadChecklistError, copy.loadSessionError, copy.loginRequired]);
 
-  if (isLoading) return <p>Se încarcă checklistul de lansare...</p>;
+  if (isLoading) return <p>{copy.loading}</p>;
 
   if (error && !user) {
     return (
       <section className="card">
-        <h1>Autentificare necesară.</h1>
+        <h1>{commonCopy.authTitle}</h1>
         <p>{error}</p>
-        <a href="/login" className="button">Mergi la login</a>
+        <a href="/login" className="button">{commonCopy.loginCta}</a>
       </section>
     );
   }
@@ -73,9 +80,9 @@ export function LaunchClient() {
   return (
     <div className="widget-demo-layout">
       <section className="card">
-        <div className="eyebrow">Lansare pilot</div>
-        <h1>Checklist de lansare MVP.</h1>
-        <p>{checklist ? `${checklist.organization.name}: ${checklist.completed}/${checklist.total} pași finalizați.` : "Nu există checklist încărcat."}</p>
+        <div className="eyebrow">{copy.eyebrow}</div>
+        <h1>{copy.title}</h1>
+        <p>{checklist ? `${checklist.organization.name}: ${checklist.completed}/${checklist.total} ${copy.stepsComplete}.` : copy.noChecklist}</p>
       </section>
 
       {error ? <p className="form-error">{error}</p> : null}
@@ -84,27 +91,27 @@ export function LaunchClient() {
         <>
           <section className="grid">
             <article className="card">
-              <h3>Progres</h3>
+              <h3>{copy.progress}</h3>
               <div className="metric">{checklist.progress}%</div>
             </article>
             <article className="card">
-              <h3>Pregătit pentru pilot</h3>
-              <div className="metric">{checklist.readyForPilot ? "Da" : "Nu încă"}</div>
+              <h3>{copy.readyForPilot}</h3>
+              <div className="metric">{checklist.readyForPilot ? copy.yes : copy.notYet}</div>
             </article>
             <article className="card">
-              <h3>Conversații publice</h3>
-              <div className="metric">{checklist.metrics.publicConversations}</div>
+              <h3>{copy.publicConversations}</h3>
+              <div className="metric">{checklist.metrics.publicConversations.toLocaleString(locale)}</div>
             </article>
           </section>
 
           <section className="grid two-columns">
             <article className="card">
-              <h2>Flux ghidat pentru demo</h2>
+              <h2>{copy.guidedFlowTitle}</h2>
               <div className="source-list">
                 {checklist.steps.map((step, index) => (
                   <a className="source-item" href={step.href} key={step.id}>
                     <strong>{step.complete ? "✓" : "○"} {index + 1}. {step.title}</strong>
-                    <span>{step.complete ? "Finalizat" : "Necesită acțiune"}</span>
+                    <span>{step.complete ? copy.complete : copy.needsAction}</span>
                     <p>{step.description}</p>
                   </a>
                 ))}
@@ -112,14 +119,14 @@ export function LaunchClient() {
             </article>
 
             <article className="card">
-              <h2>Script demo</h2>
+              <h2>{copy.scriptTitle}</h2>
               <div className="source-list">
-                <div className="source-item"><strong>1. Creează cont și deschide dashboardul</strong><p>Arată identitatea, workspace-ul și zona protejată a aplicației.</p></div>
-                <div className="source-item"><strong>2. Completează profilul companiei</strong><p>Arată cum informațiile companiei devin context operațional pentru AI.</p></div>
-                <div className="source-item"><strong>3. Adaugă baza de cunoștințe</strong><p>Încarcă sau lipește conținut pe care recepționerul AI îl poate folosi.</p></div>
-                <div className="source-item"><strong>4. Instalează widgetul</strong><p>Copiază fragmentul și explică tokenul și controalele de origine.</p></div>
-                <div className="source-item"><strong>5. Trimite mesaj de pe website</strong><p>Creează o conversație publică și un lead.</p></div>
-                <div className="source-item"><strong>6. Rezolvă în inbox</strong><p>Deschide transferul, răspunde ca operator și închide conversația.</p></div>
+                {copy.script.map((item, index) => (
+                  <div className="source-item" key={item.title}>
+                    <strong>{index + 1}. {item.title}</strong>
+                    <p>{item.body}</p>
+                  </div>
+                ))}
               </div>
             </article>
           </section>

@@ -394,3 +394,170 @@ export const dashboardContentCopy = {
   quickActions: Array<{ title: string; description: string; href: string }>;
   launchSteps: string[];
 }>;
+
+
+export const billingLaunchCopy = {
+  en: {
+    common: {
+      authTitle: "Authentication required.",
+      loginCta: "Go to login",
+      organizationMissing: "No organization was found for this account.",
+    },
+    billing: {
+      loginRequired: "Sign in before viewing billing.",
+      loadBillingError: "Could not load billing",
+      updatePlanError: "Could not update plan",
+      loadSessionError: "Could not load session",
+      loading: "Loading billing...",
+      eyebrow: "Billing",
+      title: "Plans and usage.",
+      noBilling: "No billing data loaded.",
+      planPrefix: "plan",
+      statusPrefix: "status",
+      widgetMessages: "Widget messages",
+      knowledgeSources: "Knowledge sources",
+      teamMembers: "Team members",
+      widgetMessagesPerPeriod: "widget messages / period",
+      knowledgeSourcesUnit: "knowledge sources",
+      teamMembersUnit: "team members",
+      currentPlan: "Current plan",
+      switchTo: "Switch to",
+      limit: "Limit",
+      remaining: "Remaining",
+      overLimit: "The limit has been reached.",
+    },
+    launch: {
+      loginRequired: "Sign in before viewing the launch checklist.",
+      loadChecklistError: "Could not load launch checklist",
+      loadSessionError: "Could not load session",
+      loading: "Loading launch checklist...",
+      eyebrow: "Pilot launch",
+      title: "MVP launch checklist.",
+      noChecklist: "No checklist loaded.",
+      stepsComplete: "steps complete",
+      progress: "Progress",
+      readyForPilot: "Ready for pilot",
+      publicConversations: "Public conversations",
+      yes: "Yes",
+      notYet: "Not yet",
+      guidedFlowTitle: "Guided demo flow",
+      complete: "Complete",
+      needsAction: "Needs action",
+      scriptTitle: "Demo script",
+      script: [
+        { title: "Register and open dashboard", body: "Show identity, workspace and protected app shell." },
+        { title: "Complete the business profile", body: "Show how company context becomes AI operating context." },
+        { title: "Add the knowledge base", body: "Upload or paste content the AI receptionist can use." },
+        { title: "Install the widget", body: "Copy the snippet and explain token/origin controls." },
+        { title: "Send a website message", body: "Create a public conversation and a lead." },
+        { title: "Resolve in inbox", body: "Open the handoff, answer as an operator and close the conversation." },
+      ],
+    },
+  },
+  ro: {
+    common: {
+      authTitle: "Autentificare necesară.",
+      loginCta: "Mergi la login",
+      organizationMissing: "Nu a fost găsită nicio organizație pentru acest cont.",
+    },
+    billing: {
+      loginRequired: "Autentifică-te înainte să vezi facturarea.",
+      loadBillingError: "Nu am putut încărca facturarea",
+      updatePlanError: "Nu am putut actualiza planul",
+      loadSessionError: "Nu am putut încărca sesiunea",
+      loading: "Se încarcă facturarea...",
+      eyebrow: "Facturare",
+      title: "Planuri și utilizare.",
+      noBilling: "Nu există date de facturare încărcate.",
+      planPrefix: "plan",
+      statusPrefix: "status",
+      widgetMessages: "Mesaje widget",
+      knowledgeSources: "Surse de cunoștințe",
+      teamMembers: "Membri echipă",
+      widgetMessagesPerPeriod: "mesaje widget / perioadă",
+      knowledgeSourcesUnit: "surse de cunoștințe",
+      teamMembersUnit: "membri echipă",
+      currentPlan: "Plan curent",
+      switchTo: "Schimbă la",
+      limit: "Limită",
+      remaining: "Rămas",
+      overLimit: "Limita a fost atinsă.",
+    },
+    launch: {
+      loginRequired: "Autentifică-te înainte să vezi checklistul de lansare.",
+      loadChecklistError: "Nu am putut încărca checklistul de lansare",
+      loadSessionError: "Nu am putut încărca sesiunea",
+      loading: "Se încarcă checklistul de lansare...",
+      eyebrow: "Lansare pilot",
+      title: "Checklist de lansare MVP.",
+      noChecklist: "Nu există checklist încărcat.",
+      stepsComplete: "pași finalizați",
+      progress: "Progres",
+      readyForPilot: "Pregătit pentru pilot",
+      publicConversations: "Conversații publice",
+      yes: "Da",
+      notYet: "Nu încă",
+      guidedFlowTitle: "Flux ghidat pentru demo",
+      complete: "Finalizat",
+      needsAction: "Necesită acțiune",
+      scriptTitle: "Script demo",
+      script: [
+        { title: "Creează cont și deschide dashboardul", body: "Arată identitatea, workspace-ul și zona protejată a aplicației." },
+        { title: "Completează profilul companiei", body: "Arată cum informațiile companiei devin context operațional pentru AI." },
+        { title: "Adaugă baza de cunoștințe", body: "Încarcă sau lipește conținut pe care recepționerul AI îl poate folosi." },
+        { title: "Instalează widgetul", body: "Copiază fragmentul și explică tokenul și controalele de origine." },
+        { title: "Trimite mesaj de pe website", body: "Creează o conversație publică și un lead." },
+        { title: "Rezolvă în inbox", body: "Deschide transferul, răspunde ca operator și închide conversația." },
+      ],
+    },
+  },
+} satisfies Record<AppLanguage, {
+  common: {
+    authTitle: string;
+    loginCta: string;
+    organizationMissing: string;
+  };
+  billing: {
+    loginRequired: string;
+    loadBillingError: string;
+    updatePlanError: string;
+    loadSessionError: string;
+    loading: string;
+    eyebrow: string;
+    title: string;
+    noBilling: string;
+    planPrefix: string;
+    statusPrefix: string;
+    widgetMessages: string;
+    knowledgeSources: string;
+    teamMembers: string;
+    widgetMessagesPerPeriod: string;
+    knowledgeSourcesUnit: string;
+    teamMembersUnit: string;
+    currentPlan: string;
+    switchTo: string;
+    limit: string;
+    remaining: string;
+    overLimit: string;
+  };
+  launch: {
+    loginRequired: string;
+    loadChecklistError: string;
+    loadSessionError: string;
+    loading: string;
+    eyebrow: string;
+    title: string;
+    noChecklist: string;
+    stepsComplete: string;
+    progress: string;
+    readyForPilot: string;
+    publicConversations: string;
+    yes: string;
+    notYet: string;
+    guidedFlowTitle: string;
+    complete: string;
+    needsAction: string;
+    scriptTitle: string;
+    script: Array<{ title: string; body: string }>;
+  };
+}>;
