@@ -136,7 +136,7 @@ export function WidgetAnalyticsClient() {
       <section className="card">
         <div className="eyebrow">Analitice widget</div>
         <h1>Starea instalării widgetului.</h1>
-        <p>{primaryMembership ? `Workspace: ${primaryMembership.organization.name}` : "Nu a fost găsită nicio organizație."}</p>
+        <p>{primaryMembership ? `Spațiu de lucru: ${primaryMembership.organization.name}` : "Nu a fost găsită nicio organizație."}</p>
       </section>
 
       {error ? <p className="form-error">{error}</p> : null}

@@ -120,7 +120,7 @@ export function KnowledgeBaseClient() {
     setError(null);
 
     if (!primaryMembership) {
-      setError("No organization found for this account.");
+      setError("Nu a fost găsită nicio organizație pentru acest cont.");
       return;
     }
 
@@ -161,7 +161,7 @@ export function KnowledgeBaseClient() {
     setError(null);
 
     if (!primaryMembership) {
-      setError("No organization found for this account.");
+      setError("Nu a fost găsită nicio organizație pentru acest cont.");
       return;
     }
 
@@ -201,7 +201,7 @@ export function KnowledgeBaseClient() {
     setError(null);
 
     if (!primaryMembership) {
-      setError("No organization found for this account.");
+      setError("Nu a fost găsită nicio organizație pentru acest cont.");
       return;
     }
 
@@ -236,7 +236,7 @@ export function KnowledgeBaseClient() {
     setError(null);
 
     if (!primaryMembership) {
-      setError("No organization found for this account.");
+      setError("Nu a fost găsită nicio organizație pentru acest cont.");
       return;
     }
 
@@ -283,7 +283,7 @@ export function KnowledgeBaseClient() {
       <section className="card">
         <div className="eyebrow">Bază de cunoștințe</div>
         <h1>Învață Autopilot One informațiile importante despre compania ta.</h1>
-        <p>{primaryMembership ? `Workspace: ${primaryMembership.organization.name}` : "Nu a fost găsită nicio organizație."}</p>
+        <p>{primaryMembership ? `Spațiu de lucru: ${primaryMembership.organization.name}` : "Nu a fost găsită nicio organizație."}</p>
       </section>
 
       <section className="grid two-columns">

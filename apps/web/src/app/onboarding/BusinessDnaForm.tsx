@@ -198,8 +198,8 @@ export function BusinessDnaForm() {
         <h1>Descrie compania o singură dată.</h1>
         <p>
           {primaryMembership
-            ? `Workspace: ${primaryMembership.organization.name}`
-            : "No organization found for this account."}
+            ? `Spațiu de lucru: ${primaryMembership.organization.name}`
+            : "Nu a fost găsită nicio organizație pentru acest cont."}
         </p>
       </section>
 
