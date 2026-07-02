@@ -30,7 +30,7 @@ type KnowledgeSource = {
   createdAt: string;
 };
 
-type SearchResult = {
+type CautăResult = {
   chunkId: string;
   sourceId: string;
   sourceTitle: string;
@@ -41,8 +41,8 @@ type SearchResult = {
 
 export function KnowledgeBaseClient() {
   const [user, setUser] = useState<CurrentUser | null>(null);
-  const [sources, setSources] = useState<KnowledgeSource[]>([]);
-  const [results, setResults] = useState<SearchResult[]>([]);
+  const [sources, setSurse] = useState<KnowledgeSource[]>([]);
+  const [results, setResults] = useState<CautăResult[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
   const [message, setMessage] = useState<string | null>(null);
@@ -70,7 +70,7 @@ export function KnowledgeBaseClient() {
     });
   }
 
-  async function loadSources(organizationId: string) {
+  async function loadSurse(organizationId: string) {
     const response = await apiFetch(`/knowledge-base/organization/${organizationId}/sources`);
     const data = await response.json();
 
@@ -78,7 +78,7 @@ export function KnowledgeBaseClient() {
       throw new Error(data.message ?? "Could not load knowledge sources");
     }
 
-    setSources(data);
+    setSurse(data);
   }
 
   useEffect(() => {
@@ -104,7 +104,7 @@ export function KnowledgeBaseClient() {
         const membership = data.memberships?.[0] as Membership | undefined;
 
         if (membership) {
-          await loadSources(membership.organization.id);
+          await loadSurse(membership.organization.id);
         }
       })
       .catch((caughtError) => {
@@ -145,7 +145,7 @@ export function KnowledgeBaseClient() {
       }
 
       form.reset();
-      await loadSources(primaryMembership.organization.id);
+      await loadSurse(primaryMembership.organization.id);
       setMessage("TXT source indexed.");
     } catch (caughtError) {
       setError(caughtError instanceof Error ? caughtError.message : "Could not index text source");
@@ -185,7 +185,7 @@ export function KnowledgeBaseClient() {
       }
 
       form.reset();
-      await loadSources(primaryMembership.organization.id);
+      await loadSurse(primaryMembership.organization.id);
       setMessage("Website indexed.");
     } catch (caughtError) {
       setError(caughtError instanceof Error ? caughtError.message : "Could not index website");
@@ -221,7 +221,7 @@ export function KnowledgeBaseClient() {
       }
 
       form.reset();
-      await loadSources(primaryMembership.organization.id);
+      await loadSurse(primaryMembership.organization.id);
       setMessage("File uploaded and indexed.");
     } catch (caughtError) {
       setError(caughtError instanceof Error ? caughtError.message : "Could not upload file");
@@ -230,7 +230,7 @@ export function KnowledgeBaseClient() {
     }
   }
 
-  async function onSearchSubmit(event: FormEvent<HTMLFormElement>) {
+  async function onCautăSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     setMessage(null);
     setError(null);
@@ -255,12 +255,12 @@ export function KnowledgeBaseClient() {
       const data = await response.json();
 
       if (!response.ok) {
-        throw new Error(data.message ?? "Search failed");
+        throw new Error(data.message ?? "Caută failed");
       }
 
       setResults(data);
     } catch (caughtError) {
-      setError(caughtError instanceof Error ? caughtError.message : "Search failed");
+      setError(caughtError instanceof Error ? caughtError.message : "Caută failed");
     }
   }
 
@@ -271,9 +271,9 @@ export function KnowledgeBaseClient() {
   if (error && !user) {
     return (
       <section className="card">
-        <h1>Authentication required.</h1>
+        <h1>Autentificare necesară.</h1>
         <p>{error}</p>
-        <a href="/login" className="button">Go to login</a>
+        <a href="/login" className="button">Mergi la login</a>
       </section>
     );
   }
@@ -281,39 +281,39 @@ export function KnowledgeBaseClient() {
   return (
     <div className="knowledge-layout">
       <section className="card">
-        <div className="eyebrow">BUILD #005 Knowledge Base</div>
-        <h1>Teach Autopilot One what your company knows.</h1>
-        <p>{primaryMembership ? `Workspace: ${primaryMembership.organization.name}` : "No organization found."}</p>
+        <div className="eyebrow">Bază de cunoștințe</div>
+        <h1>Învață Autopilot One informațiile importante despre compania ta.</h1>
+        <p>{primaryMembership ? `Workspace: ${primaryMembership.organization.name}` : "Nu a fost găsită nicio organizație."}</p>
       </section>
 
       <section className="grid two-columns">
         <form className="card form-section" onSubmit={onTextSubmit}>
           <h3>TXT source</h3>
-          <input name="title" placeholder="Source title" required />
-          <textarea name="content" placeholder="Paste company knowledge, policies, product details or FAQ text." required />
-          <button className="button" disabled={isSaving} type="submit">Index text</button>
+          <input name="title" placeholder="Titlu sursă" required />
+          <textarea name="content" placeholder="Lipește informații despre companie, politici, produse, servicii sau întrebări frecvente." required />
+          <button className="button" disabled={isSaving} type="submit">Indexează textul</button>
         </form>
 
         <form className="card form-section" onSubmit={onWebsiteSubmit}>
           <h3>Website source</h3>
           <input name="url" placeholder="https://example.com" type="url" required />
-          <input name="title" placeholder="Optional title" />
-          <button className="button" disabled={isSaving} type="submit">Index website</button>
+          <input name="title" placeholder="Titlu opțional" />
+          <button className="button" disabled={isSaving} type="submit">Indexează website-ul</button>
         </form>
       </section>
 
       <section className="grid two-columns">
         <form className="card form-section" onSubmit={onFileSubmit}>
           <h3>Upload PDF / DOCX / TXT</h3>
-          <input name="title" placeholder="Optional title" />
+          <input name="title" placeholder="Titlu opțional" />
           <input name="file" type="file" accept=".pdf,.docx,.txt,text/plain,application/pdf,application/vnd.openxmlformats-officedocument.wordprocessingml.document" required />
-          <button className="button" disabled={isSaving} type="submit">Upload and index</button>
+          <button className="button" disabled={isSaving} type="submit">Încarcă și indexează</button>
         </form>
 
-        <form className="card form-section" onSubmit={onSearchSubmit}>
+        <form className="card form-section" onSubmit={onCautăSubmit}>
           <h3>Semantic search</h3>
-          <input name="query" placeholder="Search company knowledge" required />
-          <button className="button" type="submit">Search</button>
+          <input name="query" placeholder="Caută în baza de cunoștințe" required />
+          <button className="button" type="submit">Caută</button>
         </form>
       </section>
 
@@ -322,7 +322,7 @@ export function KnowledgeBaseClient() {
 
       <section className="grid two-columns">
         <article className="card">
-          <h2>Sources</h2>
+          <h2>Surse</h2>
           <div className="source-list">
             {sources.length ? sources.map((source) => (
               <div className="source-item" key={source.id}>
@@ -334,7 +334,7 @@ export function KnowledgeBaseClient() {
         </article>
 
         <article className="card">
-          <h2>Search results</h2>
+          <h2>Caută results</h2>
           <div className="source-list">
             {results.length ? results.map((result) => (
               <div className="source-item" key={result.chunkId}>

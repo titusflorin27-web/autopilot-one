@@ -169,7 +169,7 @@ export function BusinessDnaForm() {
       }
 
       setBusinessDna(payload);
-      setMessage("Business DNA saved. Reception AI will use this as company context in BUILD #006.");
+      setMessage("Profilul companiei a fost salvat. Recepționerul AI îl va folosi ca informație de context.");
     } catch (caughtError) {
       setError(caughtError instanceof Error ? caughtError.message : "Could not save Business DNA");
     } finally {
@@ -184,9 +184,9 @@ export function BusinessDnaForm() {
   if (error && !user) {
     return (
       <section className="card">
-        <h1>Authentication required.</h1>
+        <h1>Autentificare necesară.</h1>
         <p>{error}</p>
-        <a href="/login" className="button">Go to login</a>
+        <a href="/login" className="button">Mergi la login</a>
       </section>
     );
   }
@@ -194,8 +194,8 @@ export function BusinessDnaForm() {
   return (
     <form className="business-dna-form" onSubmit={onSubmit}>
       <section className="card">
-        <div className="eyebrow">BUILD #004 Business DNA</div>
-        <h1>Describe your business once.</h1>
+        <div className="eyebrow">Profil companie</div>
+        <h1>Descrie compania o singură dată.</h1>
         <p>
           {primaryMembership
             ? `Workspace: ${primaryMembership.organization.name}`
@@ -204,20 +204,20 @@ export function BusinessDnaForm() {
       </section>
 
       <section className="card form-section">
-        <h2>Company summary</h2>
-        <textarea name="summary" defaultValue={businessDna.summary} placeholder="What does the company do, who does it serve, and what makes it different?" required />
+        <h2>Rezumat companie</h2>
+        <textarea name="summary" defaultValue={businessDna.summary} placeholder="Ce face compania, cui se adresează și ce o diferențiază?" required />
       </section>
 
       <section className="grid two-columns">
         <div className="card form-section">
           <h3>Products</h3>
           <p>One per line: Product - description</p>
-          <textarea name="products" defaultValue={businessDna.products.map((item) => `${item.title} - ${item.description}`).join("\n")} placeholder="Starter Plan - For small teams getting started" />
+          <textarea name="products" defaultValue={businessDna.products.map((item) => `${item.title} - ${item.description}`).join("\n")} placeholder="Plan Start - Pentru echipe mici la început" />
         </div>
         <div className="card form-section">
           <h3>Services</h3>
           <p>One per line: Service - description</p>
-          <textarea name="services" defaultValue={businessDna.services.map((item) => `${item.title} - ${item.description}`).join("\n")} placeholder="Implementation - Setup and onboarding support" />
+          <textarea name="services" defaultValue={businessDna.services.map((item) => `${item.title} - ${item.description}`).join("\n")} placeholder="Implementare - Setup și suport la pornire" />
         </div>
       </section>
 
@@ -225,12 +225,12 @@ export function BusinessDnaForm() {
         <div className="card form-section">
           <h3>Rules</h3>
           <p>One per line: Rule - explanation</p>
-          <textarea name="rules" defaultValue={businessDna.rules.map((rule) => `${rule.title} - ${rule.description}`).join("\n")} placeholder="Refunds - Escalate refund requests to a human" />
+          <textarea name="rules" defaultValue={businessDna.rules.map((rule) => `${rule.title} - ${rule.description}`).join("\n")} placeholder="Rambursări - Transferă cererile de rambursare către un operator" />
         </div>
         <div className="card form-section">
           <h3>Tone</h3>
           <p>How should AI Employees communicate?</p>
-          <textarea name="tone" defaultValue={businessDna.tone} placeholder="Professional, warm, concise, confident." required />
+          <textarea name="tone" defaultValue={businessDna.tone} placeholder="Profesional, cald, concis, sigur." required />
         </div>
       </section>
 
@@ -238,12 +238,12 @@ export function BusinessDnaForm() {
         <div className="card form-section">
           <h3>FAQ</h3>
           <p>One per line: Question ? Answer</p>
-          <textarea name="faq" defaultValue={businessDna.faq.map((item) => `${item.question} ? ${item.answer}`).join("\n")} placeholder="How fast do you respond? ? Usually within one business day." />
+          <textarea name="faq" defaultValue={businessDna.faq.map((item) => `${item.question} ? ${item.answer}`).join("\n")} placeholder="Cât de repede răspundeți? ? De obicei într-o zi lucrătoare." />
         </div>
         <div className="card form-section">
           <h3>Objectives</h3>
           <p>One per line: Objective | metric | target</p>
-          <textarea name="objectives" defaultValue={businessDna.objectives.map((item) => [item.title, item.metric, item.target].filter(Boolean).join(" | ")).join("\n")} placeholder="Increase qualified leads | leads/month | 100" />
+          <textarea name="objectives" defaultValue={businessDna.objectives.map((item) => [item.title, item.metric, item.target].filter(Boolean).join(" | ")).join("\n")} placeholder="Creștere leaduri calificate | leaduri/lună | 100" />
         </div>
       </section>
 
@@ -254,7 +254,7 @@ export function BusinessDnaForm() {
         <button className="button" type="submit" disabled={isSaving || !primaryMembership}>
           {isSaving ? "Saving..." : "Save Business DNA"}
         </button>
-        <a href="/dashboard" className="button secondary">Back to dashboard</a>
+        <a href="/dashboard" className="button secondary">Înapoi la dashboard</a>
       </div>
     </form>
   );

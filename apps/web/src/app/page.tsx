@@ -58,7 +58,7 @@ export default function HomePage() {
       <main className="container">
         <section className="hero hero-split premium-hero">
           <div>
-            <div className="eyebrow">AI receptionist + CRM Lite</div>
+            <div className="eyebrow">Recepționer AI + CRM Lite</div>
             <h1><span className="gradient-text">Un angajat AI</span> care transformă vizitatorii în lead-uri urmărite.</h1>
             <p className="lead-text">
               Autopilot One transformă website-ul într-un canal activ de vânzare: răspunde vizitatorilor, colectează datele importante și trimite conversațiile în CRM pentru follow-up.
@@ -85,7 +85,7 @@ export default function HomePage() {
               <section className="ai-window">
                 <div className="ai-window-header">
                   <div>
-                    <strong>Reception AI</strong>
+                    <strong>Recepționer AI</strong>
                     <span>Website conversation</span>
                   </div>
                   <em>online</em>
@@ -154,7 +154,7 @@ export default function HomePage() {
 
         <section className="card dashboard-preview">
           <div>
-            <div className="eyebrow">Dashboard preview</div>
+            <div className="eyebrow">Previzualizare dashboard</div>
             <h2>Tot ce contează ajunge într-un flux clar.</h2>
             <p>Conversații, lead-uri, statusuri, activitate widget și follow-up-uri într-un singur loc, fără să pierzi contextul comercial.</p>
           </div>

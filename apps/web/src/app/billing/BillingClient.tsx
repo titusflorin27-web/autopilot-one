@@ -78,9 +78,9 @@ export function BillingClient() {
   if (error && !user) {
     return (
       <section className="card">
-        <h1>Authentication required.</h1>
+        <h1>Autentificare necesară.</h1>
         <p>{error}</p>
-        <a href="/login" className="button">Go to login</a>
+        <a href="/login" className="button">Mergi la login</a>
       </section>
     );
   }
@@ -88,8 +88,8 @@ export function BillingClient() {
   return (
     <div className="widget-demo-layout">
       <section className="card">
-        <div className="eyebrow">BUILD #017 Billing</div>
-        <h1>Plans and usage.</h1>
+        <div className="eyebrow">Facturare</div>
+        <h1>Planuri și utilizare.</h1>
         <p>{billing ? `${billing.organization.name} is on ${billing.organization.billingPlan} / ${billing.organization.billingStatus}` : "No billing data loaded."}</p>
       </section>
 
@@ -98,8 +98,8 @@ export function BillingClient() {
       {billing ? (
         <>
           <section className="grid">
-            <UsageCard label="Widget messages" used={billing.usage.widgetMessages} limit={billing.limits.widgetMessages} remaining={billing.remaining.widgetMessages} over={billing.overLimit.widgetMessages} />
-            <UsageCard label="Knowledge sources" used={billing.usage.knowledgeSources} limit={billing.limits.knowledgeSources} remaining={billing.remaining.knowledgeSources} over={billing.overLimit.knowledgeSources} />
+            <UsageCard label="Mesaje widget" used={billing.usage.widgetMessages} limit={billing.limits.widgetMessages} remaining={billing.remaining.widgetMessages} over={billing.overLimit.widgetMessages} />
+            <UsageCard label="Surse de cunoștințe" used={billing.usage.knowledgeSources} limit={billing.limits.knowledgeSources} remaining={billing.remaining.knowledgeSources} over={billing.overLimit.knowledgeSources} />
             <UsageCard label="Team members" used={billing.usage.teamMembers} limit={billing.limits.teamMembers} remaining={billing.remaining.teamMembers} over={billing.overLimit.teamMembers} />
           </section>
 
@@ -108,7 +108,7 @@ export function BillingClient() {
               <article className="card" key={plan.plan}>
                 <h2>{plan.plan}</h2>
                 <p>{plan.limits.widgetMessages.toLocaleString()} widget messages / period</p>
-                <p>{plan.limits.knowledgeSources.toLocaleString()} knowledge sources</p>
+                <p>{plan.limits.knowledgeSources.toLocaleString()} surse de cunoștințe</p>
                 <p>{plan.limits.teamMembers.toLocaleString()} team members</p>
                 <button className="button" type="button" onClick={() => updatePlan(plan.plan).catch((caughtError) => setError(String(caughtError)))}>
                   {billing.organization.billingPlan === plan.plan ? "Current plan" : `Switch to ${plan.plan}`}
@@ -129,7 +129,7 @@ function UsageCard(props: { label: string; used: number; limit: number; remainin
       <div className="metric">{props.used}</div>
       <p>Limit: {props.limit.toLocaleString()}</p>
       <p>Remaining: {props.remaining.toLocaleString()}</p>
-      {props.over ? <p className="form-error">Limit reached.</p> : null}
+      {props.over ? <p className="form-error">Limita a fost atinsă.</p> : null}
     </article>
   );
 }

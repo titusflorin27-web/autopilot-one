@@ -4,7 +4,7 @@ export default function manifest(): MetadataRoute.Manifest {
   return {
     name: "Autopilot One",
     short_name: "Autopilot One",
-    description: "AI employees for small businesses.",
+    description: "Angajați AI pentru IMM-uri.",
     start_url: "/",
     scope: "/",
     display: "standalone",

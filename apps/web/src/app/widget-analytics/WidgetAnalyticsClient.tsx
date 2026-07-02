@@ -124,9 +124,9 @@ export function WidgetAnalyticsClient() {
   if (error && !user) {
     return (
       <section className="card">
-        <h1>Authentication required.</h1>
+        <h1>Autentificare necesară.</h1>
         <p>{error}</p>
-        <a href="/login" className="button">Go to login</a>
+        <a href="/login" className="button">Mergi la login</a>
       </section>
     );
   }
@@ -134,9 +134,9 @@ export function WidgetAnalyticsClient() {
   return (
     <div className="widget-demo-layout">
       <section className="card">
-        <div className="eyebrow">BUILD #014 Widget Analytics</div>
-        <h1>Widget install health.</h1>
-        <p>{primaryMembership ? `Workspace: ${primaryMembership.organization.name}` : "No organization found."}</p>
+        <div className="eyebrow">Analitice widget</div>
+        <h1>Starea instalării widgetului.</h1>
+        <p>{primaryMembership ? `Workspace: ${primaryMembership.organization.name}` : "Nu a fost găsită nicio organizație."}</p>
       </section>
 
       {error ? <p className="form-error">{error}</p> : null}
@@ -146,10 +146,10 @@ export function WidgetAnalyticsClient() {
           <section className="grid">
             <article className="card">
               <h3>Config loaded</h3>
-              <div className="metric">{analytics.installHealth.hasConfigLoad ? "Yes" : "No"}</div>
+              <div className="metric">{analytics.installHealth.hasConfigLoad ? "Da" : "Nu"}</div>
             </article>
             <article className="card">
-              <h3>Widget opened</h3>
+              <h3>Widget deschis</h3>
               <div className="metric">{analytics.events.OPENED ?? 0}</div>
             </article>
             <article className="card">
@@ -175,7 +175,7 @@ export function WidgetAnalyticsClient() {
 
           <section className="grid two-columns">
             <article className="card">
-              <h2>Event counts</h2>
+              <h2>Număr evenimente</h2>
               <div className="source-list">
                 {Object.entries(analytics.events).map(([name, count]) => (
                   <div className="source-item" key={name}>
@@ -187,20 +187,20 @@ export function WidgetAnalyticsClient() {
             </article>
 
             <article className="card">
-              <h2>Domains</h2>
+              <h2>Domenii</h2>
               <div className="source-list">
                 {Object.keys(analytics.domains).length ? Object.entries(analytics.domains).map(([domain, count]) => (
                   <div className="source-item" key={domain}>
                     <strong>{domain}</strong>
                     <span>{count} events</span>
                   </div>
-                )) : <p>No domains detected yet.</p>}
+                )) : <p>Nu domains detected yet.</p>}
               </div>
             </article>
           </section>
 
           <section className="card">
-            <h2>Recent widget events</h2>
+            <h2>Evenimente recente widget</h2>
             <div className="source-list">
               {analytics.recentEvents.length ? analytics.recentEvents.map((event) => (
                 <div className="source-item" key={event.id}>
@@ -211,7 +211,7 @@ export function WidgetAnalyticsClient() {
                   {event.visitorId ? <span>Visitor: {event.visitorId.slice(0, 18)}...</span> : null}
                   {event.conversationId ? <span>Conversation: {event.conversationId.slice(0, 10)}</span> : null}
                 </div>
-              )) : <p>No widget events yet.</p>}
+              )) : <p>Nu widget events yet.</p>}
             </div>
           </section>
         </>

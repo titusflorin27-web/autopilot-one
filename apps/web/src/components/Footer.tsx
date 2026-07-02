@@ -4,7 +4,7 @@ const productLinks = [
   { href: "/", label: "Acasă" },
   { href: "/pricing", label: "Prețuri" },
   { href: "/demo", label: "Cere demo" },
-  { href: "/widget-demo", label: "Widget demo" },
+  { href: "/widget-demo", label: "Demo widget" },
   { href: "/login", label: "Intră în cont" },
 ];
 
