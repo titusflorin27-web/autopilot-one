@@ -265,7 +265,7 @@ export function ReceptionAiClient() {
     setError(null);
 
     if (!activeConversationId) {
-      setError("Select a conversation before adding a human reply.");
+      setError("Selectează o conversație înainte să adaugi un răspuns uman.");
       return;
     }
 
@@ -397,7 +397,7 @@ export function ReceptionAiClient() {
 
         <form className="card form-section" onSubmit={onHumanReply}>
           <h2>Răspuns uman</h2>
-          <p>{activeConversationId ? `Selected conversation: ${activeConversationId}` : "Select a conversation first."}</p>
+          <p>{activeConversationId ? `Conversație selectată: ${activeConversationId}` : "Selectează mai întâi o conversație."}</p>
           <textarea name="content" placeholder="Scrie un răspuns uman sau o notă de transfer." required />
           <input name="internalNote" placeholder="Notă internă, opțional" />
           <button className="button" type="submit">Adaugă răspuns uman</button>
