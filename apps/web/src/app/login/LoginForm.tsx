@@ -1,6 +1,7 @@
 "use client";
 
 import { FormEvent, useState } from "react";
+import Link from "next/link";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:4000/api";
 
@@ -55,6 +56,10 @@ export function LoginForm() {
       <button className="button" type="submit" disabled={isSubmitting}>
         {isSubmitting ? "Signing in..." : "Continue"}
       </button>
+
+      <p className="auth-switch">
+        New to Autopilot One? <Link href="/register">Create an account</Link>.
+      </p>
     </form>
   );
 }
