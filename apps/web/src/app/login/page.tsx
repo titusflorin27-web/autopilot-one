@@ -12,7 +12,7 @@ export default function LoginPage() {
         </p>
 
         <div className="auth-proof-grid">
-          <span>AI Receptionist 24/7</span>
+          <span>Recepționer AI 24/7</span>
           <span>CRM Lite inclus</span>
           <span>Acces securizat</span>
         </div>

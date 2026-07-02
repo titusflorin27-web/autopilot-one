@@ -1,28 +1,43 @@
 import Link from "next/link";
 import { DashboardClient } from "./DashboardClient";
 
+const navigationItems = [
+  ["Panou", "/dashboard"],
+  ["Cereri demo", "/demo-requests"],
+  ["Lansare", "/launch"],
+  ["Facturare", "/billing"],
+  ["Notificări", "/notifications"],
+  ["Inbox", "/inbox"],
+  ["Profil companie", "/onboarding"],
+  ["Bază de cunoștințe", "/knowledge-base"],
+  ["Recepționer AI", "/reception-ai"],
+  ["Demo widget", "/widget-demo"],
+  ["Setări widget", "/widget-settings"],
+  ["Analitice widget", "/widget-analytics"],
+];
+
 export default function DashboardPage() {
   return (
-    <main className="dashboard">
-      <aside className="sidebar">
-        <h3>Autopilot One</h3>
-        <p>Centrul de comandă</p>
+    <main className="dashboard dashboard-premium">
+      <aside className="sidebar dashboard-sidebar">
+        <div className="sidebar-brand">
+          <div className="sidebar-logo">A1</div>
+          <div>
+            <h3>Autopilot One</h3>
+            <p>Centrul de comandă</p>
+          </div>
+        </div>
+
         <nav>
-          <Link href="/dashboard">Bord</Link>
-          <Link href="/demo-requests">Cereri demo</Link>
-          <Link href="/launch">Listă de verificare la lansări</Link>
-          <Link href="/billing">Facturare</Link>
-          <Link href="/notifications">Notificări</Link>
-          <Link href="/inbox">Inbox</Link>
-          <Link href="/onboarding">ADN-ul afacerilor</Link>
-          <Link href="/knowledge-base">Baza de cunoștințe</Link>
-          <Link href="/reception-ai">Recepție AI</Link>
-          <Link href="/widget-demo">Widgetul site-ului web</Link>
-          <Link href="/widget-settings">Setări widget</Link>
-          <Link href="/widget-analytics">Analiză widget</Link>
+          {navigationItems.map(([label, href]) => (
+            <Link key={href} href={href} className={href === "/dashboard" ? "active" : undefined}>
+              {label}
+            </Link>
+          ))}
         </nav>
       </aside>
-      <section className="main">
+
+      <section className="main dashboard-main">
         <DashboardClient />
       </section>
     </main>

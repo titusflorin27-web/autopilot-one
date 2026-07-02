@@ -39,15 +39,64 @@ type DashboardMetrics = {
   timeline: DashboardTimelineEvent[];
 };
 
+const quickActions = [
+  {
+    title: "Configurează widgetul",
+    description: "Pregătește widgetul pentru site și verifică mesajul de întâmpinare.",
+    href: "/widget-settings",
+  },
+  {
+    title: "Completează profilul companiei",
+    description: "Adaugă informațiile de bază pe care recepționerul AI le folosește în răspunsuri.",
+    href: "/onboarding",
+  },
+  {
+    title: "Verifică cererile demo",
+    description: "Urmărește leadurile captate și pașii următori pentru fiecare conversație.",
+    href: "/demo-requests",
+  },
+];
+
+const launchSteps = [
+  "Completează profilul companiei",
+  "Adaugă baza de cunoștințe",
+  "Configurează widgetul",
+  "Testează fluxul din perspectiva clientului",
+];
+
 function formatMetric(value: number) {
   return new Intl.NumberFormat("ro-RO").format(value);
 }
 
 function formatDate(value: string) {
+  const parsedDate = new Date(value);
+
+  if (Number.isNaN(parsedDate.getTime())) {
+    return "Dată indisponibilă";
+  }
+
   return new Intl.DateTimeFormat("ro-RO", {
     dateStyle: "medium",
     timeStyle: "short",
-  }).format(new Date(value));
+  }).format(parsedDate);
+}
+
+function formatRole(role?: string) {
+  if (!role) {
+    return "Membru";
+  }
+
+  const normalizedRole = role.toUpperCase();
+
+  if (normalizedRole === "OWNER") {
+    return "Owner";
+  }
+
+  if (normalizedRole === "ADMIN") {
+    return "Admin";
+  }
+
+  return "Membru";
 }
 
 function MetricCard({ metric }: { metric: DashboardMetric }) {
@@ -61,10 +110,10 @@ function MetricCard({ metric }: { metric: DashboardMetric }) {
   );
 
   if (metric.href) {
-    return <Link className="card metric-card" href={metric.href}>{content}</Link>;
+    return <Link className="card metric-card dashboard-metric-card" href={metric.href}>{content}</Link>;
   }
 
-  return <article className="card metric-card">{content}</article>;
+  return <article className="card metric-card dashboard-metric-card">{content}</article>;
 }
 
 function TimelineItem({ item }: { item: DashboardTimelineEvent }) {
@@ -78,10 +127,10 @@ function TimelineItem({ item }: { item: DashboardTimelineEvent }) {
   );
 
   if (item.href) {
-    return <Link className="source-item timeline-link" href={item.href}>{content}</Link>;
+    return <Link className="source-item timeline-link dashboard-timeline-item" href={item.href}>{content}</Link>;
   }
 
-  return <article className="source-item">{content}</article>;
+  return <article className="source-item dashboard-timeline-item">{content}</article>;
 }
 
 export function DashboardClient() {
@@ -92,6 +141,7 @@ export function DashboardClient() {
 
   const primaryMembership = user?.memberships[0];
   const timeline = useMemo(() => dashboard?.timeline ?? [], [dashboard]);
+  const metrics = dashboard?.metrics ?? [];
 
   useEffect(() => {
     const accessToken = window.localStorage.getItem("autopilot.accessToken");
@@ -132,12 +182,19 @@ export function DashboardClient() {
   }, []);
 
   if (isLoading) {
-    return <p>Se încarcă centrul de comandă...</p>;
+    return (
+      <section className="card dashboard-loading-card">
+        <div className="eyebrow">Dashboard</div>
+        <h1>Se încarcă centrul de comandă...</h1>
+        <p>Pregătim datele workspace-ului și ultimele evenimente.</p>
+      </section>
+    );
   }
 
   if (error) {
     return (
-      <section className="card">
+      <section className="card dashboard-error-card">
+        <div className="eyebrow">Acces securizat</div>
         <h1>Autentificare necesară.</h1>
         <p>{error}</p>
         <Link href="/login" className="button">Mergi la login</Link>
@@ -147,22 +204,84 @@ export function DashboardClient() {
 
   return (
     <>
-      <div className="eyebrow">Cronologie de afaceri</div>
-      <h1>Compania dumneavoastră este în funcțiune.</h1>
-      <p>
-        Conectat ca {user?.email}
-        {primaryMembership ? ` · ${primaryMembership.organization.name} · ${primaryMembership.role}` : null}
-      </p>
+      <section className="dashboard-hero-card">
+        <div>
+          <div className="eyebrow">Dashboard operațional</div>
+          <h1>Centrul de comandă este activ.</h1>
+          <p>
+            Conectat ca <strong>{user?.email}</strong>
+            {primaryMembership ? ` · ${primaryMembership.organization.name} · ${formatRole(primaryMembership.role)}` : null}
+          </p>
+        </div>
 
-      <section className="grid">
-        {dashboard?.metrics.map((metric) => <MetricCard key={metric.label} metric={metric} />)}
+        <div className="dashboard-status-grid" aria-label="Stare workspace">
+          <div>
+            <span>Workspace</span>
+            <strong>{primaryMembership?.organization.name ?? "Activ"}</strong>
+          </div>
+          <div>
+            <span>Sesiune</span>
+            <strong>Conectată</strong>
+          </div>
+          <div>
+            <span>Rol</span>
+            <strong>{formatRole(primaryMembership?.role)}</strong>
+          </div>
+        </div>
       </section>
 
-      <section className="card">
-        <h2>Ultimele evenimente</h2>
-        <div className="source-list">
-          {timeline.map((item) => <TimelineItem item={item} key={`${item.type}-${item.id}`} />)}
-        </div>
+      <section className="grid dashboard-metrics-grid">
+        {metrics.map((metric) => <MetricCard key={metric.label} metric={metric} />)}
+      </section>
+
+      <section className="dashboard-action-grid">
+        {quickActions.map((action) => (
+          <Link href={action.href} className="card dashboard-action-card" key={action.href}>
+            <span>Pas recomandat</span>
+            <strong>{action.title}</strong>
+            <p>{action.description}</p>
+            <em>Deschide →</em>
+          </Link>
+        ))}
+      </section>
+
+      <section className="dashboard-two-column">
+        <article className="card dashboard-timeline-card">
+          <div className="section-heading-row">
+            <div>
+              <div className="eyebrow">Activitate recentă</div>
+              <h2>Ultimele evenimente</h2>
+            </div>
+          </div>
+
+          <div className="source-list">
+            {timeline.length > 0 ? (
+              timeline.map((item) => <TimelineItem item={item} key={`${item.type}-${item.id}`} />)
+            ) : (
+              <div className="dashboard-empty-state">
+                <strong>Nu există evenimente recente încă.</strong>
+                <p>
+                  După ce apar cereri demo, conversații sau actualizări importante,
+                  acestea vor fi listate aici.
+                </p>
+              </div>
+            )}
+          </div>
+        </article>
+
+        <article className="card dashboard-launch-card">
+          <div className="eyebrow">Lansare</div>
+          <h2>Checklist minim</h2>
+          <p>Pașii esențiali pentru ca Autopilot One să fie pregătit pentru clienți.</p>
+
+          <ol>
+            {launchSteps.map((step) => (
+              <li key={step}>{step}</li>
+            ))}
+          </ol>
+
+          <Link href="/launch" className="button">Vezi checklistul complet</Link>
+        </article>
       </section>
     </>
   );
