@@ -1,22 +1,28 @@
+"use client";
+
 import Link from "next/link";
+import { dashboardShellCopy } from "../../lib/i18n";
+import { useAppLanguage } from "../../lib/useAppLanguage";
 import { DashboardClient } from "./DashboardClient";
 
 const navigationItems = [
-  ["Panou", "/dashboard"],
-  ["Cereri demo", "/demo-requests"],
-  ["Lansare", "/launch"],
-  ["Facturare", "/billing"],
-  ["Notificări", "/notifications"],
-  ["Inbox", "/inbox"],
-  ["Profil companie", "/onboarding"],
-  ["Bază de cunoștințe", "/knowledge-base"],
-  ["Recepționer AI", "/reception-ai"],
-  ["Demo widget", "/widget-demo"],
-  ["Setări widget", "/widget-settings"],
-  ["Analitice widget", "/widget-analytics"],
-];
+  ["dashboard", "/dashboard"],
+  ["demoRequests", "/demo-requests"],
+  ["launch", "/launch"],
+  ["billing", "/billing"],
+  ["notifications", "/notifications"],
+  ["inbox", "/inbox"],
+  ["onboarding", "/onboarding"],
+  ["knowledgeBase", "/knowledge-base"],
+  ["receptionAi", "/reception-ai"],
+  ["widgetDemo", "/widget-demo"],
+  ["widgetSettings", "/widget-settings"],
+  ["widgetAnalytics", "/widget-analytics"],
+] as const;
 
 export default function DashboardPage() {
+  const copy = dashboardShellCopy[useAppLanguage()];
+
   return (
     <main className="dashboard dashboard-premium">
       <aside className="sidebar dashboard-sidebar">
@@ -24,14 +30,14 @@ export default function DashboardPage() {
           <div className="sidebar-logo">A1</div>
           <div>
             <h3>Autopilot One</h3>
-            <p>Centrul de comandă</p>
+            <p>{copy.commandCenter}</p>
           </div>
         </div>
 
         <nav>
-          {navigationItems.map(([label, href]) => (
+          {navigationItems.map(([key, href]) => (
             <Link key={href} href={href} className={href === "/dashboard" ? "active" : undefined}>
-              {label}
+              {copy[key]}
             </Link>
           ))}
         </nav>
