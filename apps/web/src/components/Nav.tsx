@@ -9,8 +9,8 @@ export function Nav() {
       </Link>
       <nav aria-label="Navigație principală">
         <Link href="/pricing">Prețuri</Link>
-        <Link href="/demo" className="nav-cta">Cere demo</Link>
-        <Link href="/privacy">Confidențialitate</Link>
+        <Link href="/demo">Cere demo</Link>
+        <Link href="/register" className="nav-cta">Creează cont</Link>
         <Link href="/login">Intră în cont</Link>
       </nav>
     </header>
