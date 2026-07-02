@@ -238,3 +238,159 @@ export const dashboardShellCopy = {
     widgetAnalytics: "Analitice widget",
   },
 } satisfies Record<AppLanguage, Record<string, string>>;
+
+
+export const dashboardContentCopy = {
+  en: {
+    dateUnavailable: "Date unavailable",
+    memberRole: "Member",
+    ownerRole: "Owner",
+    adminRole: "Admin",
+    openDetails: "Open details →",
+    loadingEyebrow: "Dashboard",
+    loadingTitle: "Loading command center...",
+    loadingBody: "Preparing workspace data and recent events.",
+    authEyebrow: "Secure access",
+    authTitle: "Authentication required.",
+    authError: "Sign in to access the command center.",
+    sessionExpired: "Session expired",
+    metricsError: "Could not load dashboard metrics",
+    loginCta: "Go to login",
+    heroEyebrow: "Operational dashboard",
+    heroTitle: "The command center is active.",
+    connectedAs: "Signed in as",
+    statusAria: "Workspace status",
+    workspaceLabel: "Workspace",
+    activeFallback: "Active",
+    sessionLabel: "Session",
+    connectedLabel: "Connected",
+    roleLabel: "Role",
+    recommendedStep: "Recommended step",
+    openCta: "Open →",
+    recentEyebrow: "Recent activity",
+    recentTitle: "Latest events",
+    emptyTitle: "No recent events yet.",
+    emptyBody: "After demo requests, conversations or important updates appear, they will be listed here.",
+    launchEyebrow: "Launch",
+    checklistTitle: "Minimum checklist",
+    checklistBody: "Essential steps to prepare Autopilot One for customers.",
+    fullChecklistCta: "View full checklist",
+    quickActions: [
+      {
+        title: "Configure the widget",
+        description: "Prepare the widget for your website and verify the welcome message.",
+        href: "/widget-settings",
+      },
+      {
+        title: "Complete the business profile",
+        description: "Add the base information the AI receptionist uses in replies.",
+        href: "/onboarding",
+      },
+      {
+        title: "Review demo requests",
+        description: "Track captured leads and next steps for every conversation.",
+        href: "/demo-requests",
+      },
+    ],
+    launchSteps: [
+      "Complete the business profile",
+      "Add the knowledge base",
+      "Configure the widget",
+      "Test the flow from the customer perspective",
+    ],
+  },
+  ro: {
+    dateUnavailable: "Dată indisponibilă",
+    memberRole: "Membru",
+    ownerRole: "Owner",
+    adminRole: "Admin",
+    openDetails: "Deschide detalii →",
+    loadingEyebrow: "Panou",
+    loadingTitle: "Se încarcă centrul de comandă...",
+    loadingBody: "Pregătim datele workspace-ului și ultimele evenimente.",
+    authEyebrow: "Acces securizat",
+    authTitle: "Autentificare necesară.",
+    authError: "Autentifică-te pentru a accesa centrul de comandă.",
+    sessionExpired: "Sesiunea a expirat",
+    metricsError: "Nu am putut încărca metricile dashboardului",
+    loginCta: "Mergi la login",
+    heroEyebrow: "Dashboard operațional",
+    heroTitle: "Centrul de comandă este activ.",
+    connectedAs: "Conectat ca",
+    statusAria: "Stare workspace",
+    workspaceLabel: "Spațiu de lucru",
+    activeFallback: "Activ",
+    sessionLabel: "Sesiune",
+    connectedLabel: "Conectată",
+    roleLabel: "Rol",
+    recommendedStep: "Pas recomandat",
+    openCta: "Deschide →",
+    recentEyebrow: "Activitate recentă",
+    recentTitle: "Ultimele evenimente",
+    emptyTitle: "Nu există evenimente recente încă.",
+    emptyBody: "După ce apar cereri demo, conversații sau actualizări importante, acestea vor fi listate aici.",
+    launchEyebrow: "Lansare",
+    checklistTitle: "Checklist minim",
+    checklistBody: "Pașii esențiali pentru ca Autopilot One să fie pregătit pentru clienți.",
+    fullChecklistCta: "Vezi checklistul complet",
+    quickActions: [
+      {
+        title: "Configurează widgetul",
+        description: "Pregătește widgetul pentru site și verifică mesajul de întâmpinare.",
+        href: "/widget-settings",
+      },
+      {
+        title: "Completează profilul companiei",
+        description: "Adaugă informațiile de bază pe care recepționerul AI le folosește în răspunsuri.",
+        href: "/onboarding",
+      },
+      {
+        title: "Verifică cererile demo",
+        description: "Urmărește leadurile captate și pașii următori pentru fiecare conversație.",
+        href: "/demo-requests",
+      },
+    ],
+    launchSteps: [
+      "Completează profilul companiei",
+      "Adaugă baza de cunoștințe",
+      "Configurează widgetul",
+      "Testează fluxul din perspectiva clientului",
+    ],
+  },
+} satisfies Record<AppLanguage, {
+  dateUnavailable: string;
+  memberRole: string;
+  ownerRole: string;
+  adminRole: string;
+  openDetails: string;
+  loadingEyebrow: string;
+  loadingTitle: string;
+  loadingBody: string;
+  authEyebrow: string;
+  authTitle: string;
+  authError: string;
+  sessionExpired: string;
+  metricsError: string;
+  loginCta: string;
+  heroEyebrow: string;
+  heroTitle: string;
+  connectedAs: string;
+  statusAria: string;
+  workspaceLabel: string;
+  activeFallback: string;
+  sessionLabel: string;
+  connectedLabel: string;
+  roleLabel: string;
+  recommendedStep: string;
+  openCta: string;
+  recentEyebrow: string;
+  recentTitle: string;
+  emptyTitle: string;
+  emptyBody: string;
+  launchEyebrow: string;
+  checklistTitle: string;
+  checklistBody: string;
+  fullChecklistCta: string;
+  quickActions: Array<{ title: string; description: string; href: string }>;
+  launchSteps: string[];
+}>;
