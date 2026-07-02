@@ -64,13 +64,14 @@ export default function HomePage() {
               Autopilot One transformă website-ul într-un canal activ de vânzare: răspunde vizitatorilor, colectează datele importante și trimite conversațiile în CRM pentru follow-up.
             </p>
             <div className="actions">
-              <Link href="/demo" className="button">Cere demo</Link>
+              <Link href="/register" className="button">Creează cont</Link>
+              <Link href="/demo" className="button secondary">Cere demo</Link>
               <Link href="/pricing" className="button secondary">Vezi planurile</Link>
             </div>
             <div className="launch-kicker">
+              <span>Cont creat în câteva minute</span>
               <span>Demo fără card</span>
               <span>Pilot ghidat</span>
-              <span>Widget pentru website</span>
               <span>CRM Lite inclus</span>
             </div>
           </div>
@@ -230,10 +231,10 @@ export default function HomePage() {
         <section className="card cta-card final-cta-card">
           <div>
             <div className="eyebrow">Pregătit pentru pilot</div>
-            <h2>Hai să alegem primul flux AI pentru afacerea ta.</h2>
-            <p>Spune-ne ce tip de companie ai și ce conversații vrei să automatizezi prima dată. Îți propunem o implementare clară, măsurabilă și ușor de testat.</p>
+            <h2>Pornește din pagina principală și creează primul workspace.</h2>
+            <p>Un vizitator poate crea cont, poate intra în dashboard și poate începe configurarea primului flux AI pentru compania sa.</p>
           </div>
-          <Link href="/demo" className="button">Cere demo</Link>
+          <Link href="/register" className="button">Creează cont</Link>
         </section>
       </main>
       <Footer />
