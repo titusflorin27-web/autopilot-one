@@ -1,20 +1,29 @@
+"use client";
+
+import { useEffect, useState } from "react";
+import { authPageCopy, detectBrowserLanguage, subscribeToLanguageChanges, type AppLanguage } from "../../lib/i18n";
 import { RegisterForm } from "./RegisterForm";
 
 export default function RegisterPage() {
+  const [language, setLanguage] = useState<AppLanguage>("en");
+  const copy = authPageCopy.register[language];
+
+  useEffect(() => {
+    setLanguage(detectBrowserLanguage());
+    return subscribeToLanguageChanges(setLanguage);
+  }, []);
+
   return (
     <main className="auth-page-shell">
       <section className="auth-hero-panel" aria-label="Autopilot One">
         <div className="auth-brand-pill">Autopilot One</div>
-        <h1>Creează workspace-ul Autopilot One</h1>
-        <p>
-          Configurează contul de owner și primul spațiu de lucru pentru compania ta.
-          După creare, intri direct în dashboard.
-        </p>
+        <h1>{copy.title}</h1>
+        <p>{copy.body}</p>
 
         <div className="auth-proof-grid">
-          <span>Setup rapid</span>
-          <span>Dashboard inclus</span>
-          <span>Fără cod</span>
+          {copy.proofs.map((item) => (
+            <span key={item}>{item}</span>
+          ))}
         </div>
       </section>
 
