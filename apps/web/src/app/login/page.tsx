@@ -1,20 +1,29 @@
+"use client";
+
+import { useEffect, useState } from "react";
+import { authPageCopy, detectBrowserLanguage, subscribeToLanguageChanges, type AppLanguage } from "../../lib/i18n";
 import { LoginForm } from "./LoginForm";
 
 export default function LoginPage() {
+  const [language, setLanguage] = useState<AppLanguage>("en");
+  const copy = authPageCopy.login[language];
+
+  useEffect(() => {
+    setLanguage(detectBrowserLanguage());
+    return subscribeToLanguageChanges(setLanguage);
+  }, []);
+
   return (
     <main className="auth-page-shell">
       <section className="auth-hero-panel" aria-label="Autopilot One">
         <div className="auth-brand-pill">Autopilot One</div>
-        <h1>Intră în centrul tău de comandă AI</h1>
-        <p>
-          Urmărește leadurile, mesajele și activitatea widgetului dintr-un spațiu simplu,
-          creat pentru IMM-uri care vor răspuns rapid și organizare.
-        </p>
+        <h1>{copy.title}</h1>
+        <p>{copy.body}</p>
 
         <div className="auth-proof-grid">
-          <span>Recepționer AI 24/7</span>
-          <span>CRM Lite inclus</span>
-          <span>Acces securizat</span>
+          {copy.proofs.map((item) => (
+            <span key={item}>{item}</span>
+          ))}
         </div>
       </section>
 

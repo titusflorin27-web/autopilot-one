@@ -2,6 +2,7 @@ import "./globals.css";
 import "./launch.css";
 import type { Metadata, Viewport } from "next";
 import { createPageMetadata, siteConfig } from "../lib/seo";
+import { LanguageSwitcher } from "../components/LanguageSwitcher";
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteConfig.url),
@@ -44,7 +45,8 @@ export const viewport: Viewport = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="ro">
-      <body>{children}</body>
+      <body>
+        <LanguageSwitcher />{children}</body>
     </html>
   );
 }
