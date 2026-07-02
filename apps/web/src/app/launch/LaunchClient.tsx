@@ -63,9 +63,9 @@ export function LaunchClient() {
   if (error && !user) {
     return (
       <section className="card">
-        <h1>Authentication required.</h1>
+        <h1>Autentificare necesară.</h1>
         <p>{error}</p>
-        <a href="/login" className="button">Go to login</a>
+        <a href="/login" className="button">Mergi la login</a>
       </section>
     );
   }
@@ -73,8 +73,8 @@ export function LaunchClient() {
   return (
     <div className="widget-demo-layout">
       <section className="card">
-        <div className="eyebrow">BUILD #019 Demo Flow</div>
-        <h1>MVP launch checklist.</h1>
+        <div className="eyebrow">Lansare pilot</div>
+        <h1>Checklist de lansare MVP.</h1>
         <p>{checklist ? `${checklist.organization.name}: ${checklist.completed}/${checklist.total} steps complete.` : "No checklist loaded."}</p>
       </section>
 
@@ -89,7 +89,7 @@ export function LaunchClient() {
             </article>
             <article className="card">
               <h3>Ready for pilot</h3>
-              <div className="metric">{checklist.readyForPilot ? "Yes" : "Not yet"}</div>
+              <div className="metric">{checklist.readyForPilot ? "Da" : "Nu încă"}</div>
             </article>
             <article className="card">
               <h3>Public conversations</h3>
@@ -99,7 +99,7 @@ export function LaunchClient() {
 
           <section className="grid two-columns">
             <article className="card">
-              <h2>Guided demo path</h2>
+              <h2>Flux ghidat pentru demo</h2>
               <div className="source-list">
                 {checklist.steps.map((step, index) => (
                   <a className="source-item" href={step.href} key={step.id}>
@@ -112,14 +112,14 @@ export function LaunchClient() {
             </article>
 
             <article className="card">
-              <h2>Demo script</h2>
+              <h2>Script demo</h2>
               <div className="source-list">
                 <div className="source-item"><strong>1. Register and open dashboard</strong><p>Show identity, workspace and protected app shell.</p></div>
                 <div className="source-item"><strong>2. Complete Business DNA</strong><p>Show how the company context becomes AI operating context.</p></div>
-                <div className="source-item"><strong>3. Add Knowledge Base</strong><p>Upload or paste content that Reception AI can cite.</p></div>
+                <div className="source-item"><strong>3. Adaugă baza de cunoștințe</strong><p>Încarcă sau lipește conținut pe care recepționerul AI îl poate folosi.</p></div>
                 <div className="source-item"><strong>4. Install widget</strong><p>Copy the snippet and explain token/origin controls.</p></div>
-                <div className="source-item"><strong>5. Send website message</strong><p>Create a public conversation and lead.</p></div>
-                <div className="source-item"><strong>6. Resolve in Inbox</strong><p>Open handoff, reply as human, close the loop.</p></div>
+                <div className="source-item"><strong>5. Trimite mesaj de pe website</strong><p>Creează o conversație publică și un lead.</p></div>
+                <div className="source-item"><strong>6. Rezolvă în inbox</strong><p>Deschide transferul, răspunde ca operator și închide conversația.</p></div>
               </div>
             </article>
           </section>

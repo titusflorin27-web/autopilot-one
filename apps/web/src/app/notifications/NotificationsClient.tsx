@@ -73,9 +73,9 @@ export function NotificationsClient() {
   if (error && !user) {
     return (
       <section className="card">
-        <h1>Authentication required.</h1>
+        <h1>Autentificare necesară.</h1>
         <p>{error}</p>
-        <a href="/login" className="button">Go to login</a>
+        <a href="/login" className="button">Mergi la login</a>
       </section>
     );
   }
@@ -83,8 +83,8 @@ export function NotificationsClient() {
   return (
     <div className="widget-demo-layout">
       <section className="card">
-        <div className="eyebrow">BUILD #016 Notifications</div>
-        <h1>Notification center.</h1>
+        <div className="eyebrow">Notificări</div>
+        <h1>Centru de notificări.</h1>
         <p>{organization ? `Workspace: ${organization.name}` : "No organization found."}</p>
       </section>
 
@@ -94,13 +94,13 @@ export function NotificationsClient() {
         <>
           <section className="grid">
             <article className="card"><h3>Total</h3><div className="metric">{data.total}</div></article>
-            <article className="card"><h3>High priority</h3><div className="metric">{data.highPriority}</div></article>
-            <article className="card"><h3>Email-ready</h3><div className="metric">{data.emailReady.length}</div></article>
+            <article className="card"><h3>Prioritate mare</h3><div className="metric">{data.highPriority}</div></article>
+            <article className="card"><h3>Pregătite pentru email</h3><div className="metric">{data.emailReady.length}</div></article>
           </section>
 
           <section className="grid two-columns">
             <article className="card">
-              <h2>Active notifications</h2>
+              <h2>Notificări active</h2>
               <div className="source-list">
                 {data.items.length ? data.items.map((item) => (
                   <a className="source-item" href={item.href} key={item.id}>
@@ -113,7 +113,7 @@ export function NotificationsClient() {
             </article>
 
             <article className="card">
-              <h2>Email-ready payloads</h2>
+              <h2>Pregătite pentru email payloads</h2>
               <div className="source-list">
                 {data.emailReady.length ? data.emailReady.map((item, index) => (
                   <div className="source-item" key={`${item.subject}-${index}`}>

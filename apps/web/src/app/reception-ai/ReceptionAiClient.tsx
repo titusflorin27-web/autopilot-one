@@ -75,9 +75,9 @@ type OperationsSummary = {
 export function ReceptionAiClient() {
   const [user, setUser] = useState<CurrentUser | null>(null);
   const [summary, setSummary] = useState<OperationsSummary | null>(null);
-  const [conversations, setConversations] = useState<Conversation[]>([]);
-  const [tasks, setTasks] = useState<Task[]>([]);
-  const [leads, setLeads] = useState<Lead[]>([]);
+  const [conversations, setConversații] = useState<Conversation[]>([]);
+  const [tasks, setSarcini] = useState<Task[]>([]);
+  const [leads, setLeaduri] = useState<Lead[]>([]);
   const [result, setResult] = useState<ReceptionResult | null>(null);
   const [activeConversationId, setActiveConversationId] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -94,7 +94,7 @@ export function ReceptionAiClient() {
     const accessToken = getAccessToken();
 
     if (!accessToken) {
-      throw new Error("Please log in before using Reception AI.");
+      throw new Error("Autentifică-te înainte să folosești Recepționerul AI.");
     }
 
     return fetch(`${API_URL}${path}`, {
@@ -136,9 +136,9 @@ export function ReceptionAiClient() {
     }
 
     setSummary(summaryData);
-    setConversations(conversationsData);
-    setTasks(tasksData);
-    setLeads(leadsData);
+    setConversații(conversationsData);
+    setSarcini(tasksData);
+    setLeaduri(leadsData);
   }
 
   async function refresh() {
@@ -151,7 +151,7 @@ export function ReceptionAiClient() {
     const accessToken = getAccessToken();
 
     if (!accessToken) {
-      setError("Please log in before using Reception AI.");
+      setError("Autentifică-te înainte să folosești Recepționerul AI.");
       setIsLoading(false);
       return;
     }
@@ -174,7 +174,7 @@ export function ReceptionAiClient() {
         }
       })
       .catch((caughtError) => {
-        setError(caughtError instanceof Error ? caughtError.message : "Could not load Reception AI");
+        setError(caughtError instanceof Error ? caughtError.message : "Nu am putut încărca Recepționerul AI");
       })
       .finally(() => setIsLoading(false));
   }, []);
@@ -207,7 +207,7 @@ export function ReceptionAiClient() {
       const data = await response.json();
 
       if (!response.ok) {
-        throw new Error(data.message ?? "Reception AI failed");
+        throw new Error(data.message ?? "Recepționerul AI nu a putut răspunde");
       }
 
       setResult(data);
@@ -215,7 +215,7 @@ export function ReceptionAiClient() {
       await loadReceptionState(primaryMembership.organization.id);
       event.currentTarget.reset();
     } catch (caughtError) {
-      setError(caughtError instanceof Error ? caughtError.message : "Reception AI failed");
+      setError(caughtError instanceof Error ? caughtError.message : "Recepționerul AI nu a putut răspunde");
     } finally {
       setIsSending(false);
     }
@@ -294,15 +294,15 @@ export function ReceptionAiClient() {
   }
 
   if (isLoading) {
-    return <p>Loading Reception AI...</p>;
+    return <p>Se încarcă Recepționerul AI...</p>;
   }
 
   if (error && !user) {
     return (
       <section className="card">
-        <h1>Authentication required.</h1>
+        <h1>Autentificare necesară.</h1>
         <p>{error}</p>
-        <a href="/login" className="button">Go to login</a>
+        <a href="/login" className="button">Mergi la login</a>
       </section>
     );
   }
@@ -310,9 +310,9 @@ export function ReceptionAiClient() {
   return (
     <div className="reception-layout">
       <section className="card">
-        <div className="eyebrow">BUILD #008 AI Gateway</div>
-        <h1>Reception AI now has a model gateway.</h1>
-        <p>{primaryMembership ? `Workspace: ${primaryMembership.organization.name}` : "No organization found."}</p>
+        <div className="eyebrow">Recepționer AI</div>
+        <h1>Recepționerul AI este conectat la gateway-ul de model.</h1>
+        <p>{primaryMembership ? `Workspace: ${primaryMembership.organization.name}` : "Nu a fost găsită nicio organizație."}</p>
       </section>
 
       <section className="grid">
@@ -321,23 +321,23 @@ export function ReceptionAiClient() {
           <div className="metric">{summary?.conversations?.WAITING_FOR_HUMAN ?? 0}</div>
         </article>
         <article className="card">
-          <h3>Open tasks</h3>
+          <h3>Sarcini deschise</h3>
           <div className="metric">{summary?.tasks?.OPEN ?? 0}</div>
         </article>
         <article className="card">
           <h3>Last AI mode</h3>
-          <div className="metric">{result?.usedFallback ? "Fallback" : result?.aiProvider ?? "None"}</div>
+          <div className="metric">{result?.usedFallback ? "Fallback" : result?.aiProvider ?? "Niciunul"}</div>
         </article>
       </section>
 
       <section className="grid two-columns">
         <form className="card form-section" onSubmit={onSubmit}>
           <h3>Simulate customer message</h3>
-          <input name="customerName" placeholder="Customer name" />
-          <input name="customerEmail" placeholder="Customer email" type="email" />
-          <textarea name="message" placeholder="Example: I need pricing and a demo for my company next week." required />
+          <input name="customerName" placeholder="Nume client" />
+          <input name="customerEmail" placeholder="Email client" type="email" />
+          <textarea name="message" placeholder="Ex: vreau prețuri și un demo pentru compania mea săptămâna viitoare." required />
           <button className="button" type="submit" disabled={isSending}>
-            {isSending ? "Reception AI is thinking..." : "Send to Reception AI"}
+            {isSending ? "Recepționerul AI gândește..." : "Trimite către Recepționerul AI"}
           </button>
         </form>
 
@@ -375,7 +375,7 @@ export function ReceptionAiClient() {
 
       <section className="grid two-columns">
         <article className="card">
-          <h2>Conversations</h2>
+          <h2>Conversații</h2>
           <div className="source-list">
             {conversations.length ? conversations.map((conversation) => (
               <div className="source-item" key={conversation.id}>
@@ -386,9 +386,9 @@ export function ReceptionAiClient() {
                   {conversation.lead ? <span>Lead score {conversation.lead.score} · {conversation.lead.status}</span> : null}
                 </button>
                 <div className="mini-actions">
-                  <button className="button secondary mini" type="button" onClick={() => updateConversation(conversation.id, "OPEN")}>Open</button>
-                  <button className="button secondary mini" type="button" onClick={() => updateConversation(conversation.id, "WAITING_FOR_HUMAN")}>Handoff</button>
-                  <button className="button secondary mini" type="button" onClick={() => updateConversation(conversation.id, "CLOSED")}>Close</button>
+                  <button className="button secondary mini" type="button" onClick={() => updateConversation(conversation.id, "OPEN")}>Deschide</button>
+                  <button className="button secondary mini" type="button" onClick={() => updateConversation(conversation.id, "WAITING_FOR_HUMAN")}>Transfer uman</button>
+                  <button className="button secondary mini" type="button" onClick={() => updateConversation(conversation.id, "CLOSED")}>Închide</button>
                 </div>
               </div>
             )) : <p>No conversations yet.</p>}
@@ -396,17 +396,17 @@ export function ReceptionAiClient() {
         </article>
 
         <form className="card form-section" onSubmit={onHumanReply}>
-          <h2>Human reply</h2>
+          <h2>Răspuns uman</h2>
           <p>{activeConversationId ? `Selected conversation: ${activeConversationId}` : "Select a conversation first."}</p>
-          <textarea name="content" placeholder="Write a human reply or handoff note." required />
-          <input name="internalNote" placeholder="Internal note, optional" />
-          <button className="button" type="submit">Add human reply</button>
+          <textarea name="content" placeholder="Scrie un răspuns uman sau o notă de transfer." required />
+          <input name="internalNote" placeholder="Notă internă, opțional" />
+          <button className="button" type="submit">Adaugă răspuns uman</button>
         </form>
       </section>
 
       <section className="grid two-columns">
         <article className="card">
-          <h2>Tasks</h2>
+          <h2>Sarcini</h2>
           <div className="source-list">
             {tasks.length ? tasks.map((task) => (
               <div className="source-item" key={task.id}>
@@ -415,17 +415,17 @@ export function ReceptionAiClient() {
                 {task.ownerNote ? <span>{task.ownerNote}</span> : null}
                 <p>{task.description}</p>
                 <div className="mini-actions">
-                  <button className="button secondary mini" type="button" onClick={() => updateTask(task.id, "OPEN")}>Open</button>
-                  <button className="button secondary mini" type="button" onClick={() => updateTask(task.id, "DONE")}>Done</button>
-                  <button className="button secondary mini" type="button" onClick={() => updateTask(task.id, "CANCELLED")}>Cancel</button>
+                  <button className="button secondary mini" type="button" onClick={() => updateTask(task.id, "OPEN")}>Deschide</button>
+                  <button className="button secondary mini" type="button" onClick={() => updateTask(task.id, "DONE")}>Finalizează</button>
+                  <button className="button secondary mini" type="button" onClick={() => updateTask(task.id, "CANCELLED")}>Anulează</button>
                 </div>
               </div>
-            )) : <p>No Reception AI tasks yet.</p>}
+            )) : <p>Nu există încă sarcini pentru Recepționerul AI.</p>}
           </div>
         </article>
 
         <article className="card">
-          <h2>Leads</h2>
+          <h2>Leaduri</h2>
           <div className="source-list">
             {leads.length ? leads.map((lead) => (
               <div className="source-item" key={lead.id}>
@@ -434,9 +434,9 @@ export function ReceptionAiClient() {
                 {lead.ownerNote ? <span>{lead.ownerNote}</span> : null}
                 <p>{lead.summary}</p>
                 <div className="mini-actions">
-                  <button className="button secondary mini" type="button" onClick={() => updateLead(lead.id, "QUALIFIED")}>Qualify</button>
-                  <button className="button secondary mini" type="button" onClick={() => updateLead(lead.id, "CONVERTED")}>Convert</button>
-                  <button className="button secondary mini" type="button" onClick={() => updateLead(lead.id, "DISQUALIFIED")}>Disqualify</button>
+                  <button className="button secondary mini" type="button" onClick={() => updateLead(lead.id, "QUALIFIED")}>Califică</button>
+                  <button className="button secondary mini" type="button" onClick={() => updateLead(lead.id, "CONVERTED")}>Convertește</button>
+                  <button className="button secondary mini" type="button" onClick={() => updateLead(lead.id, "DISQUALIFIED")}>Descalifică</button>
                 </div>
               </div>
             )) : <p>No leads detected yet.</p>}

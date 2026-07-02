@@ -169,9 +169,9 @@ export function InboxClient() {
   if (error && !user) {
     return (
       <section className="card">
-        <h1>Authentication required.</h1>
+        <h1>Autentificare necesară.</h1>
         <p>{error}</p>
-        <a href="/login" className="button">Go to login</a>
+        <a href="/login" className="button">Mergi la login</a>
       </section>
     );
   }
@@ -179,8 +179,8 @@ export function InboxClient() {
   return (
     <div className="inbox-layout">
       <section className="card">
-        <div className="eyebrow">BUILD #015 Unified Inbox</div>
-        <h1>Operator inbox.</h1>
+        <div className="eyebrow">Inbox operator</div>
+        <h1>Inbox pentru conversații și transferuri umane.</h1>
         <p>Review website conversations, AI escalations, leads and human replies in one place.</p>
       </section>
 
@@ -190,15 +190,15 @@ export function InboxClient() {
         <aside className="card inbox-list">
           <div className="inbox-filters">
             <select value={status} onChange={(event) => { setStatus(event.target.value); loadConversations(event.target.value, source).catch(console.error); }}>
-              <option value="">All statuses</option>
-              <option value="OPEN">Open</option>
-              <option value="WAITING_FOR_HUMAN">Waiting for human</option>
+              <option value="">Toate statusurile</option>
+              <option value="OPEN">Deschis</option>
+              <option value="WAITING_FOR_HUMAN">Așteaptă operator</option>
               <option value="CLOSED">Closed</option>
             </select>
             <select value={source} onChange={(event) => { setSource(event.target.value); loadConversations(status, event.target.value).catch(console.error); }}>
-              <option value="">All sources</option>
-              <option value="public-web">Website widget</option>
-              <option value="web">Internal web</option>
+              <option value="">Toate sursele</option>
+              <option value="public-web">Widget website</option>
+              <option value="web">Web intern</option>
             </select>
           </div>
 
@@ -207,7 +207,7 @@ export function InboxClient() {
               const preview = conversation.messages[0]?.content ?? "No messages yet.";
               return (
                 <button className="source-item ghost-button" key={conversation.id} onClick={() => loadConversation(conversation.id).catch(console.error)}>
-                  <strong>{conversation.customerName || conversation.customerEmail || "Anonymous visitor"}</strong>
+                  <strong>{conversation.customerName || conversation.customerEmail || "Vizitator anonim"}</strong>
                   <span>{conversation.status} · {conversation.channel}</span>
                   <p>{preview.slice(0, 140)}</p>
                 </button>
@@ -221,15 +221,15 @@ export function InboxClient() {
             <>
               <div className="inbox-header">
                 <div>
-                  <h2>{selected.customerName || selected.customerEmail || "Anonymous visitor"}</h2>
+                  <h2>{selected.customerName || selected.customerEmail || "Vizitator anonim"}</h2>
                   <p>{selected.status} · {selected.channel}</p>
                   {selected.escalationReason ? <p>Escalation: {selected.escalationReason}</p> : null}
                   {selected.lead ? <p>Lead: {selected.lead.status} · score {selected.lead.score}</p> : null}
                 </div>
                 <div className="mini-actions">
-                  <button className="button mini" type="button" onClick={() => updateConversation("OPEN").catch((caughtError) => setError(String(caughtError)))}>Open</button>
-                  <button className="button mini secondary" type="button" onClick={() => updateConversation("WAITING_FOR_HUMAN").catch((caughtError) => setError(String(caughtError)))}>Handoff</button>
-                  <button className="button mini secondary" type="button" onClick={() => updateConversation("CLOSED").catch((caughtError) => setError(String(caughtError)))}>Close</button>
+                  <button className="button mini" type="button" onClick={() => updateConversation("OPEN").catch((caughtError) => setError(String(caughtError)))}>Deschis</button>
+                  <button className="button mini secondary" type="button" onClick={() => updateConversation("WAITING_FOR_HUMAN").catch((caughtError) => setError(String(caughtError)))}>Transfer uman</button>
+                  <button className="button mini secondary" type="button" onClick={() => updateConversation("CLOSED").catch((caughtError) => setError(String(caughtError)))}>Închide</button>
                 </div>
               </div>
 
@@ -244,8 +244,8 @@ export function InboxClient() {
               </div>
 
               <form className="widget-input" onSubmit={sendHumanReply}>
-                <input name="content" placeholder="Write a human reply..." />
-                <button className="button mini" type="submit">Send</button>
+                <input name="content" placeholder="Scrie un răspuns uman..." />
+                <button className="button mini" type="submit">Trimite</button>
               </form>
             </>
           ) : <p>Select a conversation.</p>}
