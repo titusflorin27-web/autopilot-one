@@ -2,6 +2,8 @@
 
 import { BusinessDna } from "@autopilot/shared";
 import { FormEvent, useEffect, useMemo, useState } from "react";
+import { onboardingCopy } from "../../lib/i18n";
+import { useAppLanguage } from "../../lib/useAppLanguage";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:4000/api";
 
@@ -47,13 +49,13 @@ function parseTitleDescriptionLines(value: FormDataEntryValue | null) {
   });
 }
 
-function parseFaqLines(value: FormDataEntryValue | null) {
+function parseFaqLines(value: FormDataEntryValue | null, fallbackAnswer: string) {
   return parseLines(value).map((line) => {
     const [question, ...answerParts] = line.split(" ? ");
 
     return {
       question: question.trim().endsWith("?") ? question.trim() : `${question.trim()}?`,
-      answer: answerParts.join(" ? ").trim() || "De definit.",
+      answer: answerParts.join(" ? ").trim() || fallbackAnswer,
     };
   });
 }
@@ -71,6 +73,9 @@ function parseObjectiveLines(value: FormDataEntryValue | null) {
 }
 
 export function BusinessDnaForm() {
+  const language = useAppLanguage();
+  const copy = onboardingCopy[language];
+
   const [user, setUser] = useState<CurrentUser | null>(null);
   const [businessDna, setBusinessDna] = useState<BusinessDna>(emptyBusinessDna);
   const [isLoading, setIsLoading] = useState(true);
@@ -89,7 +94,7 @@ export function BusinessDnaForm() {
 
   useEffect(() => {
     if (!accessToken) {
-      setError("Autentifică-te înainte să completezi profilul companiei.");
+      setError(copy.loginRequired);
       setIsLoading(false);
       return;
     }
@@ -101,7 +106,7 @@ export function BusinessDnaForm() {
         const data = await response.json();
 
         if (!response.ok) {
-          throw new Error(data.message ?? "Nu am putut încărca sesiunea utilizatorului");
+          throw new Error(data.message ?? copy.loadSessionError);
         }
 
         setUser(data);
@@ -121,10 +126,10 @@ export function BusinessDnaForm() {
         }
       })
       .catch((caughtError) => {
-        setError(caughtError instanceof Error ? caughtError.message : "Nu am putut încărca profilul companiei");
+        setError(caughtError instanceof Error ? caughtError.message : copy.loadBusinessDnaError);
       })
       .finally(() => setIsLoading(false));
-  }, [accessToken]);
+  }, [accessToken, copy.loadBusinessDnaError, copy.loadSessionError, copy.loginRequired]);
 
   async function onSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -132,7 +137,7 @@ export function BusinessDnaForm() {
     setMessage(null);
 
     if (!accessToken || !primaryMembership) {
-      setError("Este necesară o sesiune validă de organizație.");
+      setError(copy.validOrganizationRequired);
       return;
     }
 
@@ -145,7 +150,7 @@ export function BusinessDnaForm() {
       services: parseTitleDescriptionLines(formData.get("services")),
       rules: parseTitleDescriptionLines(formData.get("rules")),
       tone: String(formData.get("tone") ?? "").trim(),
-      faq: parseFaqLines(formData.get("faq")),
+      faq: parseFaqLines(formData.get("faq"), copy.fallbackAnswer),
       objectives: parseObjectiveLines(formData.get("objectives")),
     };
 
@@ -165,28 +170,28 @@ export function BusinessDnaForm() {
       const data = await response.json();
 
       if (!response.ok) {
-        throw new Error(data.message ?? "Nu am putut salva profilul companiei");
+        throw new Error(data.message ?? copy.saveBusinessDnaError);
       }
 
       setBusinessDna(payload);
-      setMessage("Profilul companiei a fost salvat. Recepționerul AI îl va folosi ca informație de context.");
+      setMessage(copy.saved);
     } catch (caughtError) {
-      setError(caughtError instanceof Error ? caughtError.message : "Nu am putut salva profilul companiei");
+      setError(caughtError instanceof Error ? caughtError.message : copy.saveBusinessDnaError);
     } finally {
       setIsSaving(false);
     }
   }
 
   if (isLoading) {
-    return <p>Se încarcă profilul companiei...</p>;
+    return <p>{copy.loading}</p>;
   }
 
   if (error && !user) {
     return (
       <section className="card">
-        <h1>Autentificare necesară.</h1>
+        <h1>{copy.authTitle}</h1>
         <p>{error}</p>
-        <a href="/login" className="button">Mergi la login</a>
+        <a href="/login" className="button">{copy.loginCta}</a>
       </section>
     );
   }
@@ -194,56 +199,56 @@ export function BusinessDnaForm() {
   return (
     <form className="business-dna-form" onSubmit={onSubmit}>
       <section className="card">
-        <div className="eyebrow">Profil companie</div>
-        <h1>Descrie compania o singură dată.</h1>
+        <div className="eyebrow">{copy.eyebrow}</div>
+        <h1>{copy.title}</h1>
         <p>
           {primaryMembership
-            ? `Spațiu de lucru: ${primaryMembership.organization.name}`
-            : "Nu a fost găsită nicio organizație pentru acest cont."}
+            ? `${copy.workspacePrefix}: ${primaryMembership.organization.name}`
+            : copy.organizationMissing}
         </p>
       </section>
 
       <section className="card form-section">
-        <h2>Rezumat companie</h2>
-        <textarea name="summary" defaultValue={businessDna.summary} placeholder="Ce face compania, cui se adresează și ce o diferențiază?" required />
+        <h2>{copy.summaryTitle}</h2>
+        <textarea name="summary" defaultValue={businessDna.summary} placeholder={copy.summaryPlaceholder} required />
       </section>
 
       <section className="grid two-columns">
         <div className="card form-section">
-          <h3>Produse</h3>
-          <p>Câte unul pe linie: Produs - descriere</p>
-          <textarea name="products" defaultValue={businessDna.products.map((item) => `${item.title} - ${item.description}`).join("\n")} placeholder="Plan Start - Pentru echipe mici la început" />
+          <h3>{copy.productsTitle}</h3>
+          <p>{copy.productsHelper}</p>
+          <textarea name="products" defaultValue={businessDna.products.map((item) => `${item.title} - ${item.description}`).join("\n")} placeholder={copy.productsPlaceholder} />
         </div>
         <div className="card form-section">
-          <h3>Servicii</h3>
-          <p>Câte unul pe linie: Serviciu - descriere</p>
-          <textarea name="services" defaultValue={businessDna.services.map((item) => `${item.title} - ${item.description}`).join("\n")} placeholder="Implementare - Setup și suport la pornire" />
-        </div>
-      </section>
-
-      <section className="grid two-columns">
-        <div className="card form-section">
-          <h3>Reguli</h3>
-          <p>Câte una pe linie: Regulă - explicație</p>
-          <textarea name="rules" defaultValue={businessDna.rules.map((rule) => `${rule.title} - ${rule.description}`).join("\n")} placeholder="Rambursări - Transferă cererile de rambursare către un operator" />
-        </div>
-        <div className="card form-section">
-          <h3>Ton</h3>
-          <p>Cum ar trebui să comunice angajații AI?</p>
-          <textarea name="tone" defaultValue={businessDna.tone} placeholder="Profesional, cald, concis, sigur." required />
+          <h3>{copy.servicesTitle}</h3>
+          <p>{copy.servicesHelper}</p>
+          <textarea name="services" defaultValue={businessDna.services.map((item) => `${item.title} - ${item.description}`).join("\n")} placeholder={copy.servicesPlaceholder} />
         </div>
       </section>
 
       <section className="grid two-columns">
         <div className="card form-section">
-          <h3>FAQ</h3>
-          <p>Câte una pe linie: Întrebare ? Răspuns</p>
-          <textarea name="faq" defaultValue={businessDna.faq.map((item) => `${item.question} ? ${item.answer}`).join("\n")} placeholder="Cât de repede răspundeți? ? De obicei într-o zi lucrătoare." />
+          <h3>{copy.rulesTitle}</h3>
+          <p>{copy.rulesHelper}</p>
+          <textarea name="rules" defaultValue={businessDna.rules.map((rule) => `${rule.title} - ${rule.description}`).join("\n")} placeholder={copy.rulesPlaceholder} />
         </div>
         <div className="card form-section">
-          <h3>Obiective</h3>
-          <p>Câte unul pe linie: Obiectiv | metrică | țintă</p>
-          <textarea name="objectives" defaultValue={businessDna.objectives.map((item) => [item.title, item.metric, item.target].filter(Boolean).join(" | ")).join("\n")} placeholder="Creștere leaduri calificate | leaduri/lună | 100" />
+          <h3>{copy.toneTitle}</h3>
+          <p>{copy.toneHelper}</p>
+          <textarea name="tone" defaultValue={businessDna.tone} placeholder={copy.tonePlaceholder} required />
+        </div>
+      </section>
+
+      <section className="grid two-columns">
+        <div className="card form-section">
+          <h3>{copy.faqTitle}</h3>
+          <p>{copy.faqHelper}</p>
+          <textarea name="faq" defaultValue={businessDna.faq.map((item) => `${item.question} ? ${item.answer}`).join("\n")} placeholder={copy.faqPlaceholder} />
+        </div>
+        <div className="card form-section">
+          <h3>{copy.objectivesTitle}</h3>
+          <p>{copy.objectivesHelper}</p>
+          <textarea name="objectives" defaultValue={businessDna.objectives.map((item) => [item.title, item.metric, item.target].filter(Boolean).join(" | ")).join("\n")} placeholder={copy.objectivesPlaceholder} />
         </div>
       </section>
 
@@ -252,9 +257,9 @@ export function BusinessDnaForm() {
 
       <div className="actions">
         <button className="button" type="submit" disabled={isSaving || !primaryMembership}>
-          {isSaving ? "Se salvează..." : "Salvează profilul companiei"}
+          {isSaving ? copy.saving : copy.save}
         </button>
-        <a href="/dashboard" className="button secondary">Înapoi la dashboard</a>
+        <a href="/dashboard" className="button secondary">{copy.backToDashboard}</a>
       </div>
     </form>
   );
