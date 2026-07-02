@@ -62,7 +62,7 @@ export function InboxClient() {
   async function apiFetch(path: string, init: RequestInit = {}) {
     const accessToken = token();
 
-    if (!accessToken) throw new Error("Please log in before using Inbox.");
+    if (!accessToken) throw new Error("Autentifică-te înainte să folosești inboxul.");
 
     return fetch(`${API_URL}${path}`, {
       ...init,
@@ -83,7 +83,7 @@ export function InboxClient() {
     const response = await apiFetch(`/inbox/organization/${organizationId}/conversations?${params.toString()}`);
     const data = await response.json();
 
-    if (!response.ok) throw new Error(data.message ?? "Could not load inbox");
+    if (!response.ok) throw new Error(data.message ?? "Nu am putut încărca inboxul");
 
     setConversations(data);
     if (!selected && data[0]) await loadConversation(data[0].id);
@@ -95,7 +95,7 @@ export function InboxClient() {
     const response = await apiFetch(`/inbox/organization/${organizationId}/conversations/${conversationId}`);
     const data = await response.json();
 
-    if (!response.ok) throw new Error(data.message ?? "Could not load conversation");
+    if (!response.ok) throw new Error(data.message ?? "Nu am putut încărca conversația");
 
     setSelected(data);
   }
@@ -110,7 +110,7 @@ export function InboxClient() {
     });
     const data = await response.json();
 
-    if (!response.ok) throw new Error(data.message ?? "Could not update conversation");
+    if (!response.ok) throw new Error(data.message ?? "Nu am putut actualiza conversația");
 
     setSelected(data);
     await loadConversations();
@@ -131,7 +131,7 @@ export function InboxClient() {
     });
     const data = await response.json();
 
-    if (!response.ok) throw new Error(data.message ?? "Could not send reply");
+    if (!response.ok) throw new Error(data.message ?? "Nu am putut trimite răspunsul");
 
     event.currentTarget.reset();
     setSelected(data);
@@ -142,7 +142,7 @@ export function InboxClient() {
     const accessToken = token();
 
     if (!accessToken) {
-      setError("Please log in before using Inbox.");
+      setError("Autentifică-te înainte să folosești inboxul.");
       setIsLoading(false);
       return;
     }
@@ -152,19 +152,19 @@ export function InboxClient() {
     })
       .then(async (response) => {
         const data = await response.json();
-        if (!response.ok) throw new Error(data.message ?? "Could not load session");
+        if (!response.ok) throw new Error(data.message ?? "Nu am putut încărca sesiunea");
         setUser(data);
       })
-      .catch((caughtError) => setError(caughtError instanceof Error ? caughtError.message : "Could not load session"))
+      .catch((caughtError) => setError(caughtError instanceof Error ? caughtError.message : "Nu am putut încărca sesiunea"))
       .finally(() => setIsLoading(false));
   }, []);
 
   useEffect(() => {
     if (!organizationId) return;
-    loadConversations().catch((caughtError) => setError(caughtError instanceof Error ? caughtError.message : "Could not load inbox"));
+    loadConversations().catch((caughtError) => setError(caughtError instanceof Error ? caughtError.message : "Nu am putut încărca inboxul"));
   }, [organizationId]);
 
-  if (isLoading) return <p>Loading inbox...</p>;
+  if (isLoading) return <p>Se încarcă inboxul...</p>;
 
   if (error && !user) {
     return (
@@ -181,7 +181,7 @@ export function InboxClient() {
       <section className="card">
         <div className="eyebrow">Inbox operator</div>
         <h1>Inbox pentru conversații și transferuri umane.</h1>
-        <p>Review website conversations, AI escalations, leads and human replies in one place.</p>
+        <p>Revizuiești conversațiile din website, escaladările AI, leadurile și răspunsurile umane într-un singur loc.</p>
       </section>
 
       {error ? <p className="form-error">{error}</p> : null}
@@ -193,7 +193,7 @@ export function InboxClient() {
               <option value="">Toate statusurile</option>
               <option value="OPEN">Deschis</option>
               <option value="WAITING_FOR_HUMAN">Așteaptă operator</option>
-              <option value="CLOSED">Closed</option>
+              <option value="CLOSED">Închis</option>
             </select>
             <select value={source} onChange={(event) => { setSource(event.target.value); loadConversations(status, event.target.value).catch(console.error); }}>
               <option value="">Toate sursele</option>
@@ -204,7 +204,7 @@ export function InboxClient() {
 
           <div className="source-list">
             {conversations.length ? conversations.map((conversation) => {
-              const preview = conversation.messages[0]?.content ?? "No messages yet.";
+              const preview = conversation.messages[0]?.content ?? "Nu există mesaje încă.";
               return (
                 <button className="source-item ghost-button" key={conversation.id} onClick={() => loadConversation(conversation.id).catch(console.error)}>
                   <strong>{conversation.customerName || conversation.customerEmail || "Vizitator anonim"}</strong>
@@ -212,7 +212,7 @@ export function InboxClient() {
                   <p>{preview.slice(0, 140)}</p>
                 </button>
               );
-            }) : <p>No conversations found.</p>}
+            }) : <p>Nu există conversații.</p>}
           </div>
         </aside>
 
@@ -223,8 +223,8 @@ export function InboxClient() {
                 <div>
                   <h2>{selected.customerName || selected.customerEmail || "Vizitator anonim"}</h2>
                   <p>{selected.status} · {selected.channel}</p>
-                  {selected.escalationReason ? <p>Escalation: {selected.escalationReason}</p> : null}
-                  {selected.lead ? <p>Lead: {selected.lead.status} · score {selected.lead.score}</p> : null}
+                  {selected.escalationReason ? <p>Escaladare: {selected.escalationReason}</p> : null}
+                  {selected.lead ? <p>Lead: {selected.lead.status} · scor {selected.lead.score}</p> : null}
                 </div>
                 <div className="mini-actions">
                   <button className="button mini" type="button" onClick={() => updateConversation("OPEN").catch((caughtError) => setError(String(caughtError)))}>Deschis</button>
@@ -248,7 +248,7 @@ export function InboxClient() {
                 <button className="button mini" type="submit">Trimite</button>
               </form>
             </>
-          ) : <p>Select a conversation.</p>}
+          ) : <p>Selectează o conversație.</p>}
         </article>
       </section>
     </div>

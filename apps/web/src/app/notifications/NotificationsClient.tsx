@@ -36,14 +36,14 @@ export function NotificationsClient() {
 
   async function loadNotifications(organizationId: string) {
     const accessToken = token();
-    if (!accessToken) throw new Error("Please log in before viewing notifications.");
+    if (!accessToken) throw new Error("Autentifică-te înainte să vezi notificările.");
 
     const response = await fetch(`${API_URL}/notifications/organization/${organizationId}`, {
       headers: { Authorization: `Bearer ${accessToken}` },
     });
     const json = await response.json();
 
-    if (!response.ok) throw new Error(json.message ?? "Could not load notifications");
+    if (!response.ok) throw new Error(json.message ?? "Nu am putut încărca notificările");
     setData(json);
   }
 
@@ -51,7 +51,7 @@ export function NotificationsClient() {
     const accessToken = token();
 
     if (!accessToken) {
-      setError("Please log in before viewing notifications.");
+      setError("Autentifică-te înainte să vezi notificările.");
       setIsLoading(false);
       return;
     }
@@ -59,16 +59,16 @@ export function NotificationsClient() {
     fetch(`${API_URL}/users/me`, { headers: { Authorization: `Bearer ${accessToken}` } })
       .then(async (response) => {
         const json = await response.json();
-        if (!response.ok) throw new Error(json.message ?? "Could not load session");
+        if (!response.ok) throw new Error(json.message ?? "Nu am putut încărca sesiunea");
         setUser(json);
         const primary = json.memberships?.[0]?.organization;
         if (primary) await loadNotifications(primary.id);
       })
-      .catch((caughtError) => setError(caughtError instanceof Error ? caughtError.message : "Could not load notifications"))
+      .catch((caughtError) => setError(caughtError instanceof Error ? caughtError.message : "Nu am putut încărca notificările"))
       .finally(() => setIsLoading(false));
   }, []);
 
-  if (isLoading) return <p>Loading notifications...</p>;
+  if (isLoading) return <p>Se încarcă notificările...</p>;
 
   if (error && !user) {
     return (
@@ -108,12 +108,12 @@ export function NotificationsClient() {
                     <span>{item.type} · {item.priority} · {new Date(item.createdAt).toLocaleString()}</span>
                     <p>{item.description}</p>
                   </a>
-                )) : <p>No active notifications.</p>}
+                )) : <p>Nu există notificări active.</p>}
               </div>
             </article>
 
             <article className="card">
-              <h2>Pregătite pentru email payloads</h2>
+              <h2>Mesaje pregătite pentru email</h2>
               <div className="source-list">
                 {data.emailReady.length ? data.emailReady.map((item, index) => (
                   <div className="source-item" key={`${item.subject}-${index}`}>
@@ -121,7 +121,7 @@ export function NotificationsClient() {
                     <span>{item.href}</span>
                     <p>{item.preview}</p>
                   </div>
-                )) : <p>No email payloads ready.</p>}
+                )) : <p>Nu există mesaje email pregătite.</p>}
               </div>
             </article>
           </section>

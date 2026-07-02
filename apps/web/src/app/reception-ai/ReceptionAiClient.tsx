@@ -120,19 +120,19 @@ export function ReceptionAiClient() {
     const leadsData = await leadsResponse.json();
 
     if (!summaryResponse.ok) {
-      throw new Error(summaryData.message ?? "Could not load operations summary");
+      throw new Error(summaryData.message ?? "Nu am putut încărca sumarul operațional");
     }
 
     if (!conversationsResponse.ok) {
-      throw new Error(conversationsData.message ?? "Could not load conversations");
+      throw new Error(conversationsData.message ?? "Nu am putut încărca conversațiile");
     }
 
     if (!tasksResponse.ok) {
-      throw new Error(tasksData.message ?? "Could not load tasks");
+      throw new Error(tasksData.message ?? "Nu am putut încărca sarcinile");
     }
 
     if (!leadsResponse.ok) {
-      throw new Error(leadsData.message ?? "Could not load leads");
+      throw new Error(leadsData.message ?? "Nu am putut încărca leadurile");
     }
 
     setSummary(summaryData);
@@ -163,7 +163,7 @@ export function ReceptionAiClient() {
         const data = await response.json();
 
         if (!response.ok) {
-          throw new Error(data.message ?? "Could not load user session");
+          throw new Error(data.message ?? "Nu am putut încărca sesiunea utilizatorului");
         }
 
         setUser(data);
@@ -230,7 +230,7 @@ export function ReceptionAiClient() {
     const data = await response.json();
 
     if (!response.ok) {
-      throw new Error(data.message ?? "Operation failed");
+      throw new Error(data.message ?? "Operațiunea a eșuat");
     }
 
     await refresh();
@@ -240,7 +240,7 @@ export function ReceptionAiClient() {
     try {
       await patchJson(`/reception-ai/conversations/${conversationId}`, { status });
     } catch (caughtError) {
-      setError(caughtError instanceof Error ? caughtError.message : "Could not update conversation");
+      setError(caughtError instanceof Error ? caughtError.message : "Nu am putut actualiza conversația");
     }
   }
 
@@ -248,7 +248,7 @@ export function ReceptionAiClient() {
     try {
       await patchJson(`/reception-ai/tasks/${taskId}`, { status });
     } catch (caughtError) {
-      setError(caughtError instanceof Error ? caughtError.message : "Could not update task");
+      setError(caughtError instanceof Error ? caughtError.message : "Nu am putut actualiza sarcina");
     }
   }
 
@@ -256,7 +256,7 @@ export function ReceptionAiClient() {
     try {
       await patchJson(`/reception-ai/leads/${leadId}`, { status });
     } catch (caughtError) {
-      setError(caughtError instanceof Error ? caughtError.message : "Could not update lead");
+      setError(caughtError instanceof Error ? caughtError.message : "Nu am putut actualiza leadul");
     }
   }
 
@@ -265,7 +265,7 @@ export function ReceptionAiClient() {
     setError(null);
 
     if (!activeConversationId) {
-      setError("Select a conversation before adding a human reply.");
+      setError("Selectează o conversație înainte să adaugi un răspuns uman.");
       return;
     }
 
@@ -397,7 +397,7 @@ export function ReceptionAiClient() {
 
         <form className="card form-section" onSubmit={onHumanReply}>
           <h2>Răspuns uman</h2>
-          <p>{activeConversationId ? `Selected conversation: ${activeConversationId}` : "Select a conversation first."}</p>
+          <p>{activeConversationId ? `Conversație selectată: ${activeConversationId}` : "Selectează mai întâi o conversație."}</p>
           <textarea name="content" placeholder="Scrie un răspuns uman sau o notă de transfer." required />
           <input name="internalNote" placeholder="Notă internă, opțional" />
           <button className="button" type="submit">Adaugă răspuns uman</button>

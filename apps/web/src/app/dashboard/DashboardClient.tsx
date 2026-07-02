@@ -184,7 +184,7 @@ export function DashboardClient() {
   if (isLoading) {
     return (
       <section className="card dashboard-loading-card">
-        <div className="eyebrow">Dashboard</div>
+        <div className="eyebrow">Panou</div>
         <h1>Se încarcă centrul de comandă...</h1>
         <p>Pregătim datele workspace-ului și ultimele evenimente.</p>
       </section>
@@ -216,7 +216,7 @@ export function DashboardClient() {
 
         <div className="dashboard-status-grid" aria-label="Stare workspace">
           <div>
-            <span>Workspace</span>
+            <span>Spațiu de lucru</span>
             <strong>{primaryMembership?.organization.name ?? "Activ"}</strong>
           </div>
           <div>
