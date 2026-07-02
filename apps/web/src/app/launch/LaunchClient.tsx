@@ -29,19 +29,19 @@ export function LaunchClient() {
 
   async function loadChecklist(organizationId: string) {
     const accessToken = token();
-    if (!accessToken) throw new Error("Please log in before viewing launch checklist.");
+    if (!accessToken) throw new Error("Autentifică-te înainte să vezi checklistul de lansare.");
     const response = await fetch(`${API_URL}/launch/organization/${organizationId}/checklist`, {
       headers: { Authorization: `Bearer ${accessToken}` },
     });
     const json = await response.json();
-    if (!response.ok) throw new Error(json.message ?? "Could not load launch checklist");
+    if (!response.ok) throw new Error(json.message ?? "Nu am putut încărca checklistul de lansare");
     setChecklist(json);
   }
 
   useEffect(() => {
     const accessToken = token();
     if (!accessToken) {
-      setError("Please log in before viewing launch checklist.");
+      setError("Autentifică-te înainte să vezi checklistul de lansare.");
       setIsLoading(false);
       return;
     }
@@ -49,16 +49,16 @@ export function LaunchClient() {
     fetch(`${API_URL}/users/me`, { headers: { Authorization: `Bearer ${accessToken}` } })
       .then(async (response) => {
         const json = await response.json();
-        if (!response.ok) throw new Error(json.message ?? "Could not load session");
+        if (!response.ok) throw new Error(json.message ?? "Nu am putut încărca sesiunea");
         setUser(json);
         const primary = json.memberships?.[0]?.organization;
         if (primary) await loadChecklist(primary.id);
       })
-      .catch((caughtError) => setError(caughtError instanceof Error ? caughtError.message : "Could not load launch checklist"))
+      .catch((caughtError) => setError(caughtError instanceof Error ? caughtError.message : "Nu am putut încărca checklistul de lansare"))
       .finally(() => setIsLoading(false));
   }, []);
 
-  if (isLoading) return <p>Loading launch checklist...</p>;
+  if (isLoading) return <p>Se încarcă checklistul de lansare...</p>;
 
   if (error && !user) {
     return (
@@ -75,7 +75,7 @@ export function LaunchClient() {
       <section className="card">
         <div className="eyebrow">Lansare pilot</div>
         <h1>Checklist de lansare MVP.</h1>
-        <p>{checklist ? `${checklist.organization.name}: ${checklist.completed}/${checklist.total} steps complete.` : "No checklist loaded."}</p>
+        <p>{checklist ? `${checklist.organization.name}: ${checklist.completed}/${checklist.total} pași finalizați.` : "Nu există checklist încărcat."}</p>
       </section>
 
       {error ? <p className="form-error">{error}</p> : null}
@@ -84,15 +84,15 @@ export function LaunchClient() {
         <>
           <section className="grid">
             <article className="card">
-              <h3>Progress</h3>
+              <h3>Progres</h3>
               <div className="metric">{checklist.progress}%</div>
             </article>
             <article className="card">
-              <h3>Ready for pilot</h3>
+              <h3>Pregătit pentru pilot</h3>
               <div className="metric">{checklist.readyForPilot ? "Da" : "Nu încă"}</div>
             </article>
             <article className="card">
-              <h3>Public conversations</h3>
+              <h3>Conversații publice</h3>
               <div className="metric">{checklist.metrics.publicConversations}</div>
             </article>
           </section>
@@ -104,7 +104,7 @@ export function LaunchClient() {
                 {checklist.steps.map((step, index) => (
                   <a className="source-item" href={step.href} key={step.id}>
                     <strong>{step.complete ? "✓" : "○"} {index + 1}. {step.title}</strong>
-                    <span>{step.complete ? "Complete" : "Needs action"}</span>
+                    <span>{step.complete ? "Finalizat" : "Necesită acțiune"}</span>
                     <p>{step.description}</p>
                   </a>
                 ))}
@@ -114,10 +114,10 @@ export function LaunchClient() {
             <article className="card">
               <h2>Script demo</h2>
               <div className="source-list">
-                <div className="source-item"><strong>1. Register and open dashboard</strong><p>Show identity, workspace and protected app shell.</p></div>
-                <div className="source-item"><strong>2. Complete Business DNA</strong><p>Show how the company context becomes AI operating context.</p></div>
+                <div className="source-item"><strong>1. Creează cont și deschide dashboardul</strong><p>Arată identitatea, workspace-ul și zona protejată a aplicației.</p></div>
+                <div className="source-item"><strong>2. Completează profilul companiei</strong><p>Arată cum informațiile companiei devin context operațional pentru AI.</p></div>
                 <div className="source-item"><strong>3. Adaugă baza de cunoștințe</strong><p>Încarcă sau lipește conținut pe care recepționerul AI îl poate folosi.</p></div>
-                <div className="source-item"><strong>4. Install widget</strong><p>Copy the snippet and explain token/origin controls.</p></div>
+                <div className="source-item"><strong>4. Instalează widgetul</strong><p>Copiază fragmentul și explică tokenul și controalele de origine.</p></div>
                 <div className="source-item"><strong>5. Trimite mesaj de pe website</strong><p>Creează o conversație publică și un lead.</p></div>
                 <div className="source-item"><strong>6. Rezolvă în inbox</strong><p>Deschide transferul, răspunde ca operator și închide conversația.</p></div>
               </div>

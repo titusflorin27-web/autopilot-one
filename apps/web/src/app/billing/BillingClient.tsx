@@ -30,14 +30,14 @@ export function BillingClient() {
 
   async function authedFetch(path: string, init: RequestInit = {}) {
     const accessToken = token();
-    if (!accessToken) throw new Error("Please log in before viewing billing.");
+    if (!accessToken) throw new Error("Autentifică-te înainte să vezi facturarea.");
     return fetch(`${API_URL}${path}`, { ...init, headers: { Authorization: `Bearer ${accessToken}`, ...(init.headers ?? {}) } });
   }
 
   async function loadBilling(organizationId: string) {
     const response = await authedFetch(`/billing/organization/${organizationId}`);
     const json = await response.json();
-    if (!response.ok) throw new Error(json.message ?? "Could not load billing");
+    if (!response.ok) throw new Error(json.message ?? "Nu am putut încărca facturarea");
     setBilling(json);
   }
 
@@ -49,14 +49,14 @@ export function BillingClient() {
       body: JSON.stringify({ plan }),
     });
     const json = await response.json();
-    if (!response.ok) throw new Error(json.message ?? "Could not update plan");
+    if (!response.ok) throw new Error(json.message ?? "Nu am putut actualiza planul");
     setBilling(json);
   }
 
   useEffect(() => {
     const accessToken = token();
     if (!accessToken) {
-      setError("Please log in before viewing billing.");
+      setError("Autentifică-te înainte să vezi facturarea.");
       setIsLoading(false);
       return;
     }
@@ -64,16 +64,16 @@ export function BillingClient() {
     fetch(`${API_URL}/users/me`, { headers: { Authorization: `Bearer ${accessToken}` } })
       .then(async (response) => {
         const json = await response.json();
-        if (!response.ok) throw new Error(json.message ?? "Could not load session");
+        if (!response.ok) throw new Error(json.message ?? "Nu am putut încărca sesiunea");
         setUser(json);
         const primary = json.memberships?.[0]?.organization;
         if (primary) await loadBilling(primary.id);
       })
-      .catch((caughtError) => setError(caughtError instanceof Error ? caughtError.message : "Could not load billing"))
+      .catch((caughtError) => setError(caughtError instanceof Error ? caughtError.message : "Nu am putut încărca facturarea"))
       .finally(() => setIsLoading(false));
   }, []);
 
-  if (isLoading) return <p>Loading billing...</p>;
+  if (isLoading) return <p>Se încarcă facturarea...</p>;
 
   if (error && !user) {
     return (
@@ -90,7 +90,7 @@ export function BillingClient() {
       <section className="card">
         <div className="eyebrow">Facturare</div>
         <h1>Planuri și utilizare.</h1>
-        <p>{billing ? `${billing.organization.name} is on ${billing.organization.billingPlan} / ${billing.organization.billingStatus}` : "No billing data loaded."}</p>
+        <p>{billing ? `${billing.organization.name} · plan ${billing.organization.billingPlan} · status ${billing.organization.billingStatus}` : "Nu există date de facturare încărcate."}</p>
       </section>
 
       {error ? <p className="form-error">{error}</p> : null}
@@ -100,18 +100,18 @@ export function BillingClient() {
           <section className="grid">
             <UsageCard label="Mesaje widget" used={billing.usage.widgetMessages} limit={billing.limits.widgetMessages} remaining={billing.remaining.widgetMessages} over={billing.overLimit.widgetMessages} />
             <UsageCard label="Surse de cunoștințe" used={billing.usage.knowledgeSources} limit={billing.limits.knowledgeSources} remaining={billing.remaining.knowledgeSources} over={billing.overLimit.knowledgeSources} />
-            <UsageCard label="Team members" used={billing.usage.teamMembers} limit={billing.limits.teamMembers} remaining={billing.remaining.teamMembers} over={billing.overLimit.teamMembers} />
+            <UsageCard label="Membri echipă" used={billing.usage.teamMembers} limit={billing.limits.teamMembers} remaining={billing.remaining.teamMembers} over={billing.overLimit.teamMembers} />
           </section>
 
           <section className="grid two-columns">
             {billing.plans.map((plan) => (
               <article className="card" key={plan.plan}>
                 <h2>{plan.plan}</h2>
-                <p>{plan.limits.widgetMessages.toLocaleString()} widget messages / period</p>
+                <p>{plan.limits.widgetMessages.toLocaleString()} mesaje widget / perioadă</p>
                 <p>{plan.limits.knowledgeSources.toLocaleString()} surse de cunoștințe</p>
-                <p>{plan.limits.teamMembers.toLocaleString()} team members</p>
+                <p>{plan.limits.teamMembers.toLocaleString()} membri echipă</p>
                 <button className="button" type="button" onClick={() => updatePlan(plan.plan).catch((caughtError) => setError(String(caughtError)))}>
-                  {billing.organization.billingPlan === plan.plan ? "Current plan" : `Switch to ${plan.plan}`}
+                  {billing.organization.billingPlan === plan.plan ? "Plan curent" : `Schimbă la ${plan.plan}`}
                 </button>
               </article>
             ))}
@@ -127,8 +127,8 @@ function UsageCard(props: { label: string; used: number; limit: number; remainin
     <article className="card">
       <h3>{props.label}</h3>
       <div className="metric">{props.used}</div>
-      <p>Limit: {props.limit.toLocaleString()}</p>
-      <p>Remaining: {props.remaining.toLocaleString()}</p>
+      <p>Limită: {props.limit.toLocaleString()}</p>
+      <p>Rămas: {props.remaining.toLocaleString()}</p>
       {props.over ? <p className="form-error">Limita a fost atinsă.</p> : null}
     </article>
   );

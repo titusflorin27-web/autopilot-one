@@ -30,7 +30,7 @@ type KnowledgeSource = {
   createdAt: string;
 };
 
-type CautăResult = {
+type SearchResult = {
   chunkId: string;
   sourceId: string;
   sourceTitle: string;
@@ -41,8 +41,8 @@ type CautăResult = {
 
 export function KnowledgeBaseClient() {
   const [user, setUser] = useState<CurrentUser | null>(null);
-  const [sources, setSurse] = useState<KnowledgeSource[]>([]);
-  const [results, setResults] = useState<CautăResult[]>([]);
+  const [sources, setSources] = useState<KnowledgeSource[]>([]);
+  const [results, setResults] = useState<SearchResult[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
   const [message, setMessage] = useState<string | null>(null);
@@ -58,7 +58,7 @@ export function KnowledgeBaseClient() {
     const accessToken = getAccessToken();
 
     if (!accessToken) {
-      throw new Error("Please log in before using Knowledge Base.");
+      throw new Error("Autentifică-te înainte să folosești baza de cunoștințe.");
     }
 
     return fetch(`${API_URL}${path}`, {
@@ -70,22 +70,22 @@ export function KnowledgeBaseClient() {
     });
   }
 
-  async function loadSurse(organizationId: string) {
+  async function loadSources(organizationId: string) {
     const response = await apiFetch(`/knowledge-base/organization/${organizationId}/sources`);
     const data = await response.json();
 
     if (!response.ok) {
-      throw new Error(data.message ?? "Could not load knowledge sources");
+      throw new Error(data.message ?? "Nu am putut încărca sursele de cunoștințe");
     }
 
-    setSurse(data);
+    setSources(data);
   }
 
   useEffect(() => {
     const accessToken = getAccessToken();
 
     if (!accessToken) {
-      setError("Please log in before using Knowledge Base.");
+      setError("Autentifică-te înainte să folosești baza de cunoștințe.");
       setIsLoading(false);
       return;
     }
@@ -97,18 +97,18 @@ export function KnowledgeBaseClient() {
         const data = await response.json();
 
         if (!response.ok) {
-          throw new Error(data.message ?? "Could not load user session");
+          throw new Error(data.message ?? "Nu am putut încărca sesiunea utilizatorului");
         }
 
         setUser(data);
         const membership = data.memberships?.[0] as Membership | undefined;
 
         if (membership) {
-          await loadSurse(membership.organization.id);
+          await loadSources(membership.organization.id);
         }
       })
       .catch((caughtError) => {
-        setError(caughtError instanceof Error ? caughtError.message : "Could not load Knowledge Base");
+        setError(caughtError instanceof Error ? caughtError.message : "Nu am putut încărca baza de cunoștințe");
       })
       .finally(() => setIsLoading(false));
   }, []);
@@ -141,14 +141,14 @@ export function KnowledgeBaseClient() {
       const data = await response.json();
 
       if (!response.ok) {
-        throw new Error(data.message ?? "Could not index text source");
+        throw new Error(data.message ?? "Nu am putut indexa sursa text");
       }
 
       form.reset();
-      await loadSurse(primaryMembership.organization.id);
-      setMessage("TXT source indexed.");
+      await loadSources(primaryMembership.organization.id);
+      setMessage("Sursa text a fost indexată.");
     } catch (caughtError) {
-      setError(caughtError instanceof Error ? caughtError.message : "Could not index text source");
+      setError(caughtError instanceof Error ? caughtError.message : "Nu am putut indexa sursa text");
     } finally {
       setIsSaving(false);
     }
@@ -181,14 +181,14 @@ export function KnowledgeBaseClient() {
       const data = await response.json();
 
       if (!response.ok) {
-        throw new Error(data.message ?? "Could not index website");
+        throw new Error(data.message ?? "Nu am putut indexa website-ul");
       }
 
       form.reset();
-      await loadSurse(primaryMembership.organization.id);
-      setMessage("Website indexed.");
+      await loadSources(primaryMembership.organization.id);
+      setMessage("Website-ul a fost indexat.");
     } catch (caughtError) {
-      setError(caughtError instanceof Error ? caughtError.message : "Could not index website");
+      setError(caughtError instanceof Error ? caughtError.message : "Nu am putut indexa website-ul");
     } finally {
       setIsSaving(false);
     }
@@ -217,20 +217,20 @@ export function KnowledgeBaseClient() {
       const data = await response.json();
 
       if (!response.ok) {
-        throw new Error(data.message ?? "Could not upload file");
+        throw new Error(data.message ?? "Nu am putut încărca fișierul");
       }
 
       form.reset();
-      await loadSurse(primaryMembership.organization.id);
-      setMessage("File uploaded and indexed.");
+      await loadSources(primaryMembership.organization.id);
+      setMessage("Fișierul a fost încărcat și indexat.");
     } catch (caughtError) {
-      setError(caughtError instanceof Error ? caughtError.message : "Could not upload file");
+      setError(caughtError instanceof Error ? caughtError.message : "Nu am putut încărca fișierul");
     } finally {
       setIsSaving(false);
     }
   }
 
-  async function onCautăSubmit(event: FormEvent<HTMLFormElement>) {
+  async function onSearchSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     setMessage(null);
     setError(null);
@@ -255,7 +255,7 @@ export function KnowledgeBaseClient() {
       const data = await response.json();
 
       if (!response.ok) {
-        throw new Error(data.message ?? "Caută failed");
+        throw new Error(data.message ?? "Căutarea a eșuat");
       }
 
       setResults(data);
@@ -310,7 +310,7 @@ export function KnowledgeBaseClient() {
           <button className="button" disabled={isSaving} type="submit">Încarcă și indexează</button>
         </form>
 
-        <form className="card form-section" onSubmit={onCautăSubmit}>
+        <form className="card form-section" onSubmit={onSearchSubmit}>
           <h3>Semantic search</h3>
           <input name="query" placeholder="Caută în baza de cunoștințe" required />
           <button className="button" type="submit">Caută</button>

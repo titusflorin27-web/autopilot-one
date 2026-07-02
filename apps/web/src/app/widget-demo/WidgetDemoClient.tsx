@@ -68,7 +68,7 @@ export function WidgetDemoClient() {
     const message = String(formData.get("message") ?? "").trim();
 
     if (!message) {
-      setError("Message is required.");
+      setError("Mesajul este obligatoriu.");
       setIsSending(false);
       return;
     }
@@ -124,14 +124,14 @@ export function WidgetDemoClient() {
           <input value={customerName} onChange={(event) => setCustomerName(event.target.value)} placeholder="Nume client" />
           <input value={customerEmail} onChange={(event) => setCustomerEmail(event.target.value)} placeholder="Email client" type="email" />
           <input value={widgetToken} onChange={(event) => setWidgetToken(event.target.value)} placeholder="Jeton widget necesar când protecția cu jeton este activă" />
-          <p>Visitor id: {visitorId || "creating..."}</p>
+          <p>ID vizitator: {visitorId || "se creează..."}</p>
           <p>Lipește fragmentul de mai jos înainte de tagul de închidere body pe website-ul clientului.</p>
         </article>
 
         <article className="widget-shell">
           <div className="widget-header">
             <strong>Recepționer AI</strong>
-            <span>{lastResponse?.usedFallback ? "Fallback mode" : lastResponse?.aiProvider ?? "Public intake"}</span>
+            <span>{lastResponse?.usedFallback ? "Mod fallback" : lastResponse?.aiProvider ?? "Captare publică"}</span>
           </div>
 
           <div className="widget-messages">
@@ -140,7 +140,7 @@ export function WidgetDemoClient() {
                 {message.content}
               </div>
             )) : (
-              <p>Ask a question about services, pricing, booking or support.</p>
+              <p>Întreabă despre servicii, prețuri, programări sau suport.</p>
             )}
           </div>
 
@@ -151,10 +151,10 @@ export function WidgetDemoClient() {
 
           {lastResponse ? (
             <div className="widget-meta">
-              <span>Confidence {(lastResponse.confidence * 100).toFixed(0)}%</span>
-              <span>Escalation {lastResponse.shouldEscalate ? "yes" : "no"}</span>
-              <span>Conversation {lastResponse.conversationId.slice(0, 8)}</span>
-              {lastResponse.rateLimit ? <span>Limit {lastResponse.rateLimit.max}/{lastResponse.rateLimit.windowSeconds}s</span> : null}
+              <span>Încredere {(lastResponse.confidence * 100).toFixed(0)}%</span>
+              <span>Escaladare {lastResponse.shouldEscalate ? "da" : "nu"}</span>
+              <span>Conversație {lastResponse.conversationId.slice(0, 8)}</span>
+              {lastResponse.rateLimit ? <span>Limită {lastResponse.rateLimit.max}/{lastResponse.rateLimit.windowSeconds}s</span> : null}
             </div>
           ) : null}
         </article>
@@ -165,7 +165,7 @@ export function WidgetDemoClient() {
       <section className="grid two-columns">
         <article className="card">
           <h2>Fragment de instalare</h2>
-          <p>Copy this into the target website.</p>
+          <p>Copiază acest fragment în website-ul țintă.</p>
           <pre className="code-block">{embedSnippet}</pre>
         </article>
 
@@ -175,10 +175,10 @@ export function WidgetDemoClient() {
 {
   "organizationSlug": "slug-companie",
   "message": "Întrebarea clientului",
-  "conversationId": "Optional follow-up conversation id",
-  "visitorId": "Stable anonymous visitor id",
-  "customerName": "Optional customer name",
-  "customerEmail": "Optional customer email",
+  "conversationId": "ID opțional pentru conversația de follow-up",
+  "visitorId": "ID stabil pentru vizitator anonim",
+  "customerName": "Nume client opțional",
+  "customerEmail": "Email client opțional",
   "widgetToken": "Necesar când protecția cu jeton este activă",
   "websiteUrl": "https://customer-site.example"
 }`}</pre>

@@ -62,7 +62,7 @@ export function WidgetAnalyticsClient() {
     const accessToken = getAccessToken();
 
     if (!accessToken) {
-      throw new Error("Please log in before viewing widget analytics.");
+      throw new Error("Autentifică-te înainte să vezi analiticele widgetului.");
     }
 
     return fetch(`${API_URL}${path}`, {
@@ -79,7 +79,7 @@ export function WidgetAnalyticsClient() {
     const data = await response.json();
 
     if (!response.ok) {
-      throw new Error(data.message ?? "Could not load widget analytics");
+      throw new Error(data.message ?? "Nu am putut încărca analiticele widgetului");
     }
 
     setAnalytics(data);
@@ -89,7 +89,7 @@ export function WidgetAnalyticsClient() {
     const accessToken = getAccessToken();
 
     if (!accessToken) {
-      setError("Please log in before viewing widget analytics.");
+      setError("Autentifică-te înainte să vezi analiticele widgetului.");
       setIsLoading(false);
       return;
     }
@@ -101,7 +101,7 @@ export function WidgetAnalyticsClient() {
         const data = await response.json();
 
         if (!response.ok) {
-          throw new Error(data.message ?? "Could not load user session");
+          throw new Error(data.message ?? "Nu am putut încărca sesiunea utilizatorului");
         }
 
         setUser(data);
@@ -112,13 +112,13 @@ export function WidgetAnalyticsClient() {
         }
       })
       .catch((caughtError) => {
-        setError(caughtError instanceof Error ? caughtError.message : "Could not load widget analytics");
+        setError(caughtError instanceof Error ? caughtError.message : "Nu am putut încărca analiticele widgetului");
       })
       .finally(() => setIsLoading(false));
   }, []);
 
   if (isLoading) {
-    return <p>Loading widget analytics...</p>;
+    return <p>Se încarcă analiticele widgetului...</p>;
   }
 
   if (error && !user) {
@@ -145,7 +145,7 @@ export function WidgetAnalyticsClient() {
         <>
           <section className="grid">
             <article className="card">
-              <h3>Config loaded</h3>
+              <h3>Config încărcată</h3>
               <div className="metric">{analytics.installHealth.hasConfigLoad ? "Da" : "Nu"}</div>
             </article>
             <article className="card">
@@ -153,22 +153,22 @@ export function WidgetAnalyticsClient() {
               <div className="metric">{analytics.events.OPENED ?? 0}</div>
             </article>
             <article className="card">
-              <h3>Messages sent</h3>
+              <h3>Mesaje trimise</h3>
               <div className="metric">{analytics.events.MESSAGE_SENT ?? 0}</div>
             </article>
           </section>
 
           <section className="grid">
             <article className="card">
-              <h3>Public conversations</h3>
+              <h3>Conversații publice</h3>
               <div className="metric">{analytics.publicFunnel.conversations}</div>
             </article>
             <article className="card">
-              <h3>Public leads</h3>
+              <h3>Leaduri publice</h3>
               <div className="metric">{analytics.publicFunnel.leads}</div>
             </article>
             <article className="card">
-              <h3>Follow-up tasks</h3>
+              <h3>Sarcini follow-up</h3>
               <div className="metric">{analytics.publicFunnel.tasks}</div>
             </article>
           </section>
@@ -192,9 +192,9 @@ export function WidgetAnalyticsClient() {
                 {Object.keys(analytics.domains).length ? Object.entries(analytics.domains).map(([domain, count]) => (
                   <div className="source-item" key={domain}>
                     <strong>{domain}</strong>
-                    <span>{count} events</span>
+                    <span>{count} evenimente</span>
                   </div>
-                )) : <p>Nu domains detected yet.</p>}
+                )) : <p>Nu există domenii detectate încă.</p>}
               </div>
             </article>
           </section>
@@ -206,12 +206,12 @@ export function WidgetAnalyticsClient() {
                 <div className="source-item" key={event.id}>
                   <strong>{event.type}</strong>
                   <span>{new Date(event.createdAt).toLocaleString()}</span>
-                  {event.origin ? <span>Origin: {event.origin}</span> : null}
+                  {event.origin ? <span>Origine: {event.origin}</span> : null}
                   {event.websiteUrl ? <span>URL: {event.websiteUrl}</span> : null}
-                  {event.visitorId ? <span>Visitor: {event.visitorId.slice(0, 18)}...</span> : null}
-                  {event.conversationId ? <span>Conversation: {event.conversationId.slice(0, 10)}</span> : null}
+                  {event.visitorId ? <span>Vizitator: {event.visitorId.slice(0, 18)}...</span> : null}
+                  {event.conversationId ? <span>Conversație: {event.conversationId.slice(0, 10)}</span> : null}
                 </div>
-              )) : <p>Nu widget events yet.</p>}
+              )) : <p>Nu există evenimente widget încă.</p>}
             </div>
           </section>
         </>

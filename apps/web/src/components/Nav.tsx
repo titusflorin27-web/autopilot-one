@@ -3,7 +3,7 @@ import Link from "next/link";
 export function Nav() {
   return (
     <header className="nav">
-      <Link href="/" className="brand" aria-label="Autopilot One home">
+      <Link href="/" className="brand" aria-label="Autopilot One acasă">
         <span className="brand-mark">A1</span>
         <span>Autopilot One</span>
       </Link>

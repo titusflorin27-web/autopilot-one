@@ -42,8 +42,8 @@ const steps = [
 const trustItems = [
   ["Fără token expus", "Snippetul widgetului ascunde datele sensibile în interfață."],
   ["Backup validat", "Backup local și off-server confirmat pentru pilot."],
-  ["Security hardening", "Firewall, fail2ban, rate limits și headers de securitate."],
-  ["Final QA", "Homepage, API, SEO, backup și monitoring validate pe VPS."],
+  ["Securitate întărită", "Firewall, fail2ban, rate limits și headers de securitate."],
+  ["QA final", "Homepage, API, SEO, backup și monitoring validate pe VPS."],
 ];
 
 const beforeAfter = [
@@ -76,17 +76,17 @@ export default function HomePage() {
             </div>
           </div>
 
-          <aside className="product-showcase" aria-label="Autopilot One preview">
+          <aside className="product-showcase" aria-label="Previzualizare Autopilot One">
             <div className="showcase-topbar">
               <div className="console-dots"><span /><span /><span /></div>
-              <span>LIVE PILOT</span>
+              <span>PILOT LIVE</span>
             </div>
             <div className="showcase-grid">
               <section className="ai-window">
                 <div className="ai-window-header">
                   <div>
                     <strong>Recepționer AI</strong>
-                    <span>Website conversation</span>
+                    <span>Conversație website</span>
                   </div>
                   <em>online</em>
                 </div>
@@ -97,21 +97,21 @@ export default function HomePage() {
 
               <section className="crm-window">
                 <div className="crm-card active">
-                  <span>New lead</span>
+                  <span>Lead nou</span>
                   <strong>Programare cerută</strong>
                   <p>Status: calificat</p>
                 </div>
                 <div className="crm-card">
-                  <span>Next step</span>
+                  <span>Pas următor</span>
                   <strong>Sună clientul</strong>
                   <p>Follow-up: azi</p>
                 </div>
               </section>
             </div>
             <div className="showcase-footer">
-              <span>Lead capture</span>
+              <span>Captare leaduri</span>
               <span>CRM Lite</span>
-              <span>Analytics</span>
+              <span>Analitice</span>
             </div>
           </aside>
         </section>
