@@ -120,6 +120,10 @@ model Organization {
   billingPlan               BillingPlan             @default(FREE)
   billingStatus             BillingStatus           @default(TRIALING)
   billingCurrentPeriodStart DateTime                @default(now())
+  billingCurrentPeriodEnd   DateTime?
+  stripeCustomerId          String?                 @unique
+  stripeSubscriptionId      String?                 @unique
+  stripePriceId             String?
   widgetEnabled             Boolean                 @default(true)
   widgetTitle               String                  @default("Reception AI")
   widgetPrimaryColor        String                  @default("#8ee6c9")
