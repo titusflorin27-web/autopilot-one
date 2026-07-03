@@ -43,7 +43,7 @@ export class DemoRequestEmailService {
       return;
     }
 
-    const appUrl = this.config.get<string>("APP_PUBLIC_URL") ?? "https://app.autopilot-one.com";
+    const appUrl = this.config.get<string>("PUBLIC_APP_URL") ?? "https://app.autopilot-one.com";
     const inboxUrl = `${appUrl.replace(/\/$/, "")}/demo-requests`;
     const subject = `Cerere demo nouă: ${demoRequest.name}`;
 
