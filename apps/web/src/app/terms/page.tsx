@@ -6,7 +6,7 @@ import { createPageMetadata } from "../../lib/seo";
 export const metadata: Metadata = createPageMetadata({
   title: "Termeni și condiții Autopilot One",
   description:
-    "Termenii operaționali Autopilot One pentru faza pilot: acces, conturi, utilizare acceptabilă, limitări AI și disponibilitate.",
+    "Termenii operaționali Autopilot One pentru faza pilot: acces, conturi, utilizare acceptabilă, date, AI și disponibilitate.",
   path: "/terms",
 });
 
@@ -39,6 +39,12 @@ export default function TermsPage() {
 
           <h2>Date și conținut</h2>
           <p>Clientul este responsabil pentru datele încărcate în platformă și pentru instrucțiunile oferite asistentului AI. Nu trebuie încărcate date inutile sau informații sensibile fără temei legal.</p>
+
+          <h2>Protecția datelor</h2>
+          <p>Clientul trebuie să informeze vizitatorii și utilizatorii finali despre utilizarea widgetului, AI-ului și captării de lead-uri. Pentru datele vizitatorilor introduse în platformă, clientul poate acționa ca operator, iar Autopilot One poate acționa ca persoană împuternicită, conform ofertei sau contractului aplicabil.</p>
+
+          <h2>Cookies și tehnologii similare</h2>
+          <p>Interfața publică nu folosește în prezent tracking publicitar sau analytics terț. Dacă vor fi adăugate tehnologii opționale, acestea vor fi tratate conform politicii de cookies și legislației aplicabile.</p>
 
           <h2>Disponibilitate</h2>
           <p>Serviciul este furnizat cu efort rezonabil de disponibilitate. Pot exista întreruperi pentru mentenanță, actualizări, furnizori terți sau incidente tehnice.</p>

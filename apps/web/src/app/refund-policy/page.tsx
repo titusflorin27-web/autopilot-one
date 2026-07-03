@@ -23,7 +23,10 @@ export default function RefundPolicyPage() {
 
         <section className="card trust-layout">
           <h2>Abonamente</h2>
-          <p>Autopilot One poate fi oferit pe bază de abonament lunar sau ofertă personalizată. Facturarea, perioada de test și condițiile comerciale se stabilesc în pagina de pricing sau în oferta acceptată.</p>
+          <p>Autopilot One poate fi oferit pe bază de abonament lunar sau ofertă personalizată. Facturarea, perioada de test și condițiile comerciale se stabilesc în pagina de pricing, în checkoutul furnizorului de plăți sau în oferta acceptată.</p>
+
+          <h2>Anulare și portal de facturare</h2>
+          <p>După activarea plăților online, gestionarea abonamentului, anularea și facturile pot fi disponibile prin portalul furnizorului de plăți. Până la activarea completă a plăților, solicitările se gestionează prin contact@autopilot-one.com.</p>
 
           <h2>Servicii digitale activate</h2>
           <p>Pentru servicii digitale configurate și activate, rambursarea poate depinde de stadiul implementării și de consumul efectiv al serviciului.</p>
