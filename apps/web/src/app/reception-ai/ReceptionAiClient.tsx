@@ -1,6 +1,9 @@
 "use client";
 
-import { FormEvent, useEffect, useState } from "react";
+import type { FormEvent } from "react";
+import { useEffect, useState } from "react";
+import { receptionAiCopy } from "../../lib/i18n";
+import { useAppLanguage } from "../../lib/useAppLanguage";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:4000/api";
 
@@ -72,12 +75,55 @@ type OperationsSummary = {
   leads: Record<string, number>;
 };
 
+type ReceptionCopy = typeof receptionAiCopy["ro"];
+
+function statusLabel(status: string, copy: ReceptionCopy) {
+  switch (status) {
+    case "OPEN":
+      return copy.statusOpen;
+    case "WAITING_FOR_HUMAN":
+      return copy.statusWaitingForHuman;
+    case "CLOSED":
+      return copy.statusClosed;
+    case "DONE":
+      return copy.statusDone;
+    case "CANCELLED":
+      return copy.statusCancelled;
+    case "NEW":
+      return copy.statusNew;
+    case "QUALIFIED":
+      return copy.statusQualified;
+    case "WON":
+      return copy.statusWon;
+    case "LOST":
+      return copy.statusLost;
+    default:
+      return status;
+  }
+}
+
+function priorityLabel(priority: string, copy: ReceptionCopy) {
+  switch (priority) {
+    case "LOW":
+      return copy.priorityLow;
+    case "MEDIUM":
+      return copy.priorityMedium;
+    case "HIGH":
+      return copy.priorityHigh;
+    default:
+      return priority;
+  }
+}
+
 export function ReceptionAiClient() {
+  const language = useAppLanguage();
+  const copy = receptionAiCopy[language];
+
   const [user, setUser] = useState<CurrentUser | null>(null);
   const [summary, setSummary] = useState<OperationsSummary | null>(null);
-  const [conversations, setConversații] = useState<Conversation[]>([]);
-  const [tasks, setSarcini] = useState<Task[]>([]);
-  const [leads, setLeaduri] = useState<Lead[]>([]);
+  const [conversations, setConversations] = useState<Conversation[]>([]);
+  const [tasks, setTasks] = useState<Task[]>([]);
+  const [leads, setLeads] = useState<Lead[]>([]);
   const [result, setResult] = useState<ReceptionResult | null>(null);
   const [activeConversationId, setActiveConversationId] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -94,7 +140,7 @@ export function ReceptionAiClient() {
     const accessToken = getAccessToken();
 
     if (!accessToken) {
-      throw new Error("Autentifică-te înainte să folosești Recepționerul AI.");
+      throw new Error(copy.loginRequired);
     }
 
     return fetch(`${API_URL}${path}`, {
@@ -120,25 +166,25 @@ export function ReceptionAiClient() {
     const leadsData = await leadsResponse.json();
 
     if (!summaryResponse.ok) {
-      throw new Error(summaryData.message ?? "Nu am putut încărca sumarul operațional");
+      throw new Error(summaryData.message ?? copy.loadSummaryError);
     }
 
     if (!conversationsResponse.ok) {
-      throw new Error(conversationsData.message ?? "Nu am putut încărca conversațiile");
+      throw new Error(conversationsData.message ?? copy.loadConversationsError);
     }
 
     if (!tasksResponse.ok) {
-      throw new Error(tasksData.message ?? "Nu am putut încărca sarcinile");
+      throw new Error(tasksData.message ?? copy.loadTasksError);
     }
 
     if (!leadsResponse.ok) {
-      throw new Error(leadsData.message ?? "Nu am putut încărca leadurile");
+      throw new Error(leadsData.message ?? copy.loadLeadsError);
     }
 
     setSummary(summaryData);
-    setConversații(conversationsData);
-    setSarcini(tasksData);
-    setLeaduri(leadsData);
+    setConversations(conversationsData);
+    setTasks(tasksData);
+    setLeads(leadsData);
   }
 
   async function refresh() {
@@ -151,7 +197,7 @@ export function ReceptionAiClient() {
     const accessToken = getAccessToken();
 
     if (!accessToken) {
-      setError("Autentifică-te înainte să folosești Recepționerul AI.");
+      setError(copy.loginRequired);
       setIsLoading(false);
       return;
     }
@@ -163,7 +209,7 @@ export function ReceptionAiClient() {
         const data = await response.json();
 
         if (!response.ok) {
-          throw new Error(data.message ?? "Nu am putut încărca sesiunea utilizatorului");
+          throw new Error(data.message ?? copy.loadSessionError);
         }
 
         setUser(data);
@@ -174,17 +220,17 @@ export function ReceptionAiClient() {
         }
       })
       .catch((caughtError) => {
-        setError(caughtError instanceof Error ? caughtError.message : "Nu am putut încărca Recepționerul AI");
+        setError(caughtError instanceof Error ? caughtError.message : copy.loadReceptionError);
       })
       .finally(() => setIsLoading(false));
-  }, []);
+  }, [copy.loadReceptionError, copy.loadSessionError, copy.loginRequired]);
 
   async function onSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     setError(null);
 
     if (!primaryMembership) {
-      setError("Nu a fost găsită nicio organizație pentru acest cont.");
+      setError(copy.organizationMissing);
       return;
     }
 
@@ -207,7 +253,7 @@ export function ReceptionAiClient() {
       const data = await response.json();
 
       if (!response.ok) {
-        throw new Error(data.message ?? "Recepționerul AI nu a putut răspunde");
+        throw new Error(data.message ?? copy.aiReplyError);
       }
 
       setResult(data);
@@ -215,7 +261,7 @@ export function ReceptionAiClient() {
       await loadReceptionState(primaryMembership.organization.id);
       event.currentTarget.reset();
     } catch (caughtError) {
-      setError(caughtError instanceof Error ? caughtError.message : "Recepționerul AI nu a putut răspunde");
+      setError(caughtError instanceof Error ? caughtError.message : copy.aiReplyError);
     } finally {
       setIsSending(false);
     }
@@ -230,7 +276,7 @@ export function ReceptionAiClient() {
     const data = await response.json();
 
     if (!response.ok) {
-      throw new Error(data.message ?? "Operațiunea a eșuat");
+      throw new Error(data.message ?? copy.operationFailed);
     }
 
     await refresh();
@@ -240,7 +286,7 @@ export function ReceptionAiClient() {
     try {
       await patchJson(`/reception-ai/conversations/${conversationId}`, { status });
     } catch (caughtError) {
-      setError(caughtError instanceof Error ? caughtError.message : "Nu am putut actualiza conversația");
+      setError(caughtError instanceof Error ? caughtError.message : copy.updateConversationError);
     }
   }
 
@@ -248,7 +294,7 @@ export function ReceptionAiClient() {
     try {
       await patchJson(`/reception-ai/tasks/${taskId}`, { status });
     } catch (caughtError) {
-      setError(caughtError instanceof Error ? caughtError.message : "Nu am putut actualiza sarcina");
+      setError(caughtError instanceof Error ? caughtError.message : copy.updateTaskError);
     }
   }
 
@@ -256,7 +302,7 @@ export function ReceptionAiClient() {
     try {
       await patchJson(`/reception-ai/leads/${leadId}`, { status });
     } catch (caughtError) {
-      setError(caughtError instanceof Error ? caughtError.message : "Nu am putut actualiza leadul");
+      setError(caughtError instanceof Error ? caughtError.message : copy.updateLeadError);
     }
   }
 
@@ -265,7 +311,7 @@ export function ReceptionAiClient() {
     setError(null);
 
     if (!activeConversationId) {
-      setError("Selectează o conversație înainte să adaugi un răspuns uman.");
+      setError(copy.selectConversationBeforeReply);
       return;
     }
 
@@ -283,26 +329,26 @@ export function ReceptionAiClient() {
       const data = await response.json();
 
       if (!response.ok) {
-        throw new Error(data.message ?? "Could not add human reply");
+        throw new Error(data.message ?? copy.addHumanReplyError);
       }
 
       await refresh();
       event.currentTarget.reset();
     } catch (caughtError) {
-      setError(caughtError instanceof Error ? caughtError.message : "Could not add human reply");
+      setError(caughtError instanceof Error ? caughtError.message : copy.addHumanReplyError);
     }
   }
 
   if (isLoading) {
-    return <p>Se încarcă Recepționerul AI...</p>;
+    return <p>{copy.loading}</p>;
   }
 
   if (error && !user) {
     return (
       <section className="card">
-        <h1>Autentificare necesară.</h1>
+        <h1>{copy.authTitle}</h1>
         <p>{error}</p>
-        <a href="/login" className="button">Mergi la login</a>
+        <a href="/login" className="button">{copy.loginCta}</a>
       </section>
     );
   }
@@ -310,63 +356,63 @@ export function ReceptionAiClient() {
   return (
     <div className="reception-layout">
       <section className="card">
-        <div className="eyebrow">Recepționer AI</div>
-        <h1>Recepționerul AI este conectat la gateway-ul de model.</h1>
-        <p>{primaryMembership ? `Spațiu de lucru: ${primaryMembership.organization.name}` : "Nu a fost găsită nicio organizație."}</p>
+        <div className="eyebrow">{copy.eyebrow}</div>
+        <h1>{copy.title}</h1>
+        <p>{primaryMembership ? `${copy.workspacePrefix}: ${primaryMembership.organization.name}` : copy.organizationMissing}</p>
       </section>
 
       <section className="grid">
         <article className="card">
-          <h3>Waiting for human</h3>
+          <h3>{copy.waitingForHuman}</h3>
           <div className="metric">{summary?.conversations?.WAITING_FOR_HUMAN ?? 0}</div>
         </article>
         <article className="card">
-          <h3>Sarcini deschise</h3>
+          <h3>{copy.openTasks}</h3>
           <div className="metric">{summary?.tasks?.OPEN ?? 0}</div>
         </article>
         <article className="card">
-          <h3>Last AI mode</h3>
-          <div className="metric">{result?.usedFallback ? "Fallback" : result?.aiProvider ?? "Niciunul"}</div>
+          <h3>{copy.lastAiMode}</h3>
+          <div className="metric">{result?.usedFallback ? copy.fallback : result?.aiProvider ?? copy.none}</div>
         </article>
       </section>
 
       <section className="grid two-columns">
         <form className="card form-section" onSubmit={onSubmit}>
-          <h3>Simulate customer message</h3>
-          <input name="customerName" placeholder="Nume client" />
-          <input name="customerEmail" placeholder="Email client" type="email" />
-          <textarea name="message" placeholder="Ex: vreau prețuri și un demo pentru compania mea săptămâna viitoare." required />
+          <h3>{copy.simulateTitle}</h3>
+          <input name="customerName" placeholder={copy.customerNamePlaceholder} />
+          <input name="customerEmail" placeholder={copy.customerEmailPlaceholder} type="email" />
+          <textarea name="message" placeholder={copy.messagePlaceholder} required />
           <button className="button" type="submit" disabled={isSending}>
-            {isSending ? "Recepționerul AI gândește..." : "Trimite către Recepționerul AI"}
+            {isSending ? copy.thinking : copy.sendToAi}
           </button>
         </form>
 
         <article className="card">
-          <h3>AI response</h3>
+          <h3>{copy.aiResponseTitle}</h3>
           {result ? (
             <div className="source-list">
               <div className="source-item">
-                <strong>Reply</strong>
+                <strong>{copy.reply}</strong>
                 <p>{result.reply}</p>
-                <span>Confidence: {(result.confidence * 100).toFixed(0)}%</span>
-                <span>Escalation: {result.shouldEscalate ? "yes" : "no"}</span>
-                {result.escalationReason ? <span>Reason: {result.escalationReason}</span> : null}
-                <span>Lead: {result.leadId ?? "none"}</span>
-                <span>Task: {result.taskId ?? "none"}</span>
-                <span>Provider: {result.aiProvider ?? "none"}</span>
-                <span>Model: {result.aiModel ?? "none"}</span>
-                <span>Fallback: {result.usedFallback ? "yes" : "no"}</span>
+                <span>{copy.confidence}: {(result.confidence * 100).toFixed(0)}%</span>
+                <span>{copy.escalation}: {result.shouldEscalate ? copy.yes : copy.no}</span>
+                {result.escalationReason ? <span>{copy.reason}: {result.escalationReason}</span> : null}
+                <span>{copy.lead}: {result.leadId ?? copy.none}</span>
+                <span>{copy.task}: {result.taskId ?? copy.none}</span>
+                <span>{copy.provider}: {result.aiProvider ?? copy.none}</span>
+                <span>{copy.model}: {result.aiModel ?? copy.none}</span>
+                <span>{copy.fallback}: {result.usedFallback ? copy.yes : copy.no}</span>
               </div>
               {result.citations.map((citation, index) => (
                 <div className="source-item" key={`${citation.sourceTitle}-${index}`}>
                   <strong>{citation.sourceTitle}</strong>
-                  <span>Knowledge score {citation.score.toFixed(2)}</span>
+                  <span>{copy.knowledgeScore} {citation.score.toFixed(2)}</span>
                   <p>{citation.content}</p>
                 </div>
               ))}
             </div>
           ) : (
-            <p>Send a message to test provider-backed output or deterministic fallback.</p>
+            <p>{copy.emptyAiResponse}</p>
           )}
         </article>
       </section>
@@ -375,71 +421,71 @@ export function ReceptionAiClient() {
 
       <section className="grid two-columns">
         <article className="card">
-          <h2>Conversații</h2>
+          <h2>{copy.conversationsTitle}</h2>
           <div className="source-list">
             {conversations.length ? conversations.map((conversation) => (
               <div className="source-item" key={conversation.id}>
                 <button className="ghost-button reset-button" onClick={() => setActiveConversationId(conversation.id)} type="button">
                   <strong>{conversation.customerName || conversation.customerEmail || conversation.id}</strong>
-                  <span>{conversation.status} · {conversation.messages.length} messages</span>
+                  <span>{statusLabel(conversation.status, copy)} · {conversation.messages.length} {copy.messages}</span>
                   {conversation.escalationReason ? <span>{conversation.escalationReason}</span> : null}
-                  {conversation.lead ? <span>Lead score {conversation.lead.score} · {conversation.lead.status}</span> : null}
+                  {conversation.lead ? <span>{copy.leadScore} {conversation.lead.score} · {statusLabel(conversation.lead.status, copy)}</span> : null}
                 </button>
                 <div className="mini-actions">
-                  <button className="button secondary mini" type="button" onClick={() => updateConversation(conversation.id, "OPEN")}>Deschide</button>
-                  <button className="button secondary mini" type="button" onClick={() => updateConversation(conversation.id, "WAITING_FOR_HUMAN")}>Transfer uman</button>
-                  <button className="button secondary mini" type="button" onClick={() => updateConversation(conversation.id, "CLOSED")}>Închide</button>
+                  <button className="button secondary mini" type="button" onClick={() => updateConversation(conversation.id, "OPEN")}>{copy.open}</button>
+                  <button className="button secondary mini" type="button" onClick={() => updateConversation(conversation.id, "WAITING_FOR_HUMAN")}>{copy.humanTransfer}</button>
+                  <button className="button secondary mini" type="button" onClick={() => updateConversation(conversation.id, "CLOSED")}>{copy.close}</button>
                 </div>
               </div>
-            )) : <p>No conversations yet.</p>}
+            )) : <p>{copy.noConversations}</p>}
           </div>
         </article>
 
         <form className="card form-section" onSubmit={onHumanReply}>
-          <h2>Răspuns uman</h2>
-          <p>{activeConversationId ? `Conversație selectată: ${activeConversationId}` : "Selectează mai întâi o conversație."}</p>
-          <textarea name="content" placeholder="Scrie un răspuns uman sau o notă de transfer." required />
-          <input name="internalNote" placeholder="Notă internă, opțional" />
-          <button className="button" type="submit">Adaugă răspuns uman</button>
+          <h2>{copy.humanReplyTitle}</h2>
+          <p>{activeConversationId ? `${copy.selectedConversation}: ${activeConversationId}` : copy.selectConversationFirst}</p>
+          <textarea name="content" placeholder={copy.humanReplyPlaceholder} required />
+          <input name="internalNote" placeholder={copy.internalNotePlaceholder} />
+          <button className="button" type="submit">{copy.addHumanReply}</button>
         </form>
       </section>
 
       <section className="grid two-columns">
         <article className="card">
-          <h2>Sarcini</h2>
+          <h2>{copy.tasksTitle}</h2>
           <div className="source-list">
             {tasks.length ? tasks.map((task) => (
               <div className="source-item" key={task.id}>
                 <strong>{task.title}</strong>
-                <span>{task.priority} · {task.status}</span>
+                <span>{priorityLabel(task.priority, copy)} · {statusLabel(task.status, copy)}</span>
                 {task.ownerNote ? <span>{task.ownerNote}</span> : null}
                 <p>{task.description}</p>
                 <div className="mini-actions">
-                  <button className="button secondary mini" type="button" onClick={() => updateTask(task.id, "OPEN")}>Deschide</button>
-                  <button className="button secondary mini" type="button" onClick={() => updateTask(task.id, "DONE")}>Finalizează</button>
-                  <button className="button secondary mini" type="button" onClick={() => updateTask(task.id, "CANCELLED")}>Anulează</button>
+                  <button className="button secondary mini" type="button" onClick={() => updateTask(task.id, "OPEN")}>{copy.open}</button>
+                  <button className="button secondary mini" type="button" onClick={() => updateTask(task.id, "DONE")}>{copy.done}</button>
+                  <button className="button secondary mini" type="button" onClick={() => updateTask(task.id, "CANCELLED")}>{copy.cancel}</button>
                 </div>
               </div>
-            )) : <p>Nu există încă sarcini pentru Recepționerul AI.</p>}
+            )) : <p>{copy.noTasks}</p>}
           </div>
         </article>
 
         <article className="card">
-          <h2>Leaduri</h2>
+          <h2>{copy.leadsTitle}</h2>
           <div className="source-list">
             {leads.length ? leads.map((lead) => (
               <div className="source-item" key={lead.id}>
                 <strong>{lead.name || lead.email || lead.id}</strong>
-                <span>Score {lead.score} · {lead.status}</span>
+                <span>{statusLabel(lead.status, copy)} · {copy.score} {lead.score}</span>
                 {lead.ownerNote ? <span>{lead.ownerNote}</span> : null}
                 <p>{lead.summary}</p>
                 <div className="mini-actions">
-                  <button className="button secondary mini" type="button" onClick={() => updateLead(lead.id, "QUALIFIED")}>Califică</button>
-                  <button className="button secondary mini" type="button" onClick={() => updateLead(lead.id, "CONVERTED")}>Convertește</button>
-                  <button className="button secondary mini" type="button" onClick={() => updateLead(lead.id, "DISQUALIFIED")}>Descalifică</button>
+                  <button className="button secondary mini" type="button" onClick={() => updateLead(lead.id, "QUALIFIED")}>{copy.qualify}</button>
+                  <button className="button secondary mini" type="button" onClick={() => updateLead(lead.id, "WON")}>{copy.won}</button>
+                  <button className="button secondary mini" type="button" onClick={() => updateLead(lead.id, "LOST")}>{copy.lost}</button>
                 </div>
               </div>
-            )) : <p>No leads detected yet.</p>}
+            )) : <p>{copy.noLeads}</p>}
           </div>
         </article>
       </section>
