@@ -421,10 +421,20 @@ export const billingLaunchCopy = {
       knowledgeSourcesUnit: "knowledge sources",
       teamMembersUnit: "team members",
       currentPlan: "Current plan",
+      currentPlanHelp: "This is your active package.",
       switchTo: "Switch to",
       limit: "Limit",
       remaining: "Remaining",
       overLimit: "The limit has been reached.",
+      startCheckout: "Start checkout",
+      requestPlan: "Request plan",
+      manageBilling: "Manage billing",
+      paymentProviderReady: "Stripe checkout is configured.",
+      paymentProviderPending: "Stripe checkout is not configured yet.",
+      checkoutUnavailable: "Checkout is not configured yet. Request a demo to activate this package.",
+      checkoutError: "Could not start checkout",
+      portalUnavailable: "Billing portal is available after a Stripe customer is linked.",
+      portalError: "Could not open billing portal",
     },
     launch: {
       loginRequired: "Sign in before viewing the launch checklist.",
@@ -478,10 +488,20 @@ export const billingLaunchCopy = {
       knowledgeSourcesUnit: "surse de cunoștințe",
       teamMembersUnit: "membri echipă",
       currentPlan: "Plan curent",
+      currentPlanHelp: "Acesta este pachetul activ.",
       switchTo: "Schimbă la",
       limit: "Limită",
       remaining: "Rămas",
       overLimit: "Limita a fost atinsă.",
+      startCheckout: "Pornește checkout",
+      requestPlan: "Solicită planul",
+      manageBilling: "Gestionează facturarea",
+      paymentProviderReady: "Checkoutul Stripe este configurat.",
+      paymentProviderPending: "Checkoutul Stripe nu este configurat încă.",
+      checkoutUnavailable: "Checkoutul nu este configurat încă. Cere un demo pentru activarea acestui pachet.",
+      checkoutError: "Nu am putut porni checkoutul",
+      portalUnavailable: "Portalul de facturare este disponibil după legarea unui client Stripe.",
+      portalError: "Nu am putut deschide portalul de facturare",
     },
     launch: {
       loginRequired: "Autentifică-te înainte să vezi checklistul de lansare.",
@@ -535,10 +555,20 @@ export const billingLaunchCopy = {
     knowledgeSourcesUnit: string;
     teamMembersUnit: string;
     currentPlan: string;
+    currentPlanHelp: string;
     switchTo: string;
     limit: string;
     remaining: string;
     overLimit: string;
+    startCheckout: string;
+    requestPlan: string;
+    manageBilling: string;
+    paymentProviderReady: string;
+    paymentProviderPending: string;
+    checkoutUnavailable: string;
+    checkoutError: string;
+    portalUnavailable: string;
+    portalError: string;
   };
   launch: {
     loginRequired: string;

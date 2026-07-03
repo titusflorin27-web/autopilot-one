@@ -11,12 +11,29 @@ type Membership = { organization: { id: string; name: string } };
 type CurrentUser = { memberships: Membership[] };
 type Plan = "FREE" | "STARTER" | "PRO" | "BUSINESS";
 type BillingOverview = {
-  organization: { id: string; name: string; slug: string; billingPlan: Plan; billingStatus: string; billingCurrentPeriodStart: string };
+  organization: {
+    id: string;
+    name: string;
+    slug: string;
+    billingPlan: Plan;
+    billingStatus: string;
+    billingCurrentPeriodStart: string;
+    billingCurrentPeriodEnd?: string | null;
+    hasStripeCustomer?: boolean;
+    hasStripeSubscription?: boolean;
+    hasStripePrice?: boolean;
+  };
   limits: { widgetMessages: number; knowledgeSources: number; teamMembers: number };
   usage: { widgetMessages: number; knowledgeSources: number; teamMembers: number };
   remaining: { widgetMessages: number; knowledgeSources: number; teamMembers: number };
   overLimit: { widgetMessages: boolean; knowledgeSources: boolean; teamMembers: boolean };
   plans: Array<{ plan: Plan; limits: { widgetMessages: number; knowledgeSources: number; teamMembers: number } }>;
+  paymentProvider?: {
+    provider: "stripe";
+    configured: boolean;
+    checkoutEnabled: boolean;
+    portalEnabled: boolean;
+  };
 };
 
 type BillingCopy = typeof billingLaunchCopy["ro"]["billing"];
@@ -37,6 +54,7 @@ export function BillingClient() {
   const [user, setUser] = useState<CurrentUser | null>(null);
   const [billing, setBilling] = useState<BillingOverview | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [isRedirecting, setIsRedirecting] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   function token() {
@@ -54,6 +72,49 @@ export function BillingClient() {
     const json = await response.json();
     if (!response.ok) throw new Error(json.message ?? copy.loadBillingError);
     setBilling(json);
+  }
+
+  async function startCheckout(plan: Plan) {
+    if (!billing) return;
+
+    if (!billing.paymentProvider?.checkoutEnabled) {
+      throw new Error(copy.checkoutUnavailable);
+    }
+
+    setIsRedirecting(true);
+    const response = await authedFetch(`/billing/organization/${billing.organization.id}/checkout`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ plan }),
+    });
+
+    const json = await response.json() as { url?: string; message?: string };
+
+    if (!response.ok || !json.url) {
+      setIsRedirecting(false);
+      throw new Error(json.message ?? copy.checkoutError);
+    }
+
+    window.location.assign(json.url);
+  }
+
+  async function openBillingPortal() {
+    if (!billing) return;
+
+    if (!billing.paymentProvider?.portalEnabled) {
+      throw new Error(copy.portalUnavailable);
+    }
+
+    setIsRedirecting(true);
+    const response = await authedFetch(`/billing/organization/${billing.organization.id}/portal`, { method: "POST" });
+    const json = await response.json() as { url?: string; message?: string };
+
+    if (!response.ok || !json.url) {
+      setIsRedirecting(false);
+      throw new Error(json.message ?? copy.portalError);
+    }
+
+    window.location.assign(json.url);
   }
 
   useEffect(() => {
@@ -88,6 +149,9 @@ export function BillingClient() {
     );
   }
 
+  const checkoutEnabled = Boolean(billing?.paymentProvider?.checkoutEnabled);
+  const portalEnabled = Boolean(billing?.paymentProvider?.portalEnabled);
+
   return (
     <div className="widget-demo-layout">
       <section className="card">
@@ -104,7 +168,23 @@ export function BillingClient() {
         <div className="eyebrow">{packageCopy.billingNoticeEyebrow}</div>
         <h2>{packageCopy.billingNoticeTitle}</h2>
         <p>{packageCopy.billingNoticeDescription}</p>
-        <Link href="/demo?source=billing" className="button secondary">{packageCopy.billingNoticeCta}</Link>
+        <p className="helper-text">{checkoutEnabled ? copy.paymentProviderReady : copy.paymentProviderPending}</p>
+        <div className="actions">
+          {portalEnabled ? (
+            <button
+              className="button secondary"
+              type="button"
+              disabled={isRedirecting}
+              onClick={() => openBillingPortal().catch((caughtError) => {
+                setError(caughtError instanceof Error ? caughtError.message : String(caughtError));
+              })}
+            >
+              {copy.manageBilling}
+            </button>
+          ) : (
+            <Link href="/demo?source=billing" className="button secondary">{packageCopy.billingNoticeCta}</Link>
+          )}
+        </div>
       </section>
 
       {error ? <p className="form-error">{error}</p> : null}
@@ -121,6 +201,7 @@ export function BillingClient() {
             {billing.plans.map((plan) => {
               const planCopy = getPlanCopy(packageCopy, plan.plan);
               const isCurrentPlan = billing.organization.billingPlan === plan.plan;
+              const canCheckout = checkoutEnabled && plan.plan !== "FREE";
 
               return (
                 <article className="card" key={plan.plan}>
@@ -140,10 +221,24 @@ export function BillingClient() {
                     </ul>
                   ) : null}
                   {isCurrentPlan ? (
-                    <button className="button" type="button" disabled>{copy.currentPlan}</button>
+                    <>
+                      <button className="button" type="button" disabled>{copy.currentPlan}</button>
+                      <p className="helper-text">{copy.currentPlanHelp}</p>
+                    </>
+                  ) : canCheckout ? (
+                    <button
+                      className="button secondary"
+                      type="button"
+                      disabled={isRedirecting}
+                      onClick={() => startCheckout(plan.plan).catch((caughtError) => {
+                        setError(caughtError instanceof Error ? caughtError.message : String(caughtError));
+                      })}
+                    >
+                      {copy.startCheckout}
+                    </button>
                   ) : (
                     <Link href={`/demo?source=billing&plan=${plan.plan.toLowerCase()}`} className="button secondary">
-                      {packageCopy.requestPlan}
+                      {copy.requestPlan}
                     </Link>
                   )}
                 </article>
