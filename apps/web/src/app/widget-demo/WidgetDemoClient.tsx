@@ -1,6 +1,9 @@
 "use client";
 
-import { FormEvent, useEffect, useState } from "react";
+import type { FormEvent } from "react";
+import { useEffect, useState } from "react";
+import { widgetPagesCopy } from "../../lib/i18n";
+import { useAppLanguage } from "../../lib/useAppLanguage";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:4000/api";
 const APP_URL = process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000";
@@ -34,6 +37,9 @@ function createVisitorId() {
 }
 
 export function WidgetDemoClient() {
+  const language = useAppLanguage();
+  const copy = widgetPagesCopy[language].demo;
+
   const [organizationSlug, setOrganizationSlug] = useState("autopilot-one");
   const [customerName, setCustomerName] = useState("");
   const [customerEmail, setCustomerEmail] = useState("");
@@ -47,7 +53,7 @@ export function WidgetDemoClient() {
 
   const cleanOrganizationSlug = organizationSlug.trim();
   const cleanWidgetToken = widgetToken.trim();
-  const embedSnippet = `<script\n  src="${APP_URL}/autopilot-widget.js"\n  data-organization-slug="${cleanOrganizationSlug}"\n  data-api-url="${API_URL}"\n  data-title="Recepționer AI"${cleanWidgetToken ? `\n  data-widget-token="${cleanWidgetToken}"` : ""}\n  async\n></script>`;
+  const embedSnippet = `<script\n  src="${APP_URL}/autopilot-widget.js"\n  data-organization-slug="${cleanOrganizationSlug}"\n  data-api-url="${API_URL}"\n  data-title="${copy.widgetTitle}"${cleanWidgetToken ? `\n  data-widget-token="${cleanWidgetToken}"` : ""}\n  async\n></script>`;
 
   useEffect(() => {
     const storageKey = "autopilot.publicVisitorId";
@@ -68,7 +74,7 @@ export function WidgetDemoClient() {
     const message = String(formData.get("message") ?? "").trim();
 
     if (!message) {
-      setError("Mesajul este obligatoriu.");
+      setError(copy.messageRequired);
       setIsSending(false);
       return;
     }
@@ -91,7 +97,7 @@ export function WidgetDemoClient() {
       const data = await response.json();
 
       if (!response.ok) {
-        throw new Error(data.message ?? "Recepționerul AI nu a putut răspunde.");
+        throw new Error(data.message ?? copy.replyError);
       }
 
       setConversationId(data.conversationId);
@@ -103,7 +109,7 @@ export function WidgetDemoClient() {
       ]);
       form.reset();
     } catch (caughtError) {
-      setError(caughtError instanceof Error ? caughtError.message : "Recepționerul AI nu a putut răspunde.");
+      setError(caughtError instanceof Error ? caughtError.message : copy.replyError);
     } finally {
       setIsSending(false);
     }
@@ -112,26 +118,26 @@ export function WidgetDemoClient() {
   return (
     <div className="widget-demo-layout">
       <section className="card">
-        <div className="eyebrow">Demo widget</div>
-        <h1>Instalează Recepționerul AI pe orice website.</h1>
-        <p>Această pagină arată endpointul public și scriptul real pentru widgetul flotant de website.</p>
+        <div className="eyebrow">{copy.eyebrow}</div>
+        <h1>{copy.title}</h1>
+        <p>{copy.description}</p>
       </section>
 
       <section className="grid two-columns">
         <article className="card">
-          <h3>Configurare widget</h3>
-          <input value={organizationSlug} onChange={(event) => setOrganizationSlug(event.target.value)} placeholder="Slug organizație" />
-          <input value={customerName} onChange={(event) => setCustomerName(event.target.value)} placeholder="Nume client" />
-          <input value={customerEmail} onChange={(event) => setCustomerEmail(event.target.value)} placeholder="Email client" type="email" />
-          <input value={widgetToken} onChange={(event) => setWidgetToken(event.target.value)} placeholder="Jeton widget necesar când protecția cu jeton este activă" />
-          <p>ID vizitator: {visitorId || "se creează..."}</p>
-          <p>Lipește fragmentul de mai jos înainte de tagul de închidere body pe website-ul clientului.</p>
+          <h3>{copy.configurationTitle}</h3>
+          <input value={organizationSlug} onChange={(event) => setOrganizationSlug(event.target.value)} placeholder={copy.organizationSlugPlaceholder} />
+          <input value={customerName} onChange={(event) => setCustomerName(event.target.value)} placeholder={copy.customerNamePlaceholder} />
+          <input value={customerEmail} onChange={(event) => setCustomerEmail(event.target.value)} placeholder={copy.customerEmailPlaceholder} type="email" />
+          <input value={widgetToken} onChange={(event) => setWidgetToken(event.target.value)} placeholder={copy.widgetTokenPlaceholder} />
+          <p>{copy.visitorId}: {visitorId || copy.creating}</p>
+          <p>{copy.installHint}</p>
         </article>
 
         <article className="widget-shell">
           <div className="widget-header">
-            <strong>Recepționer AI</strong>
-            <span>{lastResponse?.usedFallback ? "Mod fallback" : lastResponse?.aiProvider ?? "Captare publică"}</span>
+            <strong>{copy.widgetTitle}</strong>
+            <span>{lastResponse?.usedFallback ? copy.fallbackMode : lastResponse?.aiProvider ?? copy.publicIntake}</span>
           </div>
 
           <div className="widget-messages">
@@ -140,21 +146,21 @@ export function WidgetDemoClient() {
                 {message.content}
               </div>
             )) : (
-              <p>Întreabă despre servicii, prețuri, programări sau suport.</p>
+              <p>{copy.emptyChat}</p>
             )}
           </div>
 
           <form className="widget-input" onSubmit={onSubmit}>
-            <input name="message" placeholder="Scrie mesajul..." />
-            <button className="button mini" disabled={isSending} type="submit">Trimite</button>
+            <input name="message" placeholder={copy.messagePlaceholder} />
+            <button className="button mini" disabled={isSending} type="submit">{copy.send}</button>
           </form>
 
           {lastResponse ? (
             <div className="widget-meta">
-              <span>Încredere {(lastResponse.confidence * 100).toFixed(0)}%</span>
-              <span>Escaladare {lastResponse.shouldEscalate ? "da" : "nu"}</span>
-              <span>Conversație {lastResponse.conversationId.slice(0, 8)}</span>
-              {lastResponse.rateLimit ? <span>Limită {lastResponse.rateLimit.max}/{lastResponse.rateLimit.windowSeconds}s</span> : null}
+              <span>{copy.confidence} {(lastResponse.confidence * 100).toFixed(0)}%</span>
+              <span>{copy.escalation} {lastResponse.shouldEscalate ? copy.yes : copy.no}</span>
+              <span>{copy.conversation} {lastResponse.conversationId.slice(0, 8)}</span>
+              {lastResponse.rateLimit ? <span>{copy.limit} {lastResponse.rateLimit.max}/{lastResponse.rateLimit.windowSeconds}s</span> : null}
             </div>
           ) : null}
         </article>
@@ -164,22 +170,22 @@ export function WidgetDemoClient() {
 
       <section className="grid two-columns">
         <article className="card">
-          <h2>Fragment de instalare</h2>
-          <p>Copiază acest fragment în website-ul țintă.</p>
+          <h2>{copy.snippetTitle}</h2>
+          <p>{copy.snippetDescription}</p>
           <pre className="code-block">{embedSnippet}</pre>
         </article>
 
         <article className="card">
-          <h2>Contract API public</h2>
+          <h2>{copy.publicApiTitle}</h2>
           <pre className="code-block">{`POST /api/public/reception-ai/message
 {
   "organizationSlug": "slug-companie",
   "message": "Întrebarea clientului",
-  "conversationId": "ID opțional pentru conversația de follow-up",
-  "visitorId": "ID stabil pentru vizitator anonim",
-  "customerName": "Nume client opțional",
-  "customerEmail": "Email client opțional",
-  "widgetToken": "Necesar când protecția cu jeton este activă",
+  "conversationId": "${copy.sampleConversationId}",
+  "visitorId": "${copy.sampleVisitorId}",
+  "customerName": "${copy.sampleCustomerName}",
+  "customerEmail": "${copy.sampleCustomerEmail}",
+  "widgetToken": "${copy.sampleWidgetToken}",
   "websiteUrl": "https://customer-site.example"
 }`}</pre>
         </article>

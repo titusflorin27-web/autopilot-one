@@ -1,6 +1,8 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { widgetPagesCopy } from "../../lib/i18n";
+import { useAppLanguage } from "../../lib/useAppLanguage";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:4000/api";
 
@@ -46,7 +48,23 @@ type WidgetAnalytics = {
   }>;
 };
 
+type AnalyticsCopy = typeof widgetPagesCopy["ro"]["analytics"];
+
+function formatDate(value: string, locale: string, copy: AnalyticsCopy) {
+  const parsedDate = new Date(value);
+
+  if (Number.isNaN(parsedDate.getTime())) {
+    return copy.dateUnavailable;
+  }
+
+  return parsedDate.toLocaleString(locale);
+}
+
 export function WidgetAnalyticsClient() {
+  const language = useAppLanguage();
+  const copy = widgetPagesCopy[language].analytics;
+  const locale = language === "ro" ? "ro-RO" : "en-US";
+
   const [user, setUser] = useState<CurrentUser | null>(null);
   const [analytics, setAnalytics] = useState<WidgetAnalytics | null>(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -62,7 +80,7 @@ export function WidgetAnalyticsClient() {
     const accessToken = getAccessToken();
 
     if (!accessToken) {
-      throw new Error("Autentifică-te înainte să vezi analiticele widgetului.");
+      throw new Error(copy.loginRequired);
     }
 
     return fetch(`${API_URL}${path}`, {
@@ -79,7 +97,7 @@ export function WidgetAnalyticsClient() {
     const data = await response.json();
 
     if (!response.ok) {
-      throw new Error(data.message ?? "Nu am putut încărca analiticele widgetului");
+      throw new Error(data.message ?? copy.loadAnalyticsError);
     }
 
     setAnalytics(data);
@@ -89,7 +107,7 @@ export function WidgetAnalyticsClient() {
     const accessToken = getAccessToken();
 
     if (!accessToken) {
-      setError("Autentifică-te înainte să vezi analiticele widgetului.");
+      setError(copy.loginRequired);
       setIsLoading(false);
       return;
     }
@@ -101,7 +119,7 @@ export function WidgetAnalyticsClient() {
         const data = await response.json();
 
         if (!response.ok) {
-          throw new Error(data.message ?? "Nu am putut încărca sesiunea utilizatorului");
+          throw new Error(data.message ?? copy.loadSessionError);
         }
 
         setUser(data);
@@ -112,21 +130,21 @@ export function WidgetAnalyticsClient() {
         }
       })
       .catch((caughtError) => {
-        setError(caughtError instanceof Error ? caughtError.message : "Nu am putut încărca analiticele widgetului");
+        setError(caughtError instanceof Error ? caughtError.message : copy.loadAnalyticsError);
       })
       .finally(() => setIsLoading(false));
-  }, []);
+  }, [copy.loadAnalyticsError, copy.loadSessionError, copy.loginRequired]);
 
   if (isLoading) {
-    return <p>Se încarcă analiticele widgetului...</p>;
+    return <p>{copy.loading}</p>;
   }
 
   if (error && !user) {
     return (
       <section className="card">
-        <h1>Autentificare necesară.</h1>
+        <h1>{copy.authTitle}</h1>
         <p>{error}</p>
-        <a href="/login" className="button">Mergi la login</a>
+        <a href="/login" className="button">{copy.loginCta}</a>
       </section>
     );
   }
@@ -134,9 +152,9 @@ export function WidgetAnalyticsClient() {
   return (
     <div className="widget-demo-layout">
       <section className="card">
-        <div className="eyebrow">Analitice widget</div>
-        <h1>Starea instalării widgetului.</h1>
-        <p>{primaryMembership ? `Spațiu de lucru: ${primaryMembership.organization.name}` : "Nu a fost găsită nicio organizație."}</p>
+        <div className="eyebrow">{copy.eyebrow}</div>
+        <h1>{copy.title}</h1>
+        <p>{primaryMembership ? `${copy.workspacePrefix}: ${primaryMembership.organization.name}` : copy.organizationMissing}</p>
       </section>
 
       {error ? <p className="form-error">{error}</p> : null}
@@ -145,37 +163,37 @@ export function WidgetAnalyticsClient() {
         <>
           <section className="grid">
             <article className="card">
-              <h3>Config încărcată</h3>
-              <div className="metric">{analytics.installHealth.hasConfigLoad ? "Da" : "Nu"}</div>
+              <h3>{copy.configLoaded}</h3>
+              <div className="metric">{analytics.installHealth.hasConfigLoad ? copy.yes : copy.no}</div>
             </article>
             <article className="card">
-              <h3>Widget deschis</h3>
+              <h3>{copy.widgetOpened}</h3>
               <div className="metric">{analytics.events.OPENED ?? 0}</div>
             </article>
             <article className="card">
-              <h3>Mesaje trimise</h3>
+              <h3>{copy.messagesSent}</h3>
               <div className="metric">{analytics.events.MESSAGE_SENT ?? 0}</div>
             </article>
           </section>
 
           <section className="grid">
             <article className="card">
-              <h3>Conversații publice</h3>
+              <h3>{copy.publicConversations}</h3>
               <div className="metric">{analytics.publicFunnel.conversations}</div>
             </article>
             <article className="card">
-              <h3>Leaduri publice</h3>
+              <h3>{copy.publicLeads}</h3>
               <div className="metric">{analytics.publicFunnel.leads}</div>
             </article>
             <article className="card">
-              <h3>Sarcini follow-up</h3>
+              <h3>{copy.followUpTasks}</h3>
               <div className="metric">{analytics.publicFunnel.tasks}</div>
             </article>
           </section>
 
           <section className="grid two-columns">
             <article className="card">
-              <h2>Număr evenimente</h2>
+              <h2>{copy.eventCounts}</h2>
               <div className="source-list">
                 {Object.entries(analytics.events).map(([name, count]) => (
                   <div className="source-item" key={name}>
@@ -187,31 +205,31 @@ export function WidgetAnalyticsClient() {
             </article>
 
             <article className="card">
-              <h2>Domenii</h2>
+              <h2>{copy.domains}</h2>
               <div className="source-list">
                 {Object.keys(analytics.domains).length ? Object.entries(analytics.domains).map(([domain, count]) => (
                   <div className="source-item" key={domain}>
                     <strong>{domain}</strong>
-                    <span>{count} evenimente</span>
+                    <span>{count} {copy.events}</span>
                   </div>
-                )) : <p>Nu există domenii detectate încă.</p>}
+                )) : <p>{copy.noDomains}</p>}
               </div>
             </article>
           </section>
 
           <section className="card">
-            <h2>Evenimente recente widget</h2>
+            <h2>{copy.recentEvents}</h2>
             <div className="source-list">
               {analytics.recentEvents.length ? analytics.recentEvents.map((event) => (
                 <div className="source-item" key={event.id}>
                   <strong>{event.type}</strong>
-                  <span>{new Date(event.createdAt).toLocaleString()}</span>
-                  {event.origin ? <span>Origine: {event.origin}</span> : null}
+                  <span>{formatDate(event.createdAt, locale, copy)}</span>
+                  {event.origin ? <span>{copy.origin}: {event.origin}</span> : null}
                   {event.websiteUrl ? <span>URL: {event.websiteUrl}</span> : null}
-                  {event.visitorId ? <span>Vizitator: {event.visitorId.slice(0, 18)}...</span> : null}
-                  {event.conversationId ? <span>Conversație: {event.conversationId.slice(0, 10)}</span> : null}
+                  {event.visitorId ? <span>{copy.visitor}: {event.visitorId.slice(0, 18)}...</span> : null}
+                  {event.conversationId ? <span>{copy.conversation}: {event.conversationId.slice(0, 10)}</span> : null}
                 </div>
-              )) : <p>Nu există evenimente widget încă.</p>}
+              )) : <p>{copy.noRecentEvents}</p>}
             </div>
           </section>
         </>
