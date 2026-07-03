@@ -39,7 +39,14 @@ async function bootstrap() {
 
   app.disable("x-powered-by");
   app.set("trust proxy", 1);
-  app.use(json({ limit: bodyLimit }));
+  app.use(json({
+    limit: bodyLimit,
+    verify: (request, _response, buffer) => {
+      if (request.headers["stripe-signature"]) {
+        (request as Request & { rawBody?: Buffer }).rawBody = Buffer.from(buffer);
+      }
+    },
+  }));
   app.use(urlencoded({ extended: true, limit: bodyLimit }));
 
   app.setGlobalPrefix("api");
