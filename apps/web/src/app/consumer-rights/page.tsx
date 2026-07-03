@@ -32,7 +32,10 @@ export default function ConsumerRightsPage() {
           <p>Pentru servicii digitale, configurări, activări sau consum efectiv al serviciului, dreptul de retragere și rambursarea pot depinde de situația concretă și de legislația aplicabilă.</p>
 
           <h2>Reclamații și soluționare</h2>
-          <p>Pentru întrebări, reclamații sau solicitări, contactează contact@autopilot-one.com. Consumatorii pot consulta și canalele ANPC sau platformele de soluționare online a litigiilor, după caz.</p>
+          <p>Pentru întrebări, reclamații sau solicitări, contactează contact@autopilot-one.com. Consumatorii pot consulta și canalele ANPC, mecanismele SAL și platformele de soluționare online a litigiilor, după caz.</p>
+
+          <h2>Informații precontractuale</h2>
+          <p>Înainte de o achiziție B2C, clientul trebuie să primească informații clare despre furnizor, caracteristicile serviciului digital, preț, durată, reînnoire, anulare, dreptul de retragere și eventualele excepții aplicabile serviciilor digitale.</p>
 
           <h2>Recomandare</h2>
           <p>Aceste informații nu reprezintă consultanță juridică. Înainte de lansarea comercială completă, documentele trebuie revizuite de un specialist juridic.</p>
