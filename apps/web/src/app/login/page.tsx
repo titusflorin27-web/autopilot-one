@@ -1,17 +1,8 @@
-"use client";
-
-import { useEffect, useState } from "react";
-import { authPageCopy, detectBrowserLanguage, subscribeToLanguageChanges, type AppLanguage } from "../../lib/i18n";
+import { authPageCopy } from "../../lib/i18n";
 import { LoginForm } from "./LoginForm";
 
 export default function LoginPage() {
-  const [language, setLanguage] = useState<AppLanguage>("en");
-  const copy = authPageCopy.login[language];
-
-  useEffect(() => {
-    setLanguage(detectBrowserLanguage());
-    return subscribeToLanguageChanges(setLanguage);
-  }, []);
+  const copy = authPageCopy.login.ro;
 
   return (
     <main className="auth-page-shell">
