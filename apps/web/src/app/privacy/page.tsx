@@ -20,7 +20,7 @@ export default function PrivacyPage() {
           <div className="eyebrow">Confidențialitate / GDPR</div>
           <h1>Politica de confidențialitate</h1>
           <p>
-            Această pagină descrie modul în care Autopilot One tratează datele în faza pilot.
+            Această pagină descrie modul în care Autopilot One tratează datele în utilizarea platformei.
             Documentul este informativ și trebuie revizuit juridic înainte de lansarea comercială completă.
           </p>
         </section>
@@ -77,7 +77,7 @@ export default function PrivacyPage() {
           <h2>Păstrarea datelor</h2>
           <p>
             Datele sunt păstrate atât timp cât este necesar pentru furnizarea serviciului, obligații contractuale, securitate, audit,
-            soluționarea cererilor sau respectarea obligațiilor legale. În faza pilot, perioadele exacte pot fi stabilite în oferta sau contractul clientului.
+            soluționarea cererilor sau respectarea obligațiilor legale. Perioadele exacte pot fi stabilite în oferta, contractul sau configurarea aplicabilă clientului.
           </p>
 
           <h2>Drepturile GDPR</h2>

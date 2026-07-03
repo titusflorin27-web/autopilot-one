@@ -6,7 +6,7 @@ import { createPageMetadata } from "../../lib/seo";
 export const metadata: Metadata = createPageMetadata({
   title: "Termeni și condiții Autopilot One",
   description:
-    "Termenii operaționali Autopilot One pentru faza pilot: acces, conturi, utilizare acceptabilă, date, AI și disponibilitate.",
+    "Termenii operaționali Autopilot One: acces, conturi, utilizare acceptabilă, date, AI și disponibilitate.",
   path: "/terms",
 });
 
@@ -18,7 +18,7 @@ export default function TermsPage() {
         <section className="card">
           <div className="eyebrow">Termeni</div>
           <h1>Termeni și condiții</h1>
-          <p>Acest document este un model operațional pentru pilot și trebuie revizuit juridic înainte de lansarea comercială completă.</p>
+          <p>Acest document descrie cadrul operațional de utilizare a platformei Autopilot One și poate fi completat de oferta sau contractul acceptat de client.</p>
         </section>
 
         <section className="card trust-layout">

@@ -14,7 +14,7 @@ export function isAppLanguage(value: unknown): value is AppLanguage {
 
 export function detectBrowserLanguage(): AppLanguage {
   if (typeof window === "undefined") {
-    return "en";
+    return "ro";
   }
 
   const savedLanguage = window.localStorage.getItem(LANGUAGE_STORAGE_KEY);
@@ -182,7 +182,7 @@ export const shellCopy = {
     refunds: "Refunds",
     consumers: "Consumers",
     footerDescription: "AI platform for small businesses that want faster replies, better lead capture and a clear operational follow-up flow.",
-    footerPilot: "Controlled pilot. Guided setup, CRM Lite tracking and validation before using AI with real customers.",
+    footerPilot: "Guided implementation. Setup, CRM Lite tracking and controlled validation before scaling AI conversations.",
     contactNote: "For a demo, pilot or offer, send a request and we will suggest the first AI flow that fits your business.",
   },
   ro: {
@@ -448,7 +448,7 @@ export const billingLaunchCopy = {
       noChecklist: "No checklist loaded.",
       stepsComplete: "steps complete",
       progress: "Progress",
-      readyForPilot: "Ready for pilot",
+      readyForPilot: "Ready for implementation",
       publicConversations: "Public conversations",
       yes: "Yes",
       notYet: "Not yet",
@@ -510,12 +510,12 @@ export const billingLaunchCopy = {
       loadChecklistError: "Nu am putut încărca checklistul de lansare",
       loadSessionError: "Nu am putut încărca sesiunea",
       loading: "Se încarcă checklistul de lansare...",
-      eyebrow: "Lansare pilot",
+      eyebrow: "Lansare controlată",
       title: "Checklist de lansare MVP.",
       noChecklist: "Nu există checklist încărcat.",
       stepsComplete: "pași finalizați",
       progress: "Progres",
-      readyForPilot: "Pregătit pentru pilot",
+      readyForPilot: "Pregătit pentru implementare",
       publicConversations: "Conversații publice",
       yes: "Da",
       notYet: "Nu încă",
@@ -1350,7 +1350,7 @@ export const packagePricingCopy = {
     heroEyebrow: "Pricing",
     heroTitlePrefix: "Clear packages for",
     heroTitleHighlight: "your first AI employee.",
-    heroDescription: "Start with a measurable pilot, track usage from the dashboard and move to paid checkout only after the payment provider is connected.",
+    heroDescription: "Start with a measurable implementation, track usage from the dashboard and move to paid checkout only after the payment provider is connected.",
     requestDemo: "Request demo",
     viewTerms: "View terms",
     badges: ["Demo without card", "Guided setup", "Checkout-ready packages"],
@@ -1366,7 +1366,7 @@ export const packagePricingCopy = {
     billingNoticeCta: "Discuss billing setup",
     principles: [
       { title: "No surprises", description: "The commercial plan is confirmed before activation or payment collection." },
-      { title: "Measured pilot", description: "Conversations, leads, usage and follow-up work are tracked before scaling." },
+      { title: "Measured implementation", description: "Conversations, leads, usage and follow-up work are tracked in one operational workspace." },
       { title: "Safe rollout", description: "Checkout and subscriptions will be added through a controlled payment provider integration." },
     ],
     ctaEyebrow: "Not sure which package fits?",
@@ -1379,8 +1379,8 @@ export const packagePricingCopy = {
         name: "Free",
         price: "0 €",
         period: "/month",
-        note: "For sandbox validation and first internal tests.",
-        features: ["100 widget messages / period", "5 knowledge sources", "1 team member", "Basic AI receptionist flow", "No-card pilot validation"],
+        note: "For validation and initial configuration.",
+        features: ["100 widget messages / period", "5 knowledge sources", "1 team member", "Basic AI receptionist flow", "No-card validation"],
       },
       {
         plan: "STARTER",
@@ -1397,7 +1397,7 @@ export const packagePricingCopy = {
         period: "/month",
         featured: true,
         note: "For active teams that need higher volume and follow-up.",
-        features: ["10,000 widget messages / period", "500 knowledge sources", "10 team members", "Inbox, analytics and handoff workflow", "Operational dashboard for the pilot"],
+        features: ["10,000 widget messages / period", "500 knowledge sources", "10 team members", "Inbox, analytics and handoff workflow", "Operational dashboard for implementation"],
       },
       {
         plan: "BUSINESS",
@@ -1413,7 +1413,7 @@ export const packagePricingCopy = {
     heroEyebrow: "Prețuri",
     heroTitlePrefix: "Pachete clare pentru",
     heroTitleHighlight: "primul tău angajat AI.",
-    heroDescription: "Începe cu un pilot măsurabil, urmărește utilizarea în dashboard și treci la plata online doar după ce providerul de plăți este conectat.",
+    heroDescription: "Începe cu o implementare măsurabilă, urmărește utilizarea în dashboard și treci la plata online doar după ce providerul de plăți este conectat.",
     requestDemo: "Cere demo",
     viewTerms: "Vezi termenii",
     badges: ["Demo fără card", "Setup ghidat", "Pachete pregătite pentru checkout"],
@@ -1429,7 +1429,7 @@ export const packagePricingCopy = {
     billingNoticeCta: "Discută configurarea facturării",
     principles: [
       { title: "Fără surprize", description: "Planul comercial este confirmat înainte de activare sau colectarea plății." },
-      { title: "Pilot măsurabil", description: "Conversațiile, leadurile, utilizarea și follow-up-ul sunt urmărite înainte de scalare." },
+      { title: "Implementare măsurabilă", description: "Conversațiile, leadurile, utilizarea și follow-up-ul sunt urmărite înainte de scalare." },
       { title: "Lansare sigură", description: "Checkoutul și abonamentele vor fi adăugate printr-o integrare controlată cu providerul de plăți." },
     ],
     ctaEyebrow: "Nu știi ce pachet ți se potrivește?",
@@ -1442,8 +1442,8 @@ export const packagePricingCopy = {
         name: "Free",
         price: "0 €",
         period: "/lună",
-        note: "Pentru validare sandbox și primele teste interne.",
-        features: ["100 mesaje widget / perioadă", "5 surse de cunoștințe", "1 membru echipă", "Flux de bază pentru recepționerul AI", "Validare pilot fără card"],
+        note: "Pentru validare și configurarea inițială.",
+        features: ["100 mesaje widget / perioadă", "5 surse de cunoștințe", "1 membru echipă", "Flux de bază pentru recepționerul AI", "Validare fără card"],
       },
       {
         plan: "STARTER",
@@ -1460,7 +1460,7 @@ export const packagePricingCopy = {
         period: "/lună",
         featured: true,
         note: "Pentru echipe active care au nevoie de volum și follow-up.",
-        features: ["10.000 mesaje widget / perioadă", "500 surse de cunoștințe", "10 membri echipă", "Inbox, analytics și flux de transfer uman", "Dashboard operațional pentru pilot"],
+        features: ["10.000 mesaje widget / perioadă", "500 surse de cunoștințe", "10 membri echipă", "Inbox, analytics și flux de transfer uman", "Dashboard operațional pentru implementare"],
       },
       {
         plan: "BUSINESS",
