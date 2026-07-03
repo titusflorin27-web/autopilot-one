@@ -1,6 +1,8 @@
 "use client";
 
 import { FormEvent, useEffect, useState } from "react";
+import { knowledgeBaseCopy } from "../../lib/i18n";
+import { useAppLanguage } from "../../lib/useAppLanguage";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:4000/api";
 
@@ -39,7 +41,23 @@ type SearchResult = {
   score: number;
 };
 
+type KnowledgeCopy = typeof knowledgeBaseCopy["ro"];
+
+function formatDate(value: string, locale: string, copy: KnowledgeCopy) {
+  const parsedDate = new Date(value);
+
+  if (Number.isNaN(parsedDate.getTime())) {
+    return copy.dateUnavailable;
+  }
+
+  return parsedDate.toLocaleString(locale);
+}
+
 export function KnowledgeBaseClient() {
+  const language = useAppLanguage();
+  const copy = knowledgeBaseCopy[language];
+  const locale = language === "ro" ? "ro-RO" : "en-US";
+
   const [user, setUser] = useState<CurrentUser | null>(null);
   const [sources, setSources] = useState<KnowledgeSource[]>([]);
   const [results, setResults] = useState<SearchResult[]>([]);
@@ -58,7 +76,7 @@ export function KnowledgeBaseClient() {
     const accessToken = getAccessToken();
 
     if (!accessToken) {
-      throw new Error("Autentifică-te înainte să folosești baza de cunoștințe.");
+      throw new Error(copy.loginRequired);
     }
 
     return fetch(`${API_URL}${path}`, {
@@ -75,7 +93,7 @@ export function KnowledgeBaseClient() {
     const data = await response.json();
 
     if (!response.ok) {
-      throw new Error(data.message ?? "Nu am putut încărca sursele de cunoștințe");
+      throw new Error(data.message ?? copy.loadSourcesError);
     }
 
     setSources(data);
@@ -85,7 +103,7 @@ export function KnowledgeBaseClient() {
     const accessToken = getAccessToken();
 
     if (!accessToken) {
-      setError("Autentifică-te înainte să folosești baza de cunoștințe.");
+      setError(copy.loginRequired);
       setIsLoading(false);
       return;
     }
@@ -97,7 +115,7 @@ export function KnowledgeBaseClient() {
         const data = await response.json();
 
         if (!response.ok) {
-          throw new Error(data.message ?? "Nu am putut încărca sesiunea utilizatorului");
+          throw new Error(data.message ?? copy.loadSessionError);
         }
 
         setUser(data);
@@ -108,10 +126,10 @@ export function KnowledgeBaseClient() {
         }
       })
       .catch((caughtError) => {
-        setError(caughtError instanceof Error ? caughtError.message : "Nu am putut încărca baza de cunoștințe");
+        setError(caughtError instanceof Error ? caughtError.message : copy.loadKnowledgeBaseError);
       })
       .finally(() => setIsLoading(false));
-  }, []);
+  }, [copy.loadKnowledgeBaseError, copy.loadSessionError, copy.loginRequired]);
 
   async function onTextSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -120,7 +138,7 @@ export function KnowledgeBaseClient() {
     setError(null);
 
     if (!primaryMembership) {
-      setError("Nu a fost găsită nicio organizație pentru acest cont.");
+      setError(copy.organizationMissing);
       return;
     }
 
@@ -141,14 +159,14 @@ export function KnowledgeBaseClient() {
       const data = await response.json();
 
       if (!response.ok) {
-        throw new Error(data.message ?? "Nu am putut indexa sursa text");
+        throw new Error(data.message ?? copy.indexTextError);
       }
 
       form.reset();
       await loadSources(primaryMembership.organization.id);
-      setMessage("Sursa text a fost indexată.");
+      setMessage(copy.textIndexed);
     } catch (caughtError) {
-      setError(caughtError instanceof Error ? caughtError.message : "Nu am putut indexa sursa text");
+      setError(caughtError instanceof Error ? caughtError.message : copy.indexTextError);
     } finally {
       setIsSaving(false);
     }
@@ -161,7 +179,7 @@ export function KnowledgeBaseClient() {
     setError(null);
 
     if (!primaryMembership) {
-      setError("Nu a fost găsită nicio organizație pentru acest cont.");
+      setError(copy.organizationMissing);
       return;
     }
 
@@ -181,14 +199,14 @@ export function KnowledgeBaseClient() {
       const data = await response.json();
 
       if (!response.ok) {
-        throw new Error(data.message ?? "Nu am putut indexa website-ul");
+        throw new Error(data.message ?? copy.indexWebsiteError);
       }
 
       form.reset();
       await loadSources(primaryMembership.organization.id);
-      setMessage("Website-ul a fost indexat.");
+      setMessage(copy.websiteIndexed);
     } catch (caughtError) {
-      setError(caughtError instanceof Error ? caughtError.message : "Nu am putut indexa website-ul");
+      setError(caughtError instanceof Error ? caughtError.message : copy.indexWebsiteError);
     } finally {
       setIsSaving(false);
     }
@@ -201,7 +219,7 @@ export function KnowledgeBaseClient() {
     setError(null);
 
     if (!primaryMembership) {
-      setError("Nu a fost găsită nicio organizație pentru acest cont.");
+      setError(copy.organizationMissing);
       return;
     }
 
@@ -217,14 +235,14 @@ export function KnowledgeBaseClient() {
       const data = await response.json();
 
       if (!response.ok) {
-        throw new Error(data.message ?? "Nu am putut încărca fișierul");
+        throw new Error(data.message ?? copy.uploadFileError);
       }
 
       form.reset();
       await loadSources(primaryMembership.organization.id);
-      setMessage("Fișierul a fost încărcat și indexat.");
+      setMessage(copy.fileIndexed);
     } catch (caughtError) {
-      setError(caughtError instanceof Error ? caughtError.message : "Nu am putut încărca fișierul");
+      setError(caughtError instanceof Error ? caughtError.message : copy.uploadFileError);
     } finally {
       setIsSaving(false);
     }
@@ -236,7 +254,7 @@ export function KnowledgeBaseClient() {
     setError(null);
 
     if (!primaryMembership) {
-      setError("Nu a fost găsită nicio organizație pentru acest cont.");
+      setError(copy.organizationMissing);
       return;
     }
 
@@ -255,66 +273,36 @@ export function KnowledgeBaseClient() {
       const data = await response.json();
 
       if (!response.ok) {
-        throw new Error(data.message ?? "Căutarea a eșuat");
+        throw new Error(data.message ?? copy.searchError);
       }
 
       setResults(data);
     } catch (caughtError) {
-      setError(caughtError instanceof Error ? caughtError.message : "Caută failed");
+      setError(caughtError instanceof Error ? caughtError.message : copy.searchError);
     }
   }
 
   if (isLoading) {
-    return <p>Loading Knowledge Base...</p>;
+    return <p>{copy.loading}</p>;
   }
 
   if (error && !user) {
     return (
       <section className="card">
-        <h1>Autentificare necesară.</h1>
+        <h1>{copy.authTitle}</h1>
         <p>{error}</p>
-        <a href="/login" className="button">Mergi la login</a>
+        <a href="/login" className="button">{copy.loginCta}</a>
       </section>
     );
   }
 
   return (
-    <div className="knowledge-layout">
+    <div className="widget-demo-layout">
       <section className="card">
-        <div className="eyebrow">Bază de cunoștințe</div>
-        <h1>Învață Autopilot One informațiile importante despre compania ta.</h1>
-        <p>{primaryMembership ? `Spațiu de lucru: ${primaryMembership.organization.name}` : "Nu a fost găsită nicio organizație."}</p>
-      </section>
-
-      <section className="grid two-columns">
-        <form className="card form-section" onSubmit={onTextSubmit}>
-          <h3>TXT source</h3>
-          <input name="title" placeholder="Titlu sursă" required />
-          <textarea name="content" placeholder="Lipește informații despre companie, politici, produse, servicii sau întrebări frecvente." required />
-          <button className="button" disabled={isSaving} type="submit">Indexează textul</button>
-        </form>
-
-        <form className="card form-section" onSubmit={onWebsiteSubmit}>
-          <h3>Website source</h3>
-          <input name="url" placeholder="https://example.com" type="url" required />
-          <input name="title" placeholder="Titlu opțional" />
-          <button className="button" disabled={isSaving} type="submit">Indexează website-ul</button>
-        </form>
-      </section>
-
-      <section className="grid two-columns">
-        <form className="card form-section" onSubmit={onFileSubmit}>
-          <h3>Upload PDF / DOCX / TXT</h3>
-          <input name="title" placeholder="Titlu opțional" />
-          <input name="file" type="file" accept=".pdf,.docx,.txt,text/plain,application/pdf,application/vnd.openxmlformats-officedocument.wordprocessingml.document" required />
-          <button className="button" disabled={isSaving} type="submit">Încarcă și indexează</button>
-        </form>
-
-        <form className="card form-section" onSubmit={onSearchSubmit}>
-          <h3>Semantic search</h3>
-          <input name="query" placeholder="Caută în baza de cunoștințe" required />
-          <button className="button" type="submit">Caută</button>
-        </form>
+        <div className="eyebrow">{copy.eyebrow}</div>
+        <h1>{copy.title}</h1>
+        <p>{copy.description}</p>
+        <p>{primaryMembership ? `${copy.workspacePrefix}: ${primaryMembership.organization.name}` : copy.organizationMissing}</p>
       </section>
 
       {error ? <p className="form-error">{error}</p> : null}
@@ -322,29 +310,88 @@ export function KnowledgeBaseClient() {
 
       <section className="grid two-columns">
         <article className="card">
-          <h2>Surse</h2>
-          <div className="source-list">
-            {sources.length ? sources.map((source) => (
-              <div className="source-item" key={source.id}>
-                <strong>{source.title}</strong>
-                <span>{source.type} · {source.status} · {source._count?.chunks ?? 0} chunks</span>
-              </div>
-            )) : <p>No sources indexed yet.</p>}
-          </div>
+          <h2>{copy.textSourceTitle}</h2>
+          <form className="form-stack" onSubmit={onTextSubmit}>
+            <label>
+              {copy.titleLabel}
+              <input name="title" placeholder={copy.sourceTitlePlaceholder} required />
+            </label>
+            <label>
+              {copy.contentLabel}
+              <textarea name="content" placeholder={copy.contentPlaceholder} required />
+            </label>
+            <button className="button" type="submit" disabled={isSaving || !primaryMembership}>
+              {isSaving ? copy.saving : copy.addTextButton}
+            </button>
+          </form>
         </article>
 
         <article className="card">
-          <h2>Caută results</h2>
+          <h2>{copy.websiteSourceTitle}</h2>
+          <form className="form-stack" onSubmit={onWebsiteSubmit}>
+            <label>
+              {copy.titleLabel}
+              <input name="title" placeholder={copy.websiteTitlePlaceholder} />
+            </label>
+            <label>
+              {copy.urlLabel}
+              <input name="url" type="url" placeholder={copy.urlPlaceholder} required />
+            </label>
+            <button className="button" type="submit" disabled={isSaving || !primaryMembership}>
+              {isSaving ? copy.saving : copy.addWebsiteButton}
+            </button>
+          </form>
+        </article>
+      </section>
+
+      <section className="grid two-columns">
+        <article className="card">
+          <h2>{copy.fileSourceTitle}</h2>
+          <form className="form-stack" onSubmit={onFileSubmit}>
+            <label>
+              {copy.titleLabel}
+              <input name="title" placeholder={copy.fileTitlePlaceholder} />
+            </label>
+            <label>
+              {copy.fileLabel}
+              <input name="file" type="file" accept=".txt,.pdf,.docx,text/plain,application/pdf,application/vnd.openxmlformats-officedocument.wordprocessingml.document" required />
+            </label>
+            <button className="button" type="submit" disabled={isSaving || !primaryMembership}>
+              {isSaving ? copy.saving : copy.uploadButton}
+            </button>
+          </form>
+        </article>
+
+        <article className="card">
+          <h2>{copy.searchTitle}</h2>
+          <form className="form-stack" onSubmit={onSearchSubmit}>
+            <input name="query" placeholder={copy.searchPlaceholder} required />
+            <button className="button" type="submit" disabled={!primaryMembership}>{copy.searchButton}</button>
+          </form>
+
           <div className="source-list">
             {results.length ? results.map((result) => (
               <div className="source-item" key={result.chunkId}>
-                <strong>{result.sourceTitle} · {result.sourceType}</strong>
-                <span>Score {result.score.toFixed(2)}</span>
+                <strong>{result.sourceTitle}</strong>
+                <span>{result.sourceType} · {copy.score} {result.score.toFixed(3)}</span>
                 <p>{result.content}</p>
               </div>
-            )) : <p>Run a search to retrieve indexed knowledge.</p>}
+            )) : <p>{copy.noResults}</p>}
           </div>
         </article>
+      </section>
+
+      <section className="card">
+        <h2>{copy.sourcesTitle}</h2>
+        <div className="source-list">
+          {sources.length ? sources.map((source) => (
+            <div className="source-item" key={source.id}>
+              <strong>{source.title}</strong>
+              <span>{source.type} · {copy.status}: {source.status} · {(source._count?.chunks ?? 0).toLocaleString(locale)} {copy.chunks}</span>
+              <p>{source.url ?? source.fileName ?? source.mimeType ?? `${copy.created}: ${formatDate(source.createdAt, locale, copy)}`}</p>
+            </div>
+          )) : <p>{copy.noSources}</p>}
+        </div>
       </section>
     </div>
   );
