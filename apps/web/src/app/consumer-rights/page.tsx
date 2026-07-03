@@ -18,7 +18,7 @@ export default function ConsumerRightsPage() {
         <section className="card">
           <div className="eyebrow">Drepturile consumatorului</div>
           <h1>Informații pentru consumatori</h1>
-          <p>Această pagină este un model informativ pentru pilot și trebuie revizuită juridic înainte de lansarea comercială completă.</p>
+          <p>Această pagină prezintă informații generale pentru consumatori și modul în care pot fi transmise întrebări, reclamații sau solicitări.</p>
         </section>
 
         <section className="card trust-layout">

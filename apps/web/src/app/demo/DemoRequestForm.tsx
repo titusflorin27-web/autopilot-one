@@ -49,7 +49,7 @@ export function DemoRequestForm() {
 
   return (
     <form className="card form-section" onSubmit={onSubmit}>
-      <div className="eyebrow">Start pilot</div>
+      <div className="eyebrow">Start implementare</div>
       <h2>Cere demo</h2>
       <p>Spune-ne ce afacere ai și ce conversații vrei să preia primul angajat AI. Cererea ajunge direct în CRM.</p>
 

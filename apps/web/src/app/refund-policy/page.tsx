@@ -6,7 +6,7 @@ import { createPageMetadata } from "../../lib/seo";
 export const metadata: Metadata = createPageMetadata({
   title: "Politica de rambursare Autopilot One",
   description:
-    "Politica de rambursare Autopilot One pentru abonamente, servicii digitale activate, faza pilot și solicitări de refund.",
+    "Politica de rambursare Autopilot One pentru abonamente, servicii digitale activate și solicitări de refund.",
   path: "/refund-policy",
 });
 
@@ -18,7 +18,7 @@ export default function RefundPolicyPage() {
         <section className="card">
           <div className="eyebrow">Rambursări</div>
           <h1>Politica de rambursare</h1>
-          <p>Această politică este un model operațional pentru faza pilot și trebuie revizuită juridic înainte de lansarea comercială completă.</p>
+          <p>Această politică descrie modul în care sunt analizate solicitările de rambursare pentru serviciile Autopilot One.</p>
         </section>
 
         <section className="card trust-layout">
@@ -31,8 +31,8 @@ export default function RefundPolicyPage() {
           <h2>Servicii digitale activate</h2>
           <p>Pentru servicii digitale configurate și activate, rambursarea poate depinde de stadiul implementării și de consumul efectiv al serviciului.</p>
 
-          <h2>Faza pilot</h2>
-          <p>În perioada pilot, cererile de rambursare se analizează individual, ținând cont de configurarea efectuată, timpul de suport, utilizarea serviciului și eventualele costuri externe generate.</p>
+          <h2>Implementare și validare</h2>
+          <p>În perioada de implementare și validare, cererile de rambursare se analizează individual, ținând cont de configurarea efectuată, timpul de suport, utilizarea serviciului și eventualele costuri externe generate.</p>
 
           <h2>Cum soliciți o rambursare</h2>
           <ul className="check-list">

@@ -5,7 +5,7 @@ import { Nav } from "../components/Nav";
 import { createPageMetadata } from "../lib/seo";
 
 export const metadata: Metadata = createPageMetadata({
-  title: "Autopilot One — angajați AI pentru IMM-uri",
+  title: "Autoimplementare One — angajați AI pentru IMM-uri",
   description:
     "Adaugă pe website un angajat AI care răspunde vizitatorilor, captează lead-uri și trimite conversațiile importante în CRM Lite.",
   path: "/",
@@ -36,12 +36,12 @@ const audiences = [
 const steps = [
   ["01", "Setăm primul caz", "Alegem ce trebuie să facă AI-ul: recepție, întrebări frecvente, captare lead-uri sau calificare cereri."],
   ["02", "Încărcăm informația", "Adăugăm servicii, reguli, prețuri, program, întrebări frecvente și instrucțiuni pentru răspunsuri controlate."],
-  ["03", "Pornim pilotul", "Instalăm widgetul, urmărim conversațiile și optimizăm ce se întâmplă după fiecare cerere."],
+  ["03", "Pornim implementarea", "Instalăm widgetul, urmărim conversațiile și optimizăm fiecare cerere până devine un flux clar."],
 ];
 
 const trustItems = [
   ["Fără token expus", "Snippetul widgetului ascunde datele sensibile în interfață."],
-  ["Backup validat", "Backup local și off-server confirmat pentru pilot."],
+  ["Backup validat", "Backup local și off-server pregătit pentru operare sigură."],
   ["Securitate întărită", "Firewall, fail2ban, rate limits și headers de securitate."],
   ["QA final", "Homepage, API, SEO, backup și monitoring validate pe VPS."],
 ];
@@ -61,7 +61,7 @@ export default function HomePage() {
             <div className="eyebrow">Recepționer AI + CRM Lite</div>
             <h1><span className="gradient-text">Un angajat AI</span> care transformă vizitatorii în lead-uri urmărite.</h1>
             <p className="lead-text">
-              Autopilot One transformă website-ul într-un canal activ de vânzare: răspunde vizitatorilor, colectează datele importante și trimite conversațiile în CRM pentru follow-up.
+              Autoimplementare One transformă website-ul într-un canal activ de vânzare: răspunde vizitatorilor, colectează datele importante și trimite conversațiile în CRM pentru follow-up.
             </p>
             <div className="actions">
               <Link href="/register" className="button">Creează cont</Link>
@@ -76,7 +76,7 @@ export default function HomePage() {
             </div>
           </div>
 
-          <aside className="product-showcase" aria-label="Previzualizare Autopilot One">
+          <aside className="product-showcase" aria-label="Previzualizare Autoimplementare One">
             <div className="showcase-topbar">
               <div className="console-dots"><span /><span /><span /></div>
               <span>PILOT LIVE</span>
@@ -129,7 +129,7 @@ export default function HomePage() {
           <div className="eyebrow">De ce contează</div>
           <h2>Un website frumos nu ajunge dacă lead-urile nu sunt urmărite.</h2>
           <p>
-            Autopilot One pune AI-ul la lucru în punctul cel mai important: conversația cu vizitatorul. Nu înlocuiește echipa, ci îi pregătește cererile bune și le face mai ușor de urmărit.
+            Autoimplementare One pune AI-ul la lucru în punctul cel mai important: conversația cu vizitatorul. Nu înlocuiește echipa, ci îi pregătește cererile bune și le face mai ușor de urmărit.
           </p>
         </section>
 
@@ -206,7 +206,7 @@ export default function HomePage() {
 
         <section className="section-heading">
           <div className="eyebrow">Cum pornim</div>
-          <h2>Un pilot simplu, apoi extindem ce funcționează.</h2>
+          <h2>Începem controlat, apoi extindem ce funcționează.</h2>
         </section>
 
         <section className="grid three-columns">
@@ -230,7 +230,7 @@ export default function HomePage() {
 
         <section className="card cta-card final-cta-card">
           <div>
-            <div className="eyebrow">Pregătit pentru pilot</div>
+            <div className="eyebrow">Pregătit pentru implementare</div>
             <h2>Pornește din pagina principală și creează primul workspace.</h2>
             <p>Un vizitator poate crea cont, poate intra în dashboard și poate începe configurarea primului flux AI pentru compania sa.</p>
           </div>

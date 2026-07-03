@@ -8,19 +8,19 @@ import { DemoRequestForm } from "./DemoRequestForm";
 export const metadata: Metadata = createPageMetadata({
   title: "Cere demo Autopilot One",
   description:
-    "Programează o discuție pentru un pilot Autopilot One: recepție AI pe website, captare lead-uri, întrebări frecvente și urmărire în CRM.",
+    "Programează o discuție pentru implementarea Autopilot One: recepție AI pe website, captare lead-uri, întrebări frecvente și urmărire în CRM.",
   path: "/demo",
 });
 
 const outcomes = [
   "Identificăm întrebările repetitive și locurile unde se pierd lead-uri.",
   "Stabilim baza de cunoștințe: servicii, reguli, prețuri, program și răspunsuri permise.",
-  "Propunem un pilot clar: widget AI, captare lead-uri, CRM Lite și dashboard de urmărire.",
+  "Propunem un plan clar: widget AI, captare lead-uri, CRM Lite și dashboard de urmărire.",
 ];
 
 const trustItems = [
   ["Răspuns rapid", "Cererea ajunge în CRM și poate fi urmărită cu status, notă internă și follow-up."],
-  ["Fără obligație", "Demo-ul este o discuție de validare. Nu ai nevoie de card pentru a cere o discuție."],
+  ["Fără obligație", "Demo-ul este o discuție de validare. Nu ai nevoie de card pentru a vedea dacă soluția se potrivește."],
   ["Date controlate", "Răspunsurile AI se bazează pe conținutul configurat pentru afacerea ta."],
 ];
 
