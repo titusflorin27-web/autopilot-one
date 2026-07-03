@@ -21,7 +21,7 @@ export default function CookiesPage() {
           <h1>Politica de cookies și stocare locală</h1>
           <p>
             Această pagină explică modul în care Autopilot One folosește cookies, localStorage și tehnologii similare în configurarea actuală.
-            Documentul este informativ și trebuie revizuit juridic înainte de lansarea comercială completă.
+            Documentul este actualizat pe măsură ce platforma, preferințele de stocare și furnizorii utilizați evoluează.
           </p>
         </section>
 

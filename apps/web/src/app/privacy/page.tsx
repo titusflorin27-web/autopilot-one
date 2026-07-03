@@ -21,7 +21,7 @@ export default function PrivacyPage() {
           <h1>Politica de confidențialitate</h1>
           <p>
             Această pagină descrie modul în care Autopilot One tratează datele în utilizarea platformei.
-            Documentul este informativ și trebuie revizuit juridic înainte de lansarea comercială completă.
+            Documentul este actualizat pe măsură ce platforma, furnizorii și configurările comerciale evoluează.
           </p>
         </section>
 
