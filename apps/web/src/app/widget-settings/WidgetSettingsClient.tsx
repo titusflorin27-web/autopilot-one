@@ -1,6 +1,9 @@
 "use client";
 
-import { FormEvent, useEffect, useMemo, useState } from "react";
+import type { FormEvent } from "react";
+import { useEffect, useMemo, useState } from "react";
+import { widgetPagesCopy } from "../../lib/i18n";
+import { useAppLanguage } from "../../lib/useAppLanguage";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:4000/api";
 
@@ -49,6 +52,9 @@ function maskSnippet(snippet: string) {
 }
 
 export function WidgetSettingsClient() {
+  const language = useAppLanguage();
+  const copy = widgetPagesCopy[language].settings;
+
   const [user, setUser] = useState<CurrentUser | null>(null);
   const [settings, setSettings] = useState<WidgetSettings | null>(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -67,7 +73,7 @@ export function WidgetSettingsClient() {
     const accessToken = getAccessToken();
 
     if (!accessToken) {
-      throw new Error("Autentifică-te înainte să gestionezi setările widgetului.");
+      throw new Error(copy.loginRequired);
     }
 
     return fetch(`${API_URL}${path}`, {
@@ -84,7 +90,7 @@ export function WidgetSettingsClient() {
     const data = await response.json();
 
     if (!response.ok) {
-      throw new Error(data.message ?? "Nu am putut încărca setările widgetului");
+      throw new Error(data.message ?? copy.loadSettingsError);
     }
 
     setSettings(data);
@@ -94,7 +100,7 @@ export function WidgetSettingsClient() {
     const accessToken = getAccessToken();
 
     if (!accessToken) {
-      setError("Autentifică-te înainte să gestionezi setările widgetului.");
+      setError(copy.loginRequired);
       setIsLoading(false);
       return;
     }
@@ -106,7 +112,7 @@ export function WidgetSettingsClient() {
         const data = await response.json();
 
         if (!response.ok) {
-          throw new Error(data.message ?? "Nu am putut încărca sesiunea utilizatorului");
+          throw new Error(data.message ?? copy.loadSessionError);
         }
 
         setUser(data);
@@ -117,10 +123,10 @@ export function WidgetSettingsClient() {
         }
       })
       .catch((caughtError) => {
-        setError(caughtError instanceof Error ? caughtError.message : "Nu am putut încărca setările widgetului");
+        setError(caughtError instanceof Error ? caughtError.message : copy.loadSettingsError);
       })
       .finally(() => setIsLoading(false));
-  }, []);
+  }, [copy.loadSessionError, copy.loadSettingsError, copy.loginRequired]);
 
   async function onSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -128,7 +134,7 @@ export function WidgetSettingsClient() {
     setSuccess(null);
 
     if (!primaryMembership) {
-      setError("Nu există organizație pentru acest cont.");
+      setError(copy.organizationMissing);
       return;
     }
 
@@ -154,13 +160,13 @@ export function WidgetSettingsClient() {
       const data = await response.json();
 
       if (!response.ok) {
-        throw new Error(data.message ?? "Nu am putut salva setările widgetului");
+        throw new Error(data.message ?? copy.saveSettingsError);
       }
 
       setSettings(data);
-      setSuccess("Setările widgetului au fost salvate.");
+      setSuccess(copy.saved);
     } catch (caughtError) {
-      setError(caughtError instanceof Error ? caughtError.message : "Nu am putut salva setările widgetului");
+      setError(caughtError instanceof Error ? caughtError.message : copy.saveSettingsError);
     } finally {
       setIsSaving(false);
     }
@@ -171,7 +177,7 @@ export function WidgetSettingsClient() {
     setSuccess(null);
 
     if (!primaryMembership) {
-      setError("Nu există organizație pentru acest cont.");
+      setError(copy.organizationMissing);
       return;
     }
 
@@ -182,13 +188,13 @@ export function WidgetSettingsClient() {
       const data = await response.json();
 
       if (!response.ok) {
-        throw new Error(data.message ?? "Nu am putut regenera jetonul");
+        throw new Error(data.message ?? copy.regenerateTokenError);
       }
 
       setSettings(data);
-      setSuccess("Jetonul widgetului a fost regenerat. Copiază din nou fragmentul de instalare.");
+      setSuccess(copy.tokenRegenerated);
     } catch (caughtError) {
-      setError(caughtError instanceof Error ? caughtError.message : "Nu am putut regenera jetonul");
+      setError(caughtError instanceof Error ? caughtError.message : copy.regenerateTokenError);
     }
   }
 
@@ -198,19 +204,19 @@ export function WidgetSettingsClient() {
     }
 
     await navigator.clipboard.writeText(settings.installSnippet);
-    setSuccess("Fragmentul de instalare a fost copiat. Conține jetonul real, chiar dacă pe ecran este mascat.");
+    setSuccess(copy.snippetCopied);
   }
 
   if (isLoading) {
-    return <p>Se încarcă setările widgetului...</p>;
+    return <p>{copy.loading}</p>;
   }
 
   if (error && !user) {
     return (
       <section className="card">
-        <h1>Autentificare necesară.</h1>
+        <h1>{copy.authTitle}</h1>
         <p>{error}</p>
-        <a href="/login" className="button">Mergi la login</a>
+        <a href="/login" className="button">{copy.loginCta}</a>
       </section>
     );
   }
@@ -218,9 +224,9 @@ export function WidgetSettingsClient() {
   return (
     <div className="widget-demo-layout">
       <section className="card">
-        <div className="eyebrow">Setări widget</div>
-        <h1>Controlează instalarea widgetului.</h1>
-        <p>{settings ? `Spațiu de lucru: ${settings.name}` : "Nu există setări încărcate."}</p>
+        <div className="eyebrow">{copy.eyebrow}</div>
+        <h1>{copy.title}</h1>
+        <p>{settings ? `${copy.workspacePrefix}: ${settings.name}` : copy.noSettings}</p>
       </section>
 
       {error ? <p className="form-error">{error}</p> : null}
@@ -229,48 +235,48 @@ export function WidgetSettingsClient() {
       {settings ? (
         <section className="grid two-columns">
           <form className="card form-section" onSubmit={onSubmit}>
-            <h2>Setări widget</h2>
+            <h2>{copy.settingsTitle}</h2>
             <label>
-              <input name="widgetEnabled" type="checkbox" defaultChecked={settings.widgetEnabled} /> Activează widgetul
+              <input name="widgetEnabled" type="checkbox" defaultChecked={settings.widgetEnabled} /> {copy.enableWidget}
             </label>
-            <label className="field-label">Titlu widget</label>
-            <input name="widgetTitle" defaultValue={settings.widgetTitle} placeholder="Titlu widget" />
-            <label className="field-label">Culoare principală</label>
+            <label className="field-label">{copy.widgetTitleLabel}</label>
+            <input name="widgetTitle" defaultValue={settings.widgetTitle} placeholder={copy.widgetTitlePlaceholder} />
+            <label className="field-label">{copy.primaryColorLabel}</label>
             <input name="widgetPrimaryColor" defaultValue={settings.widgetPrimaryColor} placeholder="#8ee6c9" />
-            <label className="field-label">Poziție widget</label>
+            <label className="field-label">{copy.positionLabel}</label>
             <select name="widgetPosition" defaultValue={settings.widgetPosition}>
-              <option value="RIGHT">Dreapta</option>
-              <option value="LEFT">Stânga</option>
+              <option value="RIGHT">{copy.positionRight}</option>
+              <option value="LEFT">{copy.positionLeft}</option>
             </select>
-            <label className="field-label">Jeton widget</label>
+            <label className="field-label">{copy.widgetTokenLabel}</label>
             <input
               name="widgetToken"
               type="password"
               autoComplete="new-password"
               defaultValue={settings.widgetToken ?? ""}
-              placeholder="Jeton widget"
+              placeholder={copy.widgetTokenPlaceholder}
             />
-            {settings.widgetToken ? <p className="helper-text">Jeton curent: {maskSecret(settings.widgetToken)}</p> : null}
-            <label className="field-label">Domenii permise</label>
+            {settings.widgetToken ? <p className="helper-text">{copy.currentToken}: {maskSecret(settings.widgetToken)}</p> : null}
+            <label className="field-label">{copy.allowedOriginsLabel}</label>
             <textarea name="widgetAllowedOrigins" defaultValue={settings.widgetAllowedOrigins.join("\n")} placeholder="https://example.com\nhttps://www.example.com" />
             <div className="actions">
-              <button className="button" type="submit" disabled={isSaving}>{isSaving ? "Se salvează..." : "Salvează setările"}</button>
-              <button className="button secondary" type="button" onClick={regenerateToken}>Regenerează jetonul</button>
+              <button className="button" type="submit" disabled={isSaving}>{isSaving ? copy.saving : copy.save}</button>
+              <button className="button secondary" type="button" onClick={regenerateToken}>{copy.regenerateToken}</button>
             </div>
           </form>
 
           <article className="card">
-            <h2>Instalare în producție</h2>
-            <p>Widgetul încarcă configurația live înainte de randare.</p>
-            <p className="helper-text">Jetonul este mascat pentru siguranță. Fragmentul copiat conține jetonul real.</p>
+            <h2>{copy.productionInstallTitle}</h2>
+            <p>{copy.productionInstallDescription}</p>
+            <p className="helper-text">{copy.maskedTokenHelper}</p>
             {settings.publicConfigEndpoint ? (
               <p>
-                <span>Configurație publică: </span>
+                <span>{copy.publicConfig}: </span>
                 <code>{settings.publicConfigEndpoint}</code>
               </p>
             ) : null}
             <pre className="code-block">{maskedSnippet}</pre>
-            <button className="button" type="button" onClick={copySnippet}>Copiază fragmentul</button>
+            <button className="button" type="button" onClick={copySnippet}>{copy.copySnippet}</button>
           </article>
         </section>
       ) : null}
