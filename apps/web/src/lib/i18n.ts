@@ -1311,3 +1311,165 @@ export const widgetPagesCopy = {
   settings: Record<string, string>;
   analytics: Record<string, string>;
 }>;
+
+
+export const packagePricingCopy = {
+  en: {
+    heroEyebrow: "Pricing",
+    heroTitlePrefix: "Clear packages for",
+    heroTitleHighlight: "your first AI employee.",
+    heroDescription: "Start with a measurable pilot, track usage from the dashboard and move to paid checkout only after the payment provider is connected.",
+    requestDemo: "Request demo",
+    viewTerms: "View terms",
+    badges: ["Demo without card", "Guided setup", "Checkout-ready packages"],
+    recommended: "Recommended",
+    monthly: "/month",
+    discussPlan: "Discuss this plan",
+    requestPlan: "Request plan",
+    included: "Included",
+    planSectionTitle: "Available packages",
+    billingNoticeEyebrow: "Payment readiness",
+    billingNoticeTitle: "Online payments are being prepared.",
+    billingNoticeDescription: "Plan switching is intentionally routed through demo/contact until checkout, subscription status and webhooks are connected.",
+    billingNoticeCta: "Discuss billing setup",
+    principles: [
+      { title: "No surprises", description: "The commercial plan is confirmed before activation or payment collection." },
+      { title: "Measured pilot", description: "Conversations, leads, usage and follow-up work are tracked before scaling." },
+      { title: "Safe rollout", description: "Checkout and subscriptions will be added through a controlled payment provider integration." },
+    ],
+    ctaEyebrow: "Not sure which package fits?",
+    ctaTitle: "Start with the package that proves value fastest.",
+    ctaDescription: "Send a demo request and we will decide whether your first use case should be AI reception, lead capture or conversation follow-up.",
+    ctaButton: "Request recommendation",
+    plans: [
+      {
+        plan: "FREE",
+        name: "Free",
+        price: "0 €",
+        period: "/month",
+        note: "For sandbox validation and first internal tests.",
+        features: ["100 widget messages / period", "5 knowledge sources", "1 team member", "Basic AI receptionist flow", "No-card pilot validation"],
+      },
+      {
+        plan: "STARTER",
+        name: "Starter",
+        price: "49 €",
+        period: "/month",
+        note: "For the first real website flow.",
+        features: ["1,000 widget messages / period", "50 knowledge sources", "3 team members", "Website widget and lead capture", "Guided setup for launch"],
+      },
+      {
+        plan: "PRO",
+        name: "Pro",
+        price: "99 €",
+        period: "/month",
+        featured: true,
+        note: "For active teams that need higher volume and follow-up.",
+        features: ["10,000 widget messages / period", "500 knowledge sources", "10 team members", "Inbox, analytics and handoff workflow", "Operational dashboard for the pilot"],
+      },
+      {
+        plan: "BUSINESS",
+        name: "Business",
+        price: "Custom",
+        period: "",
+        note: "For higher volume, dedicated rollout or custom operations.",
+        features: ["50,000 widget messages / period", "2,000 knowledge sources", "50 team members", "Custom onboarding and operating model", "Commercial terms agreed separately"],
+      },
+    ],
+  },
+  ro: {
+    heroEyebrow: "Prețuri",
+    heroTitlePrefix: "Pachete clare pentru",
+    heroTitleHighlight: "primul tău angajat AI.",
+    heroDescription: "Începe cu un pilot măsurabil, urmărește utilizarea în dashboard și treci la plata online doar după ce providerul de plăți este conectat.",
+    requestDemo: "Cere demo",
+    viewTerms: "Vezi termenii",
+    badges: ["Demo fără card", "Setup ghidat", "Pachete pregătite pentru checkout"],
+    recommended: "Recomandat",
+    monthly: "/lună",
+    discussPlan: "Discută planul",
+    requestPlan: "Solicită planul",
+    included: "Inclus",
+    planSectionTitle: "Pachete disponibile",
+    billingNoticeEyebrow: "Pregătire plăți",
+    billingNoticeTitle: "Plățile online sunt în pregătire.",
+    billingNoticeDescription: "Schimbarea planului este direcționată intenționat prin demo/contact până când checkoutul, statusul abonamentului și webhookurile sunt conectate.",
+    billingNoticeCta: "Discută configurarea facturării",
+    principles: [
+      { title: "Fără surprize", description: "Planul comercial este confirmat înainte de activare sau colectarea plății." },
+      { title: "Pilot măsurabil", description: "Conversațiile, leadurile, utilizarea și follow-up-ul sunt urmărite înainte de scalare." },
+      { title: "Lansare sigură", description: "Checkoutul și abonamentele vor fi adăugate printr-o integrare controlată cu providerul de plăți." },
+    ],
+    ctaEyebrow: "Nu știi ce pachet ți se potrivește?",
+    ctaTitle: "Începem cu pachetul care dovedește valoare cel mai rapid.",
+    ctaDescription: "Trimite o cerere demo și stabilim împreună dacă primul caz de utilizare ar trebui să fie recepția AI, captarea leadurilor sau urmărirea conversațiilor.",
+    ctaButton: "Cere recomandare",
+    plans: [
+      {
+        plan: "FREE",
+        name: "Free",
+        price: "0 €",
+        period: "/lună",
+        note: "Pentru validare sandbox și primele teste interne.",
+        features: ["100 mesaje widget / perioadă", "5 surse de cunoștințe", "1 membru echipă", "Flux de bază pentru recepționerul AI", "Validare pilot fără card"],
+      },
+      {
+        plan: "STARTER",
+        name: "Starter",
+        price: "49 €",
+        period: "/lună",
+        note: "Pentru primul flux real pe website.",
+        features: ["1.000 mesaje widget / perioadă", "50 surse de cunoștințe", "3 membri echipă", "Widget pe website și captare leaduri", "Setup ghidat pentru lansare"],
+      },
+      {
+        plan: "PRO",
+        name: "Pro",
+        price: "99 €",
+        period: "/lună",
+        featured: true,
+        note: "Pentru echipe active care au nevoie de volum și follow-up.",
+        features: ["10.000 mesaje widget / perioadă", "500 surse de cunoștințe", "10 membri echipă", "Inbox, analytics și flux de transfer uman", "Dashboard operațional pentru pilot"],
+      },
+      {
+        plan: "BUSINESS",
+        name: "Business",
+        price: "Personalizat",
+        period: "",
+        note: "Pentru volum mare, lansare dedicată sau operațiuni custom.",
+        features: ["50.000 mesaje widget / perioadă", "2.000 surse de cunoștințe", "50 membri echipă", "Onboarding și model operațional custom", "Condiții comerciale stabilite separat"],
+      },
+    ],
+  },
+} satisfies Record<AppLanguage, {
+  heroEyebrow: string;
+  heroTitlePrefix: string;
+  heroTitleHighlight: string;
+  heroDescription: string;
+  requestDemo: string;
+  viewTerms: string;
+  badges: string[];
+  recommended: string;
+  monthly: string;
+  discussPlan: string;
+  requestPlan: string;
+  included: string;
+  planSectionTitle: string;
+  billingNoticeEyebrow: string;
+  billingNoticeTitle: string;
+  billingNoticeDescription: string;
+  billingNoticeCta: string;
+  principles: Array<{ title: string; description: string }>;
+  ctaEyebrow: string;
+  ctaTitle: string;
+  ctaDescription: string;
+  ctaButton: string;
+  plans: Array<{
+    plan: "FREE" | "STARTER" | "PRO" | "BUSINESS";
+    name: string;
+    price: string;
+    period: string;
+    note: string;
+    featured?: boolean;
+    features: string[];
+  }>;
+}>;

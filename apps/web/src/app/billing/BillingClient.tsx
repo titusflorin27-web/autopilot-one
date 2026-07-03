@@ -1,7 +1,8 @@
 "use client";
 
+import Link from "next/link";
 import { useEffect, useState } from "react";
-import { billingLaunchCopy } from "../../lib/i18n";
+import { billingLaunchCopy, packagePricingCopy } from "../../lib/i18n";
 import { useAppLanguage } from "../../lib/useAppLanguage";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:4000/api";
@@ -19,19 +20,24 @@ type BillingOverview = {
 };
 
 type BillingCopy = typeof billingLaunchCopy["ro"]["billing"];
+type PackageCopy = typeof packagePricingCopy["ro"];
+type PackagePlan = PackageCopy["plans"][number];
+
+function getPlanCopy(copy: PackageCopy, plan: Plan): PackagePlan | undefined {
+  return copy.plans.find((item) => item.plan === plan);
+}
 
 export function BillingClient() {
   const language = useAppLanguage();
   const copy = billingLaunchCopy[language].billing;
   const commonCopy = billingLaunchCopy[language].common;
+  const packageCopy = packagePricingCopy[language];
   const locale = language === "ro" ? "ro-RO" : "en-US";
 
   const [user, setUser] = useState<CurrentUser | null>(null);
   const [billing, setBilling] = useState<BillingOverview | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-
-  const organization = user?.memberships[0]?.organization;
 
   function token() {
     return window.localStorage.getItem("autopilot.accessToken");
@@ -47,18 +53,6 @@ export function BillingClient() {
     const response = await authedFetch(`/billing/organization/${organizationId}`);
     const json = await response.json();
     if (!response.ok) throw new Error(json.message ?? copy.loadBillingError);
-    setBilling(json);
-  }
-
-  async function updatePlan(plan: Plan) {
-    if (!organization) return;
-    const response = await authedFetch(`/billing/organization/${organization.id}/plan`, {
-      method: "PATCH",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ plan }),
-    });
-    const json = await response.json();
-    if (!response.ok) throw new Error(json.message ?? copy.updatePlanError);
     setBilling(json);
   }
 
@@ -106,6 +100,13 @@ export function BillingClient() {
         </p>
       </section>
 
+      <section className="card">
+        <div className="eyebrow">{packageCopy.billingNoticeEyebrow}</div>
+        <h2>{packageCopy.billingNoticeTitle}</h2>
+        <p>{packageCopy.billingNoticeDescription}</p>
+        <Link href="/demo?source=billing" className="button secondary">{packageCopy.billingNoticeCta}</Link>
+      </section>
+
       {error ? <p className="form-error">{error}</p> : null}
 
       {billing ? (
@@ -117,21 +118,37 @@ export function BillingClient() {
           </section>
 
           <section className="grid two-columns">
-            {billing.plans.map((plan) => (
-              <article className="card" key={plan.plan}>
-                <h2>{plan.plan}</h2>
-                <p>{plan.limits.widgetMessages.toLocaleString(locale)} {copy.widgetMessagesPerPeriod}</p>
-                <p>{plan.limits.knowledgeSources.toLocaleString(locale)} {copy.knowledgeSourcesUnit}</p>
-                <p>{plan.limits.teamMembers.toLocaleString(locale)} {copy.teamMembersUnit}</p>
-                <button
-                  className="button"
-                  type="button"
-                  onClick={() => updatePlan(plan.plan).catch((caughtError) => setError(caughtError instanceof Error ? caughtError.message : String(caughtError)))}
-                >
-                  {billing.organization.billingPlan === plan.plan ? copy.currentPlan : `${copy.switchTo} ${plan.plan}`}
-                </button>
-              </article>
-            ))}
+            {billing.plans.map((plan) => {
+              const planCopy = getPlanCopy(packageCopy, plan.plan);
+              const isCurrentPlan = billing.organization.billingPlan === plan.plan;
+
+              return (
+                <article className="card" key={plan.plan}>
+                  <h2>{planCopy?.name ?? plan.plan}</h2>
+                  {planCopy ? (
+                    <>
+                      <div className="price">{planCopy.price}<span>{planCopy.period}</span></div>
+                      <p className="plan-note">{planCopy.note}</p>
+                    </>
+                  ) : null}
+                  <p>{plan.limits.widgetMessages.toLocaleString(locale)} {copy.widgetMessagesPerPeriod}</p>
+                  <p>{plan.limits.knowledgeSources.toLocaleString(locale)} {copy.knowledgeSourcesUnit}</p>
+                  <p>{plan.limits.teamMembers.toLocaleString(locale)} {copy.teamMembersUnit}</p>
+                  {planCopy ? (
+                    <ul className="check-list">
+                      {planCopy.features.map((feature) => <li key={feature}>{feature}</li>)}
+                    </ul>
+                  ) : null}
+                  {isCurrentPlan ? (
+                    <button className="button" type="button" disabled>{copy.currentPlan}</button>
+                  ) : (
+                    <Link href={`/demo?source=billing&plan=${plan.plan.toLowerCase()}`} className="button secondary">
+                      {packageCopy.requestPlan}
+                    </Link>
+                  )}
+                </article>
+              );
+            })}
           </section>
         </>
       ) : null}
