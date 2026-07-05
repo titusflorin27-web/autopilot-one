@@ -5,7 +5,7 @@ import { Nav } from "../components/Nav";
 import { createPageMetadata } from "../lib/seo";
 
 export const metadata: Metadata = createPageMetadata({
-  title: "Autoimplementare One — angajați AI pentru IMM-uri",
+  title: "Autopilot One — angajați AI pentru IMM-uri",
   description:
     "Adaugă pe website un angajat AI care răspunde vizitatorilor, captează lead-uri și trimite conversațiile importante în CRM Lite.",
   path: "/",
@@ -61,7 +61,7 @@ export default function HomePage() {
             <div className="eyebrow">Recepționer AI + CRM Lite</div>
             <h1><span className="gradient-text">Un angajat AI</span> care transformă vizitatorii în lead-uri urmărite.</h1>
             <p className="lead-text">
-              Autoimplementare One transformă website-ul într-un canal activ de vânzare: răspunde vizitatorilor, colectează datele importante și trimite conversațiile în CRM pentru follow-up.
+              Autopilot One transformă website-ul într-un canal activ de vânzare: răspunde vizitatorilor, colectează datele importante și trimite conversațiile în CRM pentru follow-up.
             </p>
             <div className="actions">
               <Link href="/register" className="button">Creează cont</Link>
@@ -76,7 +76,7 @@ export default function HomePage() {
             </div>
           </div>
 
-          <aside className="product-showcase" aria-label="Previzualizare Autoimplementare One">
+          <aside className="product-showcase" aria-label="Previzualizare Autopilot One">
             <div className="showcase-topbar">
               <div className="console-dots"><span /><span /><span /></div>
               <span>PILOT LIVE</span>
@@ -129,7 +129,7 @@ export default function HomePage() {
           <div className="eyebrow">De ce contează</div>
           <h2>Un website frumos nu ajunge dacă lead-urile nu sunt urmărite.</h2>
           <p>
-            Autoimplementare One pune AI-ul la lucru în punctul cel mai important: conversația cu vizitatorul. Nu înlocuiește echipa, ci îi pregătește cererile bune și le face mai ușor de urmărit.
+            Autopilot One pune AI-ul la lucru în punctul cel mai important: conversația cu vizitatorul. Nu înlocuiește echipa, ci îi pregătește cererile bune și le face mai ușor de urmărit.
           </p>
         </section>
 

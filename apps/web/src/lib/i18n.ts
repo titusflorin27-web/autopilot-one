@@ -203,7 +203,7 @@ export const shellCopy = {
     refunds: "Rambursări",
     consumers: "Consumatori",
     footerDescription: "Platformă AI pentru IMM-uri care vor să răspundă rapid, să capteze lead-uri și să urmărească cererile într-un flux operațional clar.",
-    footerPilot: "Pilot controlat. Configurare ghidată, date urmărite în CRM Lite și validare înainte de folosirea cu clienți reali.",
+    footerPilot: "Implementare controlată. Configurare ghidată, date urmărite în CRM Lite și validare înainte de folosirea cu clienți reali.",
     contactNote: "Pentru demo, pilot sau ofertă, trimite o cerere și îți propunem primul flux AI potrivit pentru afacerea ta.",
   },
 } satisfies Record<AppLanguage, Record<string, string>>;
@@ -1468,7 +1468,7 @@ export const packagePricingCopy = {
         price: "Personalizat",
         period: "",
         note: "Pentru volum mare, lansare dedicată sau operațiuni custom.",
-        features: ["50.000 mesaje widget / perioadă", "2.000 surse de cunoștințe", "50 membri echipă", "Onboarding și model operațional custom", "Condiții comerciale stabilite separat"],
+        features: ["50.000 mesaje widget / perioadă", "2.000 surse de cunoștințe", "50 membri echipă", "Onboarding și flux operațional personalizat", "Condiții comerciale stabilite separat"],
       },
     ],
   },
