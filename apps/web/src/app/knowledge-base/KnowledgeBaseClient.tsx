@@ -321,11 +321,11 @@ export function KnowledgeBaseClient() {
           <form className="form-stack" onSubmit={onTextSubmit}>
             <label>
               {copy.titleLabel}
-              <input name="title" placeholder={copy.sourceTitlePlaceholder} required />
+              <input name="title" aria-label={copy.sourceTitlePlaceholder} placeholder={copy.sourceTitlePlaceholder} required />
             </label>
             <label>
               {copy.contentLabel}
-              <textarea name="content" placeholder={copy.contentPlaceholder} required />
+              <textarea name="content" aria-label={copy.contentPlaceholder} placeholder={copy.contentPlaceholder} required />
             </label>
             <button className="button" type="submit" disabled={isSaving || !primaryMembership}>
               {isSaving ? copy.saving : copy.addTextButton}
@@ -338,11 +338,11 @@ export function KnowledgeBaseClient() {
           <form className="form-stack" onSubmit={onWebsiteSubmit}>
             <label>
               {copy.titleLabel}
-              <input name="title" placeholder={copy.websiteTitlePlaceholder} />
+              <input name="title" aria-label={copy.websiteTitlePlaceholder} placeholder={copy.websiteTitlePlaceholder} />
             </label>
             <label>
               {copy.urlLabel}
-              <input name="url" type="url" placeholder={copy.urlPlaceholder} required />
+              <input name="url" aria-label={copy.urlPlaceholder} type="url" placeholder={copy.urlPlaceholder} required />
             </label>
             <button className="button" type="submit" disabled={isSaving || !primaryMembership}>
               {isSaving ? copy.saving : copy.addWebsiteButton}
@@ -357,7 +357,7 @@ export function KnowledgeBaseClient() {
           <form className="form-stack" onSubmit={onFileSubmit}>
             <label>
               {copy.titleLabel}
-              <input name="title" placeholder={copy.fileTitlePlaceholder} />
+              <input name="title" aria-label={copy.fileTitlePlaceholder} placeholder={copy.fileTitlePlaceholder} />
             </label>
             <label>
               {copy.fileLabel}
