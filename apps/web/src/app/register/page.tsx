@@ -1,17 +1,8 @@
-"use client";
-
-import { useEffect, useState } from "react";
-import { authPageCopy, detectBrowserLanguage, subscribeToLanguageChanges, type AppLanguage } from "../../lib/i18n";
+import { authPageCopy } from "../../lib/i18n";
 import { RegisterForm } from "./RegisterForm";
 
 export default function RegisterPage() {
-  const [language, setLanguage] = useState<AppLanguage>("en");
-  const copy = authPageCopy.register[language];
-
-  useEffect(() => {
-    setLanguage(detectBrowserLanguage());
-    return subscribeToLanguageChanges(setLanguage);
-  }, []);
+  const copy = authPageCopy.register.ro;
 
   return (
     <main className="auth-page-shell">
