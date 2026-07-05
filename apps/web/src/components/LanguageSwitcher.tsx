@@ -10,7 +10,7 @@ import {
 } from "../lib/i18n";
 
 export function LanguageSwitcher() {
-  const [language, setLanguage] = useState<AppLanguage>("en");
+  const [language, setLanguage] = useState<AppLanguage>("ro");
 
   useEffect(() => {
     setLanguage(detectBrowserLanguage());
