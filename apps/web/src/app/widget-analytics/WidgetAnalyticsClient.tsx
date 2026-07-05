@@ -136,7 +136,14 @@ export function WidgetAnalyticsClient() {
   }, [copy.loadAnalyticsError, copy.loadSessionError, copy.loginRequired]);
 
   if (isLoading) {
-    return <p>{copy.loading}</p>;
+    return (
+      <section className="card protected-loading-card">
+        <div className="eyebrow">Se încarcă</div>
+        <h1>Analitice widget</h1>
+        <p>{copy.loading}</p>
+        <p className="helper-text">Pregătim evenimentele, domeniile și activitatea widgetului.</p>
+      </section>
+    );
   }
 
   if (error && !user) {

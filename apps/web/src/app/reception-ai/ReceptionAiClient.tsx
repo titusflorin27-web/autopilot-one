@@ -340,7 +340,14 @@ export function ReceptionAiClient() {
   }
 
   if (isLoading) {
-    return <p>{copy.loading}</p>;
+    return (
+      <section className="card protected-loading-card">
+        <div className="eyebrow">Se încarcă</div>
+        <h1>Recepționer AI</h1>
+        <p>{copy.loading}</p>
+        <p className="helper-text">Pregătim conversațiile, taskurile și lead-urile gestionate de AI.</p>
+      </section>
+    );
   }
 
   if (error && !user) {

@@ -208,7 +208,14 @@ export function WidgetSettingsClient() {
   }
 
   if (isLoading) {
-    return <p>{copy.loading}</p>;
+    return (
+      <section className="card protected-loading-card">
+        <div className="eyebrow">Se încarcă</div>
+        <h1>Setări widget</h1>
+        <p>{copy.loading}</p>
+        <p className="helper-text">Pregătim configurarea widgetului și tokenul de instalare.</p>
+      </section>
+    );
   }
 
   if (error && !user) {

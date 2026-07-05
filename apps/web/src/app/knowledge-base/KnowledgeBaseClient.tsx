@@ -283,7 +283,14 @@ export function KnowledgeBaseClient() {
   }
 
   if (isLoading) {
-    return <p>{copy.loading}</p>;
+    return (
+      <section className="card protected-loading-card">
+        <div className="eyebrow">Se încarcă</div>
+        <h1>Bază de cunoștințe</h1>
+        <p>{copy.loading}</p>
+        <p className="helper-text">Pregătim sursele, fișierele și căutarea pentru AI.</p>
+      </section>
+    );
   }
 
   if (error && !user) {

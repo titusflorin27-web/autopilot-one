@@ -65,7 +65,16 @@ export function LaunchClient() {
       .finally(() => setIsLoading(false));
   }, [copy.loadChecklistError, copy.loadSessionError, copy.loginRequired]);
 
-  if (isLoading) return <p>{copy.loading}</p>;
+  if (isLoading) {
+    return (
+      <section className="card protected-loading-card">
+        <div className="eyebrow">Se încarcă</div>
+        <h1>Checklist lansare</h1>
+        <p>{copy.loading}</p>
+        <p className="helper-text">Pregătim pașii operaționali pentru configurarea workspace-ului.</p>
+      </section>
+    );
+  }
 
   if (error && !user) {
     return (
