@@ -22,7 +22,7 @@ export const metadata: Metadata = {
   category: "business software",
   icons: {
     icon: "/icon.svg",
-    apple: "/apple-icon.svg",
+    apple: "/icon.svg",
   },
   manifest: "/manifest.webmanifest",
   ...createPageMetadata({
