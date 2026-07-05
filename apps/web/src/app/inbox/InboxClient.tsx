@@ -216,7 +216,16 @@ export function InboxClient() {
     loadConversations().catch((caughtError) => setError(caughtError instanceof Error ? caughtError.message : copy.loadInboxError));
   }, [organizationId]);
 
-  if (isLoading) return <p>{copy.loading}</p>;
+  if (isLoading) {
+    return (
+      <section className="card protected-loading-card">
+        <div className="eyebrow">Se încarcă</div>
+        <h1>Inbox</h1>
+        <p>{copy.loading}</p>
+        <p className="helper-text">Pregătim conversațiile, lead-urile și mesajele primite.</p>
+      </section>
+    );
+  }
 
   if (error && !user) {
     return (

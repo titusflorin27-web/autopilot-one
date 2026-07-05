@@ -137,7 +137,16 @@ export function BillingClient() {
       .finally(() => setIsLoading(false));
   }, [copy.loadBillingError, copy.loadSessionError, copy.loginRequired]);
 
-  if (isLoading) return <p>{copy.loading}</p>;
+  if (isLoading) {
+    return (
+      <section className="card protected-loading-card">
+        <div className="eyebrow">Se încarcă</div>
+        <h1>Facturare</h1>
+        <p>{copy.loading}</p>
+        <p className="helper-text">Pregătim pachetele, limitele și statusul de facturare.</p>
+      </section>
+    );
+  }
 
   if (error && !user) {
     return (

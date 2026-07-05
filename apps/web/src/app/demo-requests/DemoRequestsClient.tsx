@@ -216,7 +216,14 @@ export function DemoRequestsClient() {
   }, []);
 
   if (isLoading) {
-    return <p>Se încarcă cererile demo...</p>;
+    return (
+      <section className="card protected-loading-card">
+        <div className="eyebrow">Se încarcă</div>
+        <h1>Cereri demo</h1>
+        <p>Se încarcă cererile demo...</p>
+        <p className="helper-text">Pregătim lead-urile venite din formularul public și statusurile lor.</p>
+      </section>
+    );
   }
 
   if (error && !requests.length) {

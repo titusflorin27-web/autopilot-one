@@ -1241,3 +1241,19 @@ input[type="file"] {
     right: 12px;
   }
 }
+
+.protected-loading-card {
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 32px;
+}
+
+.protected-loading-card h1 {
+  margin: 8px 0 12px;
+  font-size: clamp(2rem, 4vw, 3rem);
+  letter-spacing: -0.04em;
+}
+
+.protected-loading-card .helper-text {
+  margin-top: 10px;
+}
