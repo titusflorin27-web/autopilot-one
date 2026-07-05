@@ -49,6 +49,10 @@ type ConversationDetail = InboxConversation & {
 
 type InboxCopy = typeof notificationsInboxCopy["ro"]["inbox"];
 
+function errorMessage(caughtError: unknown, fallback: string) {
+  return caughtError instanceof Error ? caughtError.message : fallback;
+}
+
 function formatDate(value: string, locale: string, copy: InboxCopy) {
   const parsedDate = new Date(value);
 
@@ -237,13 +241,13 @@ export function InboxClient() {
       <section className="inbox-grid">
         <aside className="card inbox-list">
           <div className="inbox-filters">
-            <select value={status} onChange={(event) => { setStatus(event.target.value); loadConversations(event.target.value, source).catch(console.error); }}>
+            <select value={status} onChange={(event) => { setStatus(event.target.value); loadConversations(event.target.value, source).catch((caughtError) => setError(errorMessage(caughtError, copy.loadInboxError))); }}>
               <option value="">{copy.allStatuses}</option>
               <option value="OPEN">{copy.open}</option>
               <option value="WAITING_FOR_HUMAN">{copy.waitingForHuman}</option>
               <option value="CLOSED">{copy.closed}</option>
             </select>
-            <select value={source} onChange={(event) => { setSource(event.target.value); loadConversations(status, event.target.value).catch(console.error); }}>
+            <select value={source} onChange={(event) => { setSource(event.target.value); loadConversations(status, event.target.value).catch((caughtError) => setError(errorMessage(caughtError, copy.loadInboxError))); }}>
               <option value="">{copy.allSources}</option>
               <option value="public-web">{copy.websiteWidget}</option>
               <option value="web">{copy.internalWeb}</option>
@@ -254,7 +258,7 @@ export function InboxClient() {
             {conversations.length ? conversations.map((conversation) => {
               const preview = conversation.messages[0]?.content ?? copy.noMessages;
               return (
-                <button className="source-item ghost-button" key={conversation.id} onClick={() => loadConversation(conversation.id).catch(console.error)}>
+                <button className="source-item ghost-button" key={conversation.id} onClick={() => loadConversation(conversation.id).catch((caughtError) => setError(errorMessage(caughtError, copy.loadConversationError)))}>
                   <strong>{conversation.customerName || conversation.customerEmail || copy.anonymousVisitor}</strong>
                   <span>{statusLabel(conversation.status, copy)} · {conversation.channel} · {formatDate(conversation.updatedAt, locale, copy)}</span>
                   <p>{preview.slice(0, 140)}</p>
@@ -275,9 +279,9 @@ export function InboxClient() {
                   {selected.lead ? <p>{copy.lead}: {selected.lead.status} · {copy.score} {selected.lead.score}</p> : null}
                 </div>
                 <div className="mini-actions">
-                  <button className="button mini" type="button" onClick={() => updateConversation("OPEN").catch((caughtError) => setError(String(caughtError)))}>{copy.open}</button>
-                  <button className="button mini secondary" type="button" onClick={() => updateConversation("WAITING_FOR_HUMAN").catch((caughtError) => setError(String(caughtError)))}>{copy.humanTransfer}</button>
-                  <button className="button mini secondary" type="button" onClick={() => updateConversation("CLOSED").catch((caughtError) => setError(String(caughtError)))}>{copy.close}</button>
+                  <button className="button mini" type="button" onClick={() => updateConversation("OPEN").catch((caughtError) => setError(errorMessage(caughtError, copy.updateConversationError)))}>{copy.open}</button>
+                  <button className="button mini secondary" type="button" onClick={() => updateConversation("WAITING_FOR_HUMAN").catch((caughtError) => setError(errorMessage(caughtError, copy.updateConversationError)))}>{copy.humanTransfer}</button>
+                  <button className="button mini secondary" type="button" onClick={() => updateConversation("CLOSED").catch((caughtError) => setError(errorMessage(caughtError, copy.updateConversationError)))}>{copy.close}</button>
                 </div>
               </div>
 

@@ -7,6 +7,10 @@ const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:4000/api";
 type DemoRequestStatus = "NEW" | "CONTACTED" | "QUALIFIED" | "CLOSED";
 type DemoRequestStatusFilter = "ALL" | DemoRequestStatus;
 
+function errorMessage(caughtError: unknown, fallback: string) {
+  return caughtError instanceof Error ? caughtError.message : fallback;
+}
+
 type DemoRequest = {
   id: string;
   name: string;
@@ -245,7 +249,7 @@ export function DemoRequestsClient() {
               <h2>{filteredRequests.length}</h2>
               <p>{statusFilter === "ALL" ? `${requests.length} cereri demo` : `${statusLabels[statusFilter]} · ${requests.length} total`}</p>
             </div>
-            <button className="button mini secondary" type="button" onClick={() => loadDemoRequests().catch((caughtError) => setError(String(caughtError)))}>
+            <button className="button mini secondary" type="button" onClick={() => loadDemoRequests().catch((caughtError) => setError(errorMessage(caughtError, "Nu am putut încărca cererile demo.")))}>
               Reîncarcă
             </button>
           </div>
