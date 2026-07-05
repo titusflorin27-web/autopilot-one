@@ -246,17 +246,18 @@ export function WidgetSettingsClient() {
             <label>
               <input name="widgetEnabled" type="checkbox" defaultChecked={settings.widgetEnabled} /> {copy.enableWidget}
             </label>
-            <label className="field-label">{copy.widgetTitleLabel}</label>
-            <input name="widgetTitle" defaultValue={settings.widgetTitle} placeholder={copy.widgetTitlePlaceholder} />
-            <label className="field-label">{copy.primaryColorLabel}</label>
-            <input name="widgetPrimaryColor" defaultValue={settings.widgetPrimaryColor} placeholder="#8ee6c9" />
-            <label className="field-label">{copy.positionLabel}</label>
-            <select name="widgetPosition" defaultValue={settings.widgetPosition}>
+            <label className="field-label" htmlFor="widget-title">{copy.widgetTitleLabel}</label>
+            <input id="widget-title" name="widgetTitle" defaultValue={settings.widgetTitle} placeholder={copy.widgetTitlePlaceholder} />
+            <label className="field-label" htmlFor="widget-primary-color">{copy.primaryColorLabel}</label>
+            <input id="widget-primary-color" name="widgetPrimaryColor" defaultValue={settings.widgetPrimaryColor} placeholder="#8ee6c9" />
+            <label className="field-label" htmlFor="widget-position">{copy.positionLabel}</label>
+            <select id="widget-position" name="widgetPosition" defaultValue={settings.widgetPosition}>
               <option value="RIGHT">{copy.positionRight}</option>
               <option value="LEFT">{copy.positionLeft}</option>
             </select>
-            <label className="field-label">{copy.widgetTokenLabel}</label>
+            <label className="field-label" htmlFor="widget-token">{copy.widgetTokenLabel}</label>
             <input
+              id="widget-token"
               name="widgetToken"
               type="password"
               autoComplete="new-password"
@@ -264,8 +265,8 @@ export function WidgetSettingsClient() {
               placeholder={copy.widgetTokenPlaceholder}
             />
             {settings.widgetToken ? <p className="helper-text">{copy.currentToken}: {maskSecret(settings.widgetToken)}</p> : null}
-            <label className="field-label">{copy.allowedOriginsLabel}</label>
-            <textarea name="widgetAllowedOrigins" defaultValue={settings.widgetAllowedOrigins.join("\n")} placeholder="https://example.com\nhttps://www.example.com" />
+            <label className="field-label" htmlFor="widget-allowed-origins">{copy.allowedOriginsLabel}</label>
+            <textarea id="widget-allowed-origins" name="widgetAllowedOrigins" defaultValue={settings.widgetAllowedOrigins.join("\n")} placeholder="https://example.com\nhttps://www.example.com" />
             <div className="actions">
               <button className="button" type="submit" disabled={isSaving}>{isSaving ? copy.saving : copy.save}</button>
               <button className="button secondary" type="button" onClick={regenerateToken}>{copy.regenerateToken}</button>

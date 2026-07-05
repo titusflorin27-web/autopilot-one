@@ -261,8 +261,8 @@ export function DemoRequestsClient() {
             </button>
           </div>
 
-          <label className="field-label">Filtru status</label>
-          <select value={statusFilter} onChange={(event) => { setStatusFilter(event.target.value as DemoRequestStatusFilter); setSelectedId(null); }}>
+          <label className="field-label" htmlFor="demo-request-status-filter">Filtru status</label>
+          <select id="demo-request-status-filter" value={statusFilter} onChange={(event) => { setStatusFilter(event.target.value as DemoRequestStatusFilter); setSelectedId(null); }}>
             {statusFilters.map((filter) => <option key={filter.value} value={filter.value}>{filter.label}</option>)}
           </select>
 
@@ -313,14 +313,14 @@ export function DemoRequestsClient() {
               <div className="source-list">
                 <article className="source-item">
                   <strong>CRM Lite</strong>
-                  <label className="field-label">Notă internă</label>
-                  <textarea value={internalNote} maxLength={2000} onChange={(event) => setInternalNote(event.target.value)} placeholder="Ex: client interesat de widget pentru clinici, vrea demo săptămâna viitoare." />
+                  <label className="field-label" htmlFor="demo-request-internal-note">Notă internă</label>
+                  <textarea id="demo-request-internal-note" value={internalNote} maxLength={2000} onChange={(event) => setInternalNote(event.target.value)} placeholder="Ex: client interesat de widget pentru clinici, vrea demo săptămâna viitoare." />
 
-                  <label className="field-label">Următorul pas</label>
-                  <input value={nextStep} maxLength={500} onChange={(event) => setNextStep(event.target.value)} placeholder="Ex: sună clientul / trimite ofertă / pregătește demo" />
+                  <label className="field-label" htmlFor="demo-request-next-step">Următorul pas</label>
+                  <input id="demo-request-next-step" value={nextStep} maxLength={500} onChange={(event) => setNextStep(event.target.value)} placeholder="Ex: sună clientul / trimite ofertă / pregătește demo" />
 
-                  <label className="field-label">Dată follow-up</label>
-                  <input type="datetime-local" value={followUpAt} onChange={(event) => setFollowUpAt(event.target.value)} />
+                  <label className="field-label" htmlFor="demo-request-follow-up-at">Dată follow-up</label>
+                  <input id="demo-request-follow-up-at" type="datetime-local" value={followUpAt} onChange={(event) => setFollowUpAt(event.target.value)} />
 
                   <button className="button mini" type="button" disabled={isSavingCrm} onClick={saveCrmFields}>
                     {isSavingCrm ? "Se salvează..." : "Salvează detaliile CRM"}

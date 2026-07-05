@@ -217,7 +217,7 @@ export function BusinessDnaForm() {
 
       <section className="card form-section">
         <h2>{copy.summaryTitle}</h2>
-        <textarea name="summary" defaultValue={businessDna.summary} placeholder={copy.summaryPlaceholder} required />
+        <textarea name="summary" aria-label={copy.summaryPlaceholder} defaultValue={businessDna.summary} placeholder={copy.summaryPlaceholder} required />
       </section>
 
       <section className="grid two-columns">
@@ -242,7 +242,7 @@ export function BusinessDnaForm() {
         <div className="card form-section">
           <h3>{copy.toneTitle}</h3>
           <p>{copy.toneHelper}</p>
-          <textarea name="tone" defaultValue={businessDna.tone} placeholder={copy.tonePlaceholder} required />
+          <textarea name="tone" aria-label={copy.tonePlaceholder} defaultValue={businessDna.tone} placeholder={copy.tonePlaceholder} required />
         </div>
       </section>
 

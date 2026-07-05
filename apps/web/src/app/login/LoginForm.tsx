@@ -57,8 +57,8 @@ export function LoginForm() {
       <h2>{copy.title}</h2>
       <p>{copy.subtitle}</p>
 
-      <input name="email" placeholder={copy.emailPlaceholder} type="email" autoComplete="email" required />
-      <input name="password" placeholder={copy.passwordPlaceholder} type="password" autoComplete="current-password" minLength={8} required />
+      <input name="email" aria-label={copy.emailPlaceholder} placeholder={copy.emailPlaceholder} type="email" autoComplete="email" required />
+      <input name="password" aria-label={copy.passwordPlaceholder} placeholder={copy.passwordPlaceholder} type="password" autoComplete="current-password" minLength={8} required />
 
       {error ? <p className="form-error">{error}</p> : null}
 

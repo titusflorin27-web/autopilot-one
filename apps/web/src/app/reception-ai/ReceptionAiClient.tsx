@@ -386,9 +386,9 @@ export function ReceptionAiClient() {
       <section className="grid two-columns">
         <form className="card form-section" onSubmit={onSubmit}>
           <h3>{copy.simulateTitle}</h3>
-          <input name="customerName" placeholder={copy.customerNamePlaceholder} />
-          <input name="customerEmail" placeholder={copy.customerEmailPlaceholder} type="email" />
-          <textarea name="message" placeholder={copy.messagePlaceholder} required />
+          <input name="customerName" aria-label={copy.customerNamePlaceholder} placeholder={copy.customerNamePlaceholder} />
+          <input name="customerEmail" aria-label={copy.customerEmailPlaceholder} placeholder={copy.customerEmailPlaceholder} type="email" />
+          <textarea name="message" aria-label={copy.messagePlaceholder} placeholder={copy.messagePlaceholder} required />
           <button className="button" type="submit" disabled={isSending}>
             {isSending ? copy.thinking : copy.sendToAi}
           </button>
@@ -451,8 +451,8 @@ export function ReceptionAiClient() {
         <form className="card form-section" onSubmit={onHumanReply}>
           <h2>{copy.humanReplyTitle}</h2>
           <p>{activeConversationId ? `${copy.selectedConversation}: ${activeConversationId}` : copy.selectConversationFirst}</p>
-          <textarea name="content" placeholder={copy.humanReplyPlaceholder} required />
-          <input name="internalNote" placeholder={copy.internalNotePlaceholder} />
+          <textarea name="content" aria-label={copy.humanReplyPlaceholder} placeholder={copy.humanReplyPlaceholder} required />
+          <input name="internalNote" aria-label={copy.internalNotePlaceholder} placeholder={copy.internalNotePlaceholder} />
           <button className="button" type="submit">{copy.addHumanReply}</button>
         </form>
       </section>
