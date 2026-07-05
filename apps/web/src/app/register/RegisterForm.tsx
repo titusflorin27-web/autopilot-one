@@ -61,12 +61,12 @@ export function RegisterForm() {
       <h2>{copy.title}</h2>
       <p>{copy.subtitle}</p>
 
-      <input name="email" placeholder={copy.emailPlaceholder} type="email" autoComplete="email" required />
-      <input name="password" placeholder={copy.passwordPlaceholder} type="password" autoComplete="new-password" minLength={8} required />
-      <input name="firstName" placeholder={copy.firstNamePlaceholder} autoComplete="given-name" />
-      <input name="lastName" placeholder={copy.lastNamePlaceholder} autoComplete="family-name" />
-      <input name="organizationName" placeholder={copy.organizationNamePlaceholder} required />
-      <input name="organizationSlug" placeholder={copy.organizationSlugPlaceholder} pattern="[a-z0-9-]+" />
+      <input name="email" aria-label={copy.emailPlaceholder} placeholder={copy.emailPlaceholder} type="email" autoComplete="email" required />
+      <input name="password" aria-label={copy.passwordPlaceholder} placeholder={copy.passwordPlaceholder} type="password" autoComplete="new-password" minLength={8} required />
+      <input name="firstName" aria-label={copy.firstNamePlaceholder} placeholder={copy.firstNamePlaceholder} autoComplete="given-name" />
+      <input name="lastName" aria-label={copy.lastNamePlaceholder} placeholder={copy.lastNamePlaceholder} autoComplete="family-name" />
+      <input name="organizationName" aria-label={copy.organizationNamePlaceholder} placeholder={copy.organizationNamePlaceholder} required />
+      <input name="organizationSlug" aria-label={copy.organizationSlugPlaceholder} placeholder={copy.organizationSlugPlaceholder} pattern="[a-z0-9-]+" />
 
       {error ? <p className="form-error">{error}</p> : null}
 

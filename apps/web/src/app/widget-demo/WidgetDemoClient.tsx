@@ -126,10 +126,10 @@ export function WidgetDemoClient() {
       <section className="grid two-columns">
         <article className="card">
           <h3>{copy.configurationTitle}</h3>
-          <input value={organizationSlug} onChange={(event) => setOrganizationSlug(event.target.value)} placeholder={copy.organizationSlugPlaceholder} />
-          <input value={customerName} onChange={(event) => setCustomerName(event.target.value)} placeholder={copy.customerNamePlaceholder} />
-          <input value={customerEmail} onChange={(event) => setCustomerEmail(event.target.value)} placeholder={copy.customerEmailPlaceholder} type="email" />
-          <input value={widgetToken} onChange={(event) => setWidgetToken(event.target.value)} placeholder={copy.widgetTokenPlaceholder} />
+          <input value={organizationSlug} onChange={(event) => setOrganizationSlug(event.target.value)} aria-label={copy.organizationSlugPlaceholder} placeholder={copy.organizationSlugPlaceholder} />
+          <input value={customerName} onChange={(event) => setCustomerName(event.target.value)} aria-label={copy.customerNamePlaceholder} placeholder={copy.customerNamePlaceholder} />
+          <input value={customerEmail} onChange={(event) => setCustomerEmail(event.target.value)} aria-label={copy.customerEmailPlaceholder} placeholder={copy.customerEmailPlaceholder} type="email" />
+          <input value={widgetToken} onChange={(event) => setWidgetToken(event.target.value)} aria-label={copy.widgetTokenPlaceholder} placeholder={copy.widgetTokenPlaceholder} />
           <p>{copy.visitorId}: {visitorId || copy.creating}</p>
           <p>{copy.installHint}</p>
         </article>
@@ -151,7 +151,7 @@ export function WidgetDemoClient() {
           </div>
 
           <form className="widget-input" onSubmit={onSubmit}>
-            <input name="message" placeholder={copy.messagePlaceholder} />
+            <input name="message" aria-label={copy.messagePlaceholder} placeholder={copy.messagePlaceholder} />
             <button className="button mini" disabled={isSending} type="submit">{copy.send}</button>
           </form>
 

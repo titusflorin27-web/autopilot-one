@@ -372,7 +372,7 @@ export function KnowledgeBaseClient() {
         <article className="card">
           <h2>{copy.searchTitle}</h2>
           <form className="form-stack" onSubmit={onSearchSubmit}>
-            <input name="query" placeholder={copy.searchPlaceholder} required />
+            <input name="query" aria-label={copy.searchPlaceholder} placeholder={copy.searchPlaceholder} required />
             <button className="button" type="submit" disabled={!primaryMembership}>{copy.searchButton}</button>
           </form>
 

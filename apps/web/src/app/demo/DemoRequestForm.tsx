@@ -56,23 +56,23 @@ export function DemoRequestForm() {
       {submitState === "error" && message ? <p className="form-error">{message}</p> : null}
       {submitState === "success" && message ? <p className="form-success">{message}</p> : null}
 
-      <label className="field-label">Nume</label>
-      <input name="name" required minLength={2} maxLength={120} placeholder="Nume complet" autoComplete="name" />
+      <label className="field-label" htmlFor="demo-name">Nume</label>
+      <input id="demo-name" name="name" required minLength={2} maxLength={120} placeholder="Nume complet" autoComplete="name" />
 
-      <label className="field-label">Email</label>
-      <input name="email" required type="email" maxLength={180} placeholder="nume@companie.ro" autoComplete="email" />
+      <label className="field-label" htmlFor="demo-email">Email</label>
+      <input id="demo-email" name="email" required type="email" maxLength={180} placeholder="nume@companie.ro" autoComplete="email" />
 
-      <label className="field-label">Companie</label>
-      <input name="company" maxLength={160} placeholder="Numele companiei" autoComplete="organization" />
+      <label className="field-label" htmlFor="demo-company">Companie</label>
+      <input id="demo-company" name="company" maxLength={160} placeholder="Numele companiei" autoComplete="organization" />
 
-      <label className="field-label">Telefon</label>
-      <input name="phone" maxLength={60} placeholder="Opțional" autoComplete="tel" />
+      <label className="field-label" htmlFor="demo-phone">Telefon</label>
+      <input id="demo-phone" name="phone" maxLength={60} placeholder="Opțional" autoComplete="tel" />
 
-      <label className="field-label">Website</label>
-      <input name="website" maxLength={240} placeholder="https://companie.ro" inputMode="url" />
+      <label className="field-label" htmlFor="demo-website">Website</label>
+      <input id="demo-website" name="website" maxLength={240} placeholder="https://companie.ro" inputMode="url" />
 
-      <label className="field-label">Ce vrei să automatizezi?</label>
-      <textarea name="message" required minLength={10} maxLength={2000} placeholder="Ex: vreau un AI care răspunde la întrebări despre servicii, captează date de contact și trimite lead-urile către echipă." />
+      <label className="field-label" htmlFor="demo-message">Ce vrei să automatizezi?</label>
+      <textarea id="demo-message" name="message" required minLength={10} maxLength={2000} placeholder="Ex: vreau un AI care răspunde la întrebări despre servicii, captează date de contact și trimite lead-urile către echipă." />
 
       <button className="button" type="submit" disabled={submitState === "submitting"}>
         {submitState === "submitting" ? "Se trimite..." : "Trimite cererea"}

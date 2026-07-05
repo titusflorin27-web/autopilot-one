@@ -250,13 +250,13 @@ export function InboxClient() {
       <section className="inbox-grid">
         <aside className="card inbox-list">
           <div className="inbox-filters">
-            <select value={status} onChange={(event) => { setStatus(event.target.value); loadConversations(event.target.value, source).catch((caughtError) => setError(errorMessage(caughtError, copy.loadInboxError))); }}>
+            <select aria-label="Filtru status conversații" value={status} onChange={(event) => { setStatus(event.target.value); loadConversations(event.target.value, source).catch((caughtError) => setError(errorMessage(caughtError, copy.loadInboxError))); }}>
               <option value="">{copy.allStatuses}</option>
               <option value="OPEN">{copy.open}</option>
               <option value="WAITING_FOR_HUMAN">{copy.waitingForHuman}</option>
               <option value="CLOSED">{copy.closed}</option>
             </select>
-            <select value={source} onChange={(event) => { setSource(event.target.value); loadConversations(status, event.target.value).catch((caughtError) => setError(errorMessage(caughtError, copy.loadInboxError))); }}>
+            <select aria-label="Filtru sursă conversații" value={source} onChange={(event) => { setSource(event.target.value); loadConversations(status, event.target.value).catch((caughtError) => setError(errorMessage(caughtError, copy.loadInboxError))); }}>
               <option value="">{copy.allSources}</option>
               <option value="public-web">{copy.websiteWidget}</option>
               <option value="web">{copy.internalWeb}</option>
@@ -305,7 +305,7 @@ export function InboxClient() {
               </div>
 
               <form className="widget-input" onSubmit={sendHumanReply}>
-                <input name="content" placeholder={copy.replyPlaceholder} />
+                <input name="content" aria-label={copy.replyPlaceholder} placeholder={copy.replyPlaceholder} />
                 <button className="button mini" type="submit">{copy.send}</button>
               </form>
             </>
