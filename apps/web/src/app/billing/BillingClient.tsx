@@ -176,7 +176,7 @@ export function BillingClient() {
               type="button"
               disabled={isRedirecting}
               onClick={() => openBillingPortal().catch((caughtError) => {
-                setError(caughtError instanceof Error ? caughtError.message : String(caughtError));
+                setError(caughtError instanceof Error ? caughtError.message : copy.portalError);
               })}
             >
               {copy.manageBilling}
@@ -231,7 +231,7 @@ export function BillingClient() {
                       type="button"
                       disabled={isRedirecting}
                       onClick={() => startCheckout(plan.plan).catch((caughtError) => {
-                        setError(caughtError instanceof Error ? caughtError.message : String(caughtError));
+                        setError(caughtError instanceof Error ? caughtError.message : copy.checkoutError);
                       })}
                     >
                       {copy.startCheckout}
