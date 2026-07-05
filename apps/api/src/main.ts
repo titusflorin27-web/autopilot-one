@@ -65,7 +65,7 @@ async function bootstrap() {
         return;
       }
 
-      callback(new Error("Origin not allowed by API CORS policy"), false);
+      callback(null, false);
     },
     credentials: true,
     methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
