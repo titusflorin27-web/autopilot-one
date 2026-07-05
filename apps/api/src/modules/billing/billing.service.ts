@@ -95,9 +95,9 @@ export class BillingService {
         teamMembers: Math.max(0, limits.teamMembers - teamMembers),
       },
       overLimit: {
-        widgetMessages: widgetMessages >= limits.widgetMessages,
-        knowledgeSources: knowledgeSources >= limits.knowledgeSources,
-        teamMembers: teamMembers >= limits.teamMembers,
+        widgetMessages: widgetMessages > limits.widgetMessages,
+        knowledgeSources: knowledgeSources > limits.knowledgeSources,
+        teamMembers: teamMembers > limits.teamMembers,
       },
       plans: Object.entries(PLAN_LIMITS).map(([plan, planLimits]) => ({ plan, limits: planLimits })),
       paymentProvider: {
