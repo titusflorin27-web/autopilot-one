@@ -5,9 +5,9 @@ import { Nav } from "../components/Nav";
 import { createPageMetadata } from "../lib/seo";
 
 export const metadata: Metadata = createPageMetadata({
-  title: "Autopilot One — AI receptionist and CRM Lite for SMBs",
+  title: "Autopilot One — angajați AI pentru IMM-uri",
   description:
-    "Add an AI employee to your website that answers visitors, captures leads and sends important conversations into CRM Lite.",
+    "Adaugă pe website un angajat AI care răspunde vizitatorilor, captează lead-uri și trimite conversațiile importante în CRM Lite.",
   path: "/",
 });
 
