@@ -1,62 +1,21 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import { Footer } from "../../components/Footer";
 import { Nav } from "../../components/Nav";
 import { createPageMetadata } from "../../lib/seo";
-import { DemoRequestForm } from "./DemoRequestForm";
+import { DemoPageClient } from "./DemoPageClient";
 
 export const metadata: Metadata = createPageMetadata({
-  title: "Cere demo Autopilot One",
+  title: "Autopilot One demo",
   description:
-    "Programează o discuție pentru implementarea Autopilot One: recepție AI pe website, captare lead-uri, întrebări frecvente și urmărire în CRM.",
+    "Autopilot One demo request page for AI reception, lead capture, CRM Lite and guided implementation.",
   path: "/demo",
 });
-
-const outcomes = [
-  "Identificăm întrebările repetitive și locurile unde se pierd lead-uri.",
-  "Stabilim baza de cunoștințe: servicii, reguli, prețuri, program și răspunsuri permise.",
-  "Propunem un plan clar: widget AI, captare lead-uri, CRM Lite și dashboard de urmărire.",
-];
-
-const trustItems = [
-  ["Răspuns rapid", "Cererea ajunge în CRM și poate fi urmărită cu status, notă internă și follow-up."],
-  ["Fără obligație", "Demo-ul este o discuție de validare. Nu ai nevoie de card pentru a vedea dacă soluția se potrivește."],
-  ["Date controlate", "Răspunsurile AI se bazează pe conținutul configurat pentru afacerea ta."],
-];
 
 export default function DemoPage() {
   return (
     <>
       <Nav />
-      <main className="container page-stack">
-        <section className="grid two-columns demo-layout">
-          <article className="card hero-card">
-            <div className="eyebrow">Cerere demo</div>
-            <h1><span className="gradient-text">Vezi Autopilot One</span> pe cazul tău real.</h1>
-            <p className="lead-text">
-              Completează formularul și pregătim o discuție scurtă despre primul flux AI potrivit pentru afacerea ta: recepție web, lead capture, întrebări frecvente sau follow-up.
-            </p>
-            <ul className="check-list">
-              {outcomes.map((outcome) => <li key={outcome}>{outcome}</li>)}
-            </ul>
-            <div className="demo-trust">
-              {trustItems.map(([title, description]) => (
-                <article key={title}>
-                  <strong>{title}</strong>
-                  <p>{description}</p>
-                </article>
-              ))}
-            </div>
-            <p className="helper-text">
-              Prin trimiterea formularului confirmi că ai citit politica de confidențialitate.
-              <br />
-              <Link href="/privacy">Vezi politica de confidențialitate</Link>
-            </p>
-          </article>
-
-          <DemoRequestForm />
-        </section>
-      </main>
+      <DemoPageClient />
       <Footer />
     </>
   );
