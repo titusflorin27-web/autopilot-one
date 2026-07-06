@@ -13,6 +13,7 @@ PILOT_EMAIL="${PILOT_EMAIL:-}"
 PILOT_ORG_SLUG="${PILOT_ORG_SLUG:-}"
 DEMO_EMAIL="${DEMO_EMAIL:-}"
 DEMO_SOURCE="${DEMO_SOURCE:-build-078a-functional-pilot-qa}"
+CLEAN_DEMO_SOURCE_MATCHES="${CLEAN_DEMO_SOURCE_MATCHES:-0}"
 
 fail() {
   echo "FAIL: $*" >&2
@@ -39,7 +40,7 @@ require_command docker
 
 WHERE_USER=""
 WHERE_ORG=""
-WHERE_DEMO=""
+WHERE_DEMO="false"
 
 if [ -n "$PILOT_EMAIL" ]; then
   WHERE_USER="email = :'pilot_email'"
@@ -50,8 +51,8 @@ if [ -n "$PILOT_ORG_SLUG" ]; then
 fi
 
 if [ -n "$DEMO_EMAIL" ]; then
-  WHERE_DEMO="email = :'demo_email' OR source = :'demo_source'"
-else
+  WHERE_DEMO="email = :'demo_email'"
+elif [ "$CLEAN_DEMO_SOURCE_MATCHES" = "1" ]; then
   WHERE_DEMO="source = :'demo_source'"
 fi
 
@@ -62,6 +63,7 @@ echo "Pilot email: ${PILOT_EMAIL:-not set}"
 echo "Pilot organization slug: ${PILOT_ORG_SLUG:-not set}"
 echo "Demo email: ${DEMO_EMAIL:-not set}"
 echo "Demo source: $DEMO_SOURCE"
+echo "Clean demo source matches: $CLEAN_DEMO_SOURCE_MATCHES"
 
 echo
  echo "=== MATCHING RECORDS ==="
