@@ -266,7 +266,7 @@ api_json GET "/reception-ai/organization/$ORG_ID/conversations" "" "$TMP_DIR/rec
 api_json GET "/reception-ai/organization/$ORG_ID/leads" "" "$TMP_DIR/reception-leads.json" "200" auth
 api_json GET "/reception-ai/organization/$ORG_ID/tasks" "" "$TMP_DIR/reception-tasks.json" "200" auth
 api_json GET "/inbox/organization/$ORG_ID/conversations" "" "$TMP_DIR/inbox-conversations.json" "200" auth
-api_json GET "/dashboard/organization/$ORG_ID" "" "$TMP_DIR/dashboard.json" "200" auth
+api_json GET "/dashboard/metrics" "" "$TMP_DIR/dashboard.json" "200" auth
 
 echo
  echo "=== BILLING READS ==="
