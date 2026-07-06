@@ -1,3 +1,5 @@
 # AUTOPILOT-TITUS
 
-Project launch readiness marker.
+Project marker.
+
+Current state: review and polish.
