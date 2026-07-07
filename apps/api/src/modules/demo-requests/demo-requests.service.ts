@@ -5,6 +5,8 @@ import { DemoRequestEmailService } from "./demo-request-email.service";
 import { CreateDemoRequestDto } from "./dto/create-demo-request.dto";
 import { UpdateDemoRequestCrmDto } from "./dto/update-demo-request-crm.dto";
 
+const DEFAULT_FOLLOW_UP_DELAY_HOURS = 24;
+
 function cleanOptional(value?: string) {
   const cleaned = value?.trim();
   return cleaned || undefined;
@@ -13,6 +15,26 @@ function cleanOptional(value?: string) {
 function cleanNullable(value?: string | null) {
   const cleaned = value?.trim();
   return cleaned || null;
+}
+
+function defaultFollowUpDate() {
+  return new Date(Date.now() + DEFAULT_FOLLOW_UP_DELAY_HOURS * 60 * 60 * 1000);
+}
+
+function buildInitialNextStep(dto: CreateDemoRequestDto) {
+  const contactMethod = cleanOptional(dto.phone) ? "telefon sau email" : "email";
+  return `Contactează leadul prin ${contactMethod} în maximum 24h și confirmă primul caz de utilizare pentru demo.`;
+}
+
+function buildInitialInternalNote(dto: CreateDemoRequestDto) {
+  const parts = [
+    "Cerere demo publică. Verifică fit-ul B2B înainte de activare.",
+    cleanOptional(dto.company) ? `Companie: ${cleanOptional(dto.company)}` : null,
+    cleanOptional(dto.website) ? `Website: ${cleanOptional(dto.website)}` : null,
+    cleanOptional(dto.source) ? `Sursă: ${cleanOptional(dto.source)}` : "Sursă: demo_page",
+  ].filter(Boolean);
+
+  return parts.join("\n");
 }
 
 const demoRequestSelect = {
@@ -51,6 +73,9 @@ export class DemoRequestsService {
         website: cleanOptional(dto.website),
         message: dto.message.trim(),
         source: cleanOptional(dto.source) ?? "demo_page",
+        internalNote: buildInitialInternalNote(dto),
+        nextStep: buildInitialNextStep(dto),
+        followUpAt: defaultFollowUpDate(),
       },
       select: demoRequestSelect,
     });
