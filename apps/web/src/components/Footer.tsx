@@ -5,12 +5,15 @@ import { shellCopy } from "../lib/i18n";
 import { useAppLanguage } from "../lib/useAppLanguage";
 
 export function Footer() {
-  const copy = shellCopy[useAppLanguage()];
+  const language = useAppLanguage();
+  const copy = shellCopy[language];
+  const trustLabel = language === "ro" ? "Încredere" : "Trust";
 
   const productLinks = [
     { href: "/", label: copy.home },
     { href: "/pricing", label: copy.pricing },
     { href: "/demo", label: copy.demo },
+    { href: "/trust", label: trustLabel },
     { href: "/widget-demo", label: copy.widgetDemo },
     { href: "/login", label: copy.login },
   ];
