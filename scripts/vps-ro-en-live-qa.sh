@@ -88,7 +88,7 @@ check_logs_after_baseline() {
   done
 }
 
-echo "=== Autopilot One RO/EN live QA ==="
+echo "=== Autopilot One demo-first live QA ==="
 date -u +"Timestamp UTC: %Y-%m-%dT%H:%M:%SZ"
 echo "App URL: $APP_URL"
 echo "API URL: $API_HEALTH_URL"
@@ -99,25 +99,36 @@ LOG_BASELINE_UTC="$(date -u +"%Y-%m-%dT%H:%M:%SZ")"
 echo "Log baseline UTC: $LOG_BASELINE_UTC"
 
 echo
- echo "=== ROUTE STATUS ==="
-for path in / /pricing /demo /privacy /cookies /terms /refund-policy /consumer-rights /widget-demo /login /register; do
+echo "=== ROUTE STATUS ==="
+for path in / /pricing /trust /demo /billing /privacy /cookies /terms /refund-policy /consumer-rights /widget-demo /login /register; do
   fetch_route "$path"
 done
 
 echo
- echo "=== API HEALTH ==="
+echo "=== API HEALTH ==="
 api_body="$(curl -k -fsS -H 'Cache-Control: no-cache' "$API_HEALTH_URL")" || fail "API health request failed"
 echo "$api_body"
 printf '%s' "$api_body" | grep -Eq '"status"[[:space:]]*:[[:space:]]*"ok"' || fail "API health did not return status ok"
 
 echo
- echo "=== CURRENT BUILD TEXT CHECK ==="
+echo "=== DEMO-FIRST BUILD TEXT CHECK ==="
 contains "$TMP_DIR/home.html" "Un angajat AI"
-contains "$TMP_DIR/home.html" "Creează cont"
 contains "$TMP_DIR/home.html" "Cere demo"
 contains "$TMP_DIR/home.html" "Vezi planurile"
+contains "$TMP_DIR/home.html" "Vezi cum lucrăm sigur"
+not_contains "$TMP_DIR/home.html" "Creează cont"
+
 contains "$TMP_DIR/_pricing.html" "Pachete clare"
+contains "$TMP_DIR/_pricing.html" "Activare controlată"
+contains "$TMP_DIR/_pricing.html" "Planurile plătite se activează prin demo înainte de plata online"
 contains "$TMP_DIR/_pricing.html" "Business"
+
+contains "$TMP_DIR/_trust.html" "Încredere și control"
+contains "$TMP_DIR/_trust.html" "Ce nu promitem"
+contains "$TMP_DIR/_trust.html" "Plăți și activare"
+contains "$TMP_DIR/_trust.html" "activarea finală depinde de datele firmei"
+
+contains "$TMP_DIR/_billing.html" "Facturare"
 contains "$TMP_DIR/_demo.html" "Vezi Autopilot One"
 contains "$TMP_DIR/_login.html" "Intră în centrul tău de comandă AI"
 contains "$TMP_DIR/_register.html" "Creează workspace-ul Autopilot One"
@@ -130,7 +141,7 @@ for file in "$TMP_DIR/_privacy.html" "$TMP_DIR/_terms.html"; do
 done
 
 echo
- echo "=== SEO SURFACE ==="
+echo "=== SEO SURFACE ==="
 robots_code="$(curl -k -sS -H 'Cache-Control: no-cache' -o "$TMP_DIR/robots.txt" -w "%{http_code}" "$APP_URL/robots.txt?qa=$(date +%s)" || true)"
 echo "robots.txt code=$robots_code"
 [ "$robots_code" = "200" ] || fail "robots.txt not reachable"
@@ -142,10 +153,11 @@ echo "sitemap.xml code=$sitemap_code"
 [ "$sitemap_code" = "200" ] || fail "sitemap.xml not reachable"
 contains "$TMP_DIR/sitemap.xml" "$APP_URL/pricing"
 contains "$TMP_DIR/sitemap.xml" "$APP_URL/demo"
+contains "$TMP_DIR/sitemap.xml" "$APP_URL/trust"
 contains "$TMP_DIR/sitemap.xml" "$APP_URL/widget-demo"
 
 echo
 check_logs_after_baseline
 
 echo
- echo "=== QA PASSED ==="
+echo "=== DEMO-FIRST QA PASSED ==="
