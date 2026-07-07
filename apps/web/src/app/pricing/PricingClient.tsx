@@ -7,6 +7,19 @@ import { useAppLanguage } from "../../lib/useAppLanguage";
 export function PricingClient() {
   const language = useAppLanguage();
   const copy = packagePricingCopy[language];
+  const activationCopy = language === "ro"
+    ? {
+        eyebrow: "Activare controlată",
+        title: "Planurile plătite se activează prin demo înainte de plata online.",
+        description: "Alegem pachetul potrivit, verificăm cazul de utilizare și pregătim configurarea comercială înainte de activarea finală.",
+        cta: "Discută activarea",
+      }
+    : {
+        eyebrow: "Controlled activation",
+        title: "Paid plans start through demo before online payment.",
+        description: "We choose the right package, validate the use case and prepare the commercial setup before final activation.",
+        cta: "Discuss activation",
+      };
 
   return (
     <main className="container page-stack">
@@ -23,6 +36,15 @@ export function PricingClient() {
         <div className="launch-kicker">
           {copy.badges.map((badge) => <span key={badge}>{badge}</span>)}
         </div>
+      </section>
+
+      <section className="card cta-card">
+        <div>
+          <div className="eyebrow">{activationCopy.eyebrow}</div>
+          <h2>{activationCopy.title}</h2>
+          <p>{activationCopy.description}</p>
+        </div>
+        <Link href="/demo" className="button secondary">{activationCopy.cta}</Link>
       </section>
 
       <section className="pricing-grid" aria-label={copy.planSectionTitle}>
