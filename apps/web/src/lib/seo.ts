@@ -71,6 +71,7 @@ export const publicSitemapRoutes = [
   { path: "/", priority: 1, changeFrequency: "weekly" },
   { path: "/pricing", priority: 0.9, changeFrequency: "weekly" },
   { path: "/demo", priority: 0.9, changeFrequency: "weekly" },
+  { path: "/trust", priority: 0.8, changeFrequency: "monthly" },
   { path: "/privacy", priority: 0.4, changeFrequency: "monthly" },
   { path: "/cookies", priority: 0.4, changeFrequency: "monthly" },
   { path: "/terms", priority: 0.4, changeFrequency: "monthly" },

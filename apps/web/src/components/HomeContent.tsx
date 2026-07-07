@@ -25,7 +25,7 @@ const homeCopy = {
       "Echipe mici care pierd lead-uri după program",
     ],
     steps: [
-      ["01", "Setăm primul caz", "Alegem ce trebuie să facă AI-ul: recepție, întrebări frecvente, captare lead-uri sau calificare cereri."],
+      ["01", "Discutăm cazul", "Începem cu o cerere demo și alegem primul flux: recepție, întrebări frecvente, captare lead-uri sau calificare cereri."],
       ["02", "Încărcăm informația", "Adăugăm servicii, reguli, prețuri, program, întrebări frecvente și instrucțiuni pentru răspunsuri controlate."],
       ["03", "Pornim implementarea", "Instalăm widgetul, urmărim conversațiile și optimizăm fiecare cerere până devine un flux clar."],
     ],
@@ -43,10 +43,11 @@ const homeCopy = {
     heroTitlePrefix: "Un angajat AI",
     heroTitleSuffix: " care transformă vizitatorii în lead-uri urmărite.",
     heroDescription: "Autopilot One transformă website-ul într-un canal activ de vânzare: răspunde vizitatorilor, colectează datele importante și trimite conversațiile în CRM pentru follow-up.",
-    createAccount: "Creează cont",
+    createAccount: "Creează workspace",
     requestDemo: "Cere demo",
     viewPlans: "Vezi planurile",
-    kickers: ["Cont creat în câteva minute", "Demo fără card", "Pilot ghidat", "CRM Lite inclus"],
+    trustPage: "Vezi cum lucrăm sigur",
+    kickers: ["Demo fără card", "Pilot ghidat", "Activare controlată", "CRM Lite inclus"],
     showcaseAria: "Previzualizare Autopilot One",
     pilotLive: "PILOT LIVE",
     aiReceptionist: "Recepționer AI",
@@ -86,10 +87,10 @@ const homeCopy = {
     measurable: "Mai măsurabil",
     measurableBody: "Urmărești conversații, lead-uri, statusuri și activitate widget.",
     howEyebrow: "Cum pornim",
-    howTitle: "Începem controlat, apoi extindem ce funcționează.",
-    finalEyebrow: "Pregătit pentru implementare",
-    finalTitle: "Pornește din pagina principală și creează primul workspace.",
-    finalBody: "Un vizitator poate crea cont, poate intra în dashboard și poate începe configurarea primului flux AI pentru compania sa.",
+    howTitle: "Începem cu demo controlat, apoi extindem ce funcționează.",
+    finalEyebrow: "Pregătit pentru demo",
+    finalTitle: "Începe cu un caz real, nu cu un cont gol.",
+    finalBody: "Trimite o cerere demo și stabilim primul flux AI potrivit pentru compania ta. După validare, activăm workspace-ul și configurarea completă.",
   },
   en: {
     metrics: [
@@ -112,7 +113,7 @@ const homeCopy = {
       "Small teams losing leads after hours",
     ],
     steps: [
-      ["01", "Set the first use case", "Choose what the AI should do: reception, FAQs, lead capture or request qualification."],
+      ["01", "Discuss the use case", "Start with a demo request and choose the first flow: reception, FAQs, lead capture or request qualification."],
       ["02", "Load the information", "Add services, rules, prices, opening hours, FAQs and instructions for controlled replies."],
       ["03", "Start implementation", "Install the widget, track conversations and optimize every request until it becomes a clear flow."],
     ],
@@ -130,10 +131,11 @@ const homeCopy = {
     heroTitlePrefix: "An AI employee",
     heroTitleSuffix: " that turns visitors into tracked leads.",
     heroDescription: "Autopilot One turns your website into an active sales channel: it answers visitors, collects the important details and sends conversations to the CRM for follow-up.",
-    createAccount: "Create account",
+    createAccount: "Create workspace",
     requestDemo: "Request demo",
     viewPlans: "View plans",
-    kickers: ["Account created in minutes", "No-card demo", "Guided pilot", "CRM Lite included"],
+    trustPage: "See how we work safely",
+    kickers: ["No-card demo", "Guided pilot", "Controlled activation", "CRM Lite included"],
     showcaseAria: "Autopilot One preview",
     pilotLive: "LIVE PILOT",
     aiReceptionist: "AI Receptionist",
@@ -173,10 +175,10 @@ const homeCopy = {
     measurable: "More measurable",
     measurableBody: "Track conversations, leads, statuses and widget activity.",
     howEyebrow: "How we start",
-    howTitle: "We start controlled, then expand what works.",
-    finalEyebrow: "Ready for implementation",
-    finalTitle: "Start from the homepage and create the first workspace.",
-    finalBody: "A visitor can create an account, enter the dashboard and start configuring the first AI flow for their company.",
+    howTitle: "We start with a controlled demo, then expand what works.",
+    finalEyebrow: "Ready for demo",
+    finalTitle: "Start with a real use case, not an empty account.",
+    finalBody: "Send a demo request and we will define the first AI flow for your company. After validation, we activate the workspace and complete the setup.",
   },
 } as const;
 
@@ -191,9 +193,9 @@ export function HomeContent() {
           <h1><span className="gradient-text">{copy.heroTitlePrefix}</span>{copy.heroTitleSuffix}</h1>
           <p className="lead-text">{copy.heroDescription}</p>
           <div className="actions">
-            <Link href="/register" className="button">{copy.createAccount}</Link>
-            <Link href="/demo" className="button secondary">{copy.requestDemo}</Link>
+            <Link href="/demo" className="button">{copy.requestDemo}</Link>
             <Link href="/pricing" className="button secondary">{copy.viewPlans}</Link>
+            <Link href="/trust" className="button secondary">{copy.trustPage}</Link>
           </div>
           <div className="launch-kicker">
             {copy.kickers.map((kicker) => <span key={kicker}>{kicker}</span>)}
@@ -354,7 +356,7 @@ export function HomeContent() {
           <h2>{copy.finalTitle}</h2>
           <p>{copy.finalBody}</p>
         </div>
-        <Link href="/register" className="button">{copy.createAccount}</Link>
+        <Link href="/demo" className="button">{copy.requestDemo}</Link>
       </section>
     </main>
   );
