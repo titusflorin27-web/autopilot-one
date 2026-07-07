@@ -36,6 +36,10 @@ function secondsToDate(value: unknown) {
   return typeof value === "number" ? new Date(value * 1000) : undefined;
 }
 
+function isEnabledFlag(value?: string) {
+  return ["1", "true", "yes", "on"].includes((value ?? "").trim().toLowerCase());
+}
+
 @Injectable()
 export class BillingService {
   private stripeClient?: Stripe;
@@ -75,6 +79,7 @@ export class BillingService {
     ]);
 
     const { stripeCustomerId, stripeSubscriptionId, stripePriceId, ...safeOrganization } = organization;
+    const stripeConfigured = this.isStripeConfigured();
 
     return {
       organization: {
@@ -102,9 +107,9 @@ export class BillingService {
       plans: Object.entries(PLAN_LIMITS).map(([plan, planLimits]) => ({ plan, limits: planLimits })),
       paymentProvider: {
         provider: "stripe",
-        configured: this.isStripeConfigured(),
-        checkoutEnabled: this.isStripeConfigured(),
-        portalEnabled: this.isStripeConfigured() && Boolean(stripeCustomerId),
+        configured: stripeConfigured,
+        checkoutEnabled: this.isStripeCheckoutEnabled(),
+        portalEnabled: stripeConfigured && Boolean(stripeCustomerId),
       },
     };
   }
@@ -112,6 +117,14 @@ export class BillingService {
   async createCheckoutSession(organizationId: string, plan: BillingPlan) {
     if (plan === BillingPlan.FREE) {
       throw new BadRequestException("FREE plan does not require checkout");
+    }
+
+    if (plan === BillingPlan.BUSINESS) {
+      throw new BadRequestException("BUSINESS plan requires manual activation");
+    }
+
+    if (!this.isStripeCheckoutEnabled()) {
+      throw new ServiceUnavailableException("Stripe checkout is not enabled yet");
     }
 
     const stripe = this.getStripeClient();
@@ -227,6 +240,10 @@ export class BillingService {
   }
 
   async updatePlan(organizationId: string, plan: BillingPlan) {
+    if (!this.manualPlanUpdatesEnabled()) {
+      throw new ServiceUnavailableException("Manual billing plan updates are disabled");
+    }
+
     await this.prisma.organization.update({
       where: { id: organizationId },
       data: { billingPlan: plan, billingStatus: BillingStatus.ACTIVE, billingCurrentPeriodStart: new Date() },
@@ -259,6 +276,18 @@ export class BillingService {
 
   private isStripeConfigured() {
     return Boolean(this.config.get<string>("STRIPE_SECRET_KEY"));
+  }
+
+  private isStripeCheckoutEnabled() {
+    return this.isStripeConfigured() && isEnabledFlag(this.config.get<string>("STRIPE_CHECKOUT_ENABLED")) && this.hasSelfServeStripePrices();
+  }
+
+  private manualPlanUpdatesEnabled() {
+    return isEnabledFlag(this.config.get<string>("MANUAL_BILLING_PLAN_UPDATES_ENABLED"));
+  }
+
+  private hasSelfServeStripePrices() {
+    return Boolean(this.config.get<string>("STRIPE_PRICE_STARTER") && this.config.get<string>("STRIPE_PRICE_PRO"));
   }
 
   private getStripePriceId(plan: BillingPlan) {

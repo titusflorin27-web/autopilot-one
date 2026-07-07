@@ -210,7 +210,7 @@ export function BillingClient() {
             {billing.plans.map((plan) => {
               const planCopy = getPlanCopy(packageCopy, plan.plan);
               const isCurrentPlan = billing.organization.billingPlan === plan.plan;
-              const canCheckout = checkoutEnabled && plan.plan !== "FREE";
+              const canCheckout = checkoutEnabled && plan.plan !== "FREE" && plan.plan !== "BUSINESS";
 
               return (
                 <article className="card" key={plan.plan}>
