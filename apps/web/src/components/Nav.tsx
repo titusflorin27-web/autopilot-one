@@ -5,7 +5,9 @@ import { shellCopy } from "../lib/i18n";
 import { useAppLanguage } from "../lib/useAppLanguage";
 
 export function Nav() {
-  const copy = shellCopy[useAppLanguage()];
+  const language = useAppLanguage();
+  const copy = shellCopy[language];
+  const trustLabel = language === "ro" ? "Încredere" : "Trust";
 
   return (
     <header className="nav">
@@ -15,8 +17,8 @@ export function Nav() {
       </Link>
       <nav aria-label={copy.navAria}>
         <Link href="/pricing">{copy.pricing}</Link>
-        <Link href="/demo">{copy.demo}</Link>
-        <Link href="/register" className="nav-cta">{copy.createAccount}</Link>
+        <Link href="/trust">{trustLabel}</Link>
+        <Link href="/demo" className="nav-cta">{copy.demo}</Link>
         <Link href="/login">{copy.login}</Link>
       </nav>
     </header>
