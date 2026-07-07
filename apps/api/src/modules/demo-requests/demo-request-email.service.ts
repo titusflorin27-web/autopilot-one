@@ -11,6 +11,9 @@ type DemoRequestEmailPayload = {
   message: string;
   source: string;
   status: string;
+  internalNote: string | null;
+  nextStep: string | null;
+  followUpAt: Date | null;
   createdAt: Date;
 };
 
@@ -25,6 +28,16 @@ function escapeHtml(value: string) {
 
 function optionalValue(value?: string | null) {
   return value?.trim() || "Nespecificat";
+}
+
+function formatFollowUpDate(value?: Date | null) {
+  if (!value) return "Nespecificat";
+
+  return new Intl.DateTimeFormat("ro-RO", {
+    dateStyle: "medium",
+    timeStyle: "short",
+    timeZone: "Europe/Bucharest",
+  }).format(value);
 }
 
 @Injectable()
@@ -80,6 +93,13 @@ export class DemoRequestEmailService {
       `Website: ${optionalValue(demoRequest.website)}`,
       `Sursă: ${demoRequest.source}`,
       `Status: ${demoRequest.status}`,
+      `Follow-up: ${formatFollowUpDate(demoRequest.followUpAt)}`,
+      "",
+      "Următorul pas:",
+      optionalValue(demoRequest.nextStep),
+      "",
+      "Notă internă:",
+      optionalValue(demoRequest.internalNote),
       "",
       "Mesaj:",
       demoRequest.message,
@@ -97,12 +117,13 @@ export class DemoRequestEmailService {
       ["Website", optionalValue(demoRequest.website)],
       ["Sursă", demoRequest.source],
       ["Status", demoRequest.status],
+      ["Follow-up", formatFollowUpDate(demoRequest.followUpAt)],
     ];
 
     return `
       <div style="font-family: Inter, Arial, sans-serif; color: #0f172a; line-height: 1.6;">
         <h1 style="margin: 0 0 16px;">Cerere demo nouă</h1>
-        <p style="margin: 0 0 20px;">A intrat o cerere demo nouă în Autopilot One.</p>
+        <p style="margin: 0 0 20px;">A intrat o cerere demo nouă în Autopilot One. Contactează leadul în maximum 24h și confirmă primul caz de utilizare.</p>
         <table style="border-collapse: collapse; width: 100%; max-width: 640px;">
           ${rows.map(([label, value]) => `
             <tr>
@@ -111,6 +132,10 @@ export class DemoRequestEmailService {
             </tr>
           `).join("")}
         </table>
+        <h2 style="margin: 24px 0 8px;">Următorul pas</h2>
+        <p style="white-space: pre-line; border: 1px solid #e2e8f0; padding: 12px; border-radius: 12px; max-width: 640px;">${escapeHtml(optionalValue(demoRequest.nextStep))}</p>
+        <h2 style="margin: 24px 0 8px;">Notă internă</h2>
+        <p style="white-space: pre-line; border: 1px solid #e2e8f0; padding: 12px; border-radius: 12px; max-width: 640px;">${escapeHtml(optionalValue(demoRequest.internalNote))}</p>
         <h2 style="margin: 24px 0 8px;">Mesaj</h2>
         <p style="white-space: pre-line; border: 1px solid #e2e8f0; padding: 12px; border-radius: 12px; max-width: 640px;">${escapeHtml(demoRequest.message)}</p>
         <p style="margin-top: 24px;">
