@@ -9,13 +9,13 @@ export function PricingClient() {
   const copy = packagePricingCopy[language];
   const activationCopy = language === "ro"
     ? {
-        eyebrow: "Activare comercială controlată",
+        eyebrow: "Activare controlată",
         title: "Planurile sunt pregătite pentru discuție comercială și activare manuală după demo.",
         description: "Confirmăm cazul de utilizare, limitele, setup-ul și facturarea înainte de orice plată online sau abonament automat.",
         cta: "Discută activarea",
       }
     : {
-        eyebrow: "Controlled commercial activation",
+        eyebrow: "Controlled activation",
         title: "Plans are ready for commercial discussion and manual activation after demo.",
         description: "We confirm the use case, limits, setup and billing before any online payment or automatic subscription.",
         cta: "Discuss activation",
