@@ -3,7 +3,7 @@
 **Project:** AUTOPILOT-TITUS / Autopilot One  
 **Status:** pre-launch public pricing guidance  
 **Date:** 2026-07-08  
-**Scope:** explain client actions after choosing each plan  
+**Scope:** explain client actions and plan components after choosing each plan  
 **Runtime behavior changed:** frontend copy only  
 **Stripe live enabled:** no  
 **Tracking added:** no
@@ -12,7 +12,10 @@
 
 ## 1. Purpose
 
-This build adds a public pricing section that explains, step by step, what the client has to do after choosing a plan.
+This build adds public pricing sections that explain two things clearly:
+
+1. what each part of every plan means;
+2. what the client has to do after choosing each plan.
 
 The goal is to reduce uncertainty for prospects and make the onboarding effort feel controlled, simple and guided.
 
@@ -22,9 +25,59 @@ The goal is to reduce uncertainty for prospects and make the onboarding effort f
 
 The page should make clear that Autopilot One does most of the setup work, while the client only has to confirm essential information, approve AI-generated content, install or forward the widget snippet, test and approve go-live.
 
+It should also explain each plan component in plain language, so the client understands terms such as widget messages, knowledge sources, team members, AI receptionist flow, inbox, analytics and custom onboarding.
+
 ---
 
-## 3. Plan-specific client steps
+## 3. Plan component explanations
+
+### Pilot
+
+Explains:
+
+- `0 € / validation` as controlled validation, not a permanent free production plan;
+- `100 widget messages / month` as a testing conversation limit;
+- `5 knowledge sources` as a small set of verified AI context sources;
+- `1 team member` as one responsible tester/contact;
+- basic AI receptionist flow as simple replies and contact capture;
+- no-card validation as a test before commercial activation.
+
+### Starter
+
+Explains:
+
+- `49 € / month` as the first paid website AI flow;
+- `1,000 widget messages / month` as suitable starter production volume;
+- `50 knowledge sources` as pages, FAQs, docs or KB entries;
+- `3 team members` as owner plus up to two team members;
+- website widget and lead capture as the live website intake flow;
+- guided setup as preparation of profile, sources, widget and final test.
+
+### Pro
+
+Explains:
+
+- `99 € / month` as a plan for active teams;
+- `10,000 widget messages / month` as higher-volume usage;
+- `500 knowledge sources` as an extended operating knowledge base;
+- `10 team members` as support for broader internal work;
+- inbox, analytics and human handoff as the operating layer;
+- dashboard as visibility into conversations, leads, notifications and optimization.
+
+### Business
+
+Explains:
+
+- custom pricing based on volume, complexity and support;
+- `50,000 widget messages / month` as indicative high-volume capacity;
+- `2,000 knowledge sources` as extended documentation and process coverage;
+- `50 team members` as support for larger teams;
+- custom onboarding and operating model as setup around the client's real process;
+- separate commercial terms as contractually confirmed support, responsibilities and activation.
+
+---
+
+## 4. Plan-specific client steps
 
 ### Pilot
 
@@ -73,7 +126,7 @@ Client actions:
 
 ---
 
-## 4. What did not change
+## 5. What did not change
 
 This build does not:
 
@@ -87,12 +140,14 @@ This build does not:
 
 ---
 
-## 5. Acceptance criteria
+## 6. Acceptance criteria
 
 Build #089A is complete when:
 
+- `/pricing` explains what each plan component means;
 - `/pricing` explains what the client has to do after choosing each plan;
-- Pilot, Starter, Pro and Business each have plan-specific steps;
+- Pilot, Starter, Pro and Business each have plan-specific component explanations;
+- Pilot, Starter, Pro and Business each have plan-specific client steps;
 - the copy remains demo-first and controlled-activation compatible;
 - the existing pricing QA markers remain present;
 - `/pricing` remains HTTP 200 after deploy;
@@ -100,7 +155,7 @@ Build #089A is complete when:
 
 ---
 
-## 6. Post-merge QA
+## 7. Post-merge QA
 
 Run after deploy:
 
@@ -121,12 +176,12 @@ Expected markers from the live QA script must still pass:
 Optional visual check:
 
 ```bash
-curl -k -sS -L https://app.autopilot-one.com/pricing | grep -E "Pașii clientului|Ce ai de făcut|Confirmi firma|Aprobi baza"
+curl -k -sS -L https://app.autopilot-one.com/pricing | grep -E "Explicația planurilor|Ce reprezintă fiecare element|Pașii clientului|Ce ai de făcut|Confirmi firma|Aprobi baza"
 ```
 
 ---
 
-## 7. Next recommended build
+## 8. Next recommended build
 
 After this public explanation section, continue with:
 
