@@ -7,7 +7,7 @@ import { PricingClient } from "./PricingClient";
 export const metadata: Metadata = createPageMetadata({
   title: "Prețuri Autopilot One",
   description:
-    "Vezi pachetele Autopilot One pentru recepționer AI, widget pe website, captare leaduri, CRM Lite și automatizare ghidată pentru IMM-uri.",
+    "Vezi pachetele Autopilot One pentru recepționer AI, widget pe website, captare leaduri, CRM Lite și activare comercială controlată după demo.",
   path: "/pricing",
 });
 
