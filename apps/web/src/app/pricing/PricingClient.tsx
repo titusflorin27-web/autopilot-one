@@ -10,13 +10,13 @@ export function PricingClient() {
   const activationCopy = language === "ro"
     ? {
         eyebrow: "Activare controlată",
-        title: "Planurile sunt pregătite pentru discuție comercială și activare manuală după demo.",
+        title: "Planurile plătite se activează prin demo înainte de plata online.",
         description: "Confirmăm cazul de utilizare, limitele, setup-ul și facturarea înainte de orice plată online sau abonament automat.",
         cta: "Discută activarea",
       }
     : {
         eyebrow: "Controlled activation",
-        title: "Plans are ready for commercial discussion and manual activation after demo.",
+        title: "Paid plans start through demo before online payment.",
         description: "We confirm the use case, limits, setup and billing before any online payment or automatic subscription.",
         cta: "Discuss activation",
       };
