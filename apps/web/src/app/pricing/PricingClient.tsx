@@ -61,6 +61,103 @@ export function PricingClient() {
           },
         ],
       };
+  const planStepsCopy = language === "ro"
+    ? {
+        eyebrow: "Pașii clientului",
+        title: "Ce ai de făcut după alegerea planului",
+        description: "Procesul este ghidat. Clientul confirmă informațiile esențiale, iar Autopilot One pregătește agentul AI, baza de cunoștințe și instalarea widgetului.",
+        plans: [
+          {
+            title: "Pilot",
+            description: "Pentru validare inițială înainte de un plan plătit.",
+            steps: [
+              "Confirmi website-ul și datele de contact.",
+              "Răspunzi la câteva întrebări despre business.",
+              "Aprobi profilul AI generat pentru test.",
+              "Testezi o conversație și decizi dacă trecem la Starter.",
+            ],
+          },
+          {
+            title: "Starter",
+            description: "Pentru primul flux real de AI pe website.",
+            steps: [
+              "Confirmi firma, domeniul și persoana responsabilă.",
+              "Adaugi serviciile, FAQ-ul și regulile principale.",
+              "Aprobi baza de cunoștințe creată de AI.",
+              "Instalezi widgetul sau trimiți instrucțiunile developerului.",
+              "Trimiți un mesaj de test și aprobi go-live.",
+            ],
+          },
+          {
+            title: "Pro",
+            description: "Pentru volum, inbox, analytics și follow-up organizat.",
+            steps: [
+              "Confirmi echipa, rolurile și fluxul de follow-up.",
+              "Adaugi surse extinse și reguli pentru transfer uman.",
+              "Testezi lead capture, inbox, notificări și analytics.",
+              "Aprobi lansarea și primești raport de optimizare.",
+            ],
+          },
+          {
+            title: "Business",
+            description: "Pentru implementări dedicate și condiții comerciale separate.",
+            steps: [
+              "Stabilim scopul, volumul și cerințele speciale.",
+              "Confirmăm termenii comerciali și responsabilitățile.",
+              "Pregătim onboardingul dedicat și regulile operaționale.",
+              "Lansăm controlat după testare și aprobare finală.",
+            ],
+          },
+        ],
+      }
+    : {
+        eyebrow: "Client steps",
+        title: "What happens after choosing a plan",
+        description: "The process is guided. The client confirms the essential information while Autopilot One prepares the AI agent, knowledge base and widget installation.",
+        plans: [
+          {
+            title: "Pilot",
+            description: "For initial validation before a paid plan.",
+            steps: [
+              "Confirm the website and contact details.",
+              "Answer a few business questions.",
+              "Approve the AI profile generated for testing.",
+              "Test one conversation and decide whether to move to Starter.",
+            ],
+          },
+          {
+            title: "Starter",
+            description: "For the first real AI flow on the website.",
+            steps: [
+              "Confirm the company, domain and responsible contact.",
+              "Add services, FAQ and main rules.",
+              "Approve the knowledge base created by AI.",
+              "Install the widget or send instructions to the developer.",
+              "Send a test message and approve go-live.",
+            ],
+          },
+          {
+            title: "Pro",
+            description: "For volume, inbox, analytics and organized follow-up.",
+            steps: [
+              "Confirm the team, roles and follow-up workflow.",
+              "Add extended sources and human handoff rules.",
+              "Test lead capture, inbox, notifications and analytics.",
+              "Approve launch and receive an optimization report.",
+            ],
+          },
+          {
+            title: "Business",
+            description: "For dedicated implementations and separately agreed commercial terms.",
+            steps: [
+              "Define scope, volume and special requirements.",
+              "Confirm commercial terms and responsibilities.",
+              "Prepare dedicated onboarding and operating rules.",
+              "Launch in a controlled way after testing and final approval.",
+            ],
+          },
+        ],
+      };
 
   const planName = (plan: (typeof copy.plans)[number]) =>
     plan.plan === "FREE" ? "Pilot" : plan.name;
@@ -134,6 +231,24 @@ export function PricingClient() {
                 {copy.discussPlan}
               </Link>
             </div>
+          </article>
+        ))}
+      </section>
+
+      <section className="card">
+        <div className="eyebrow">{planStepsCopy.eyebrow}</div>
+        <h2>{planStepsCopy.title}</h2>
+        <p>{planStepsCopy.description}</p>
+      </section>
+
+      <section className="grid three-columns" aria-label={planStepsCopy.title}>
+        {planStepsCopy.plans.map((plan) => (
+          <article className="card" key={plan.title}>
+            <h3>{plan.title}</h3>
+            <p>{plan.description}</p>
+            <ol className="check-list">
+              {plan.steps.map((step) => <li key={step}>{step}</li>)}
+            </ol>
           </article>
         ))}
       </section>
