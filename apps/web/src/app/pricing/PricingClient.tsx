@@ -66,6 +66,7 @@ export function PricingClient() {
         eyebrow: "Pașii clientului",
         title: "Ce ai de făcut după alegerea planului",
         description: "Procesul este ghidat. Clientul confirmă informațiile esențiale, iar Autopilot One pregătește agentul AI, baza de cunoștințe și instalarea widgetului.",
+        stepPrefix: "Pasul",
         plans: [
           {
             title: "Pilot",
@@ -114,6 +115,7 @@ export function PricingClient() {
         eyebrow: "Client steps",
         title: "What happens after choosing a plan",
         description: "The process is guided. The client confirms the essential information while Autopilot One prepares the AI agent, knowledge base and widget installation.",
+        stepPrefix: "Step",
         plans: [
           {
             title: "Pilot",
@@ -162,50 +164,50 @@ export function PricingClient() {
     ? {
         eyebrow: "Explicația planurilor",
         title: "Ce reprezintă fiecare element din plan",
-        description: "Fiecare limită și funcție are un rol clar. Mai jos vezi ce înseamnă fiecare parte din plan, pe înțelesul clientului.",
+        description: "Fiecare limită și funcție are un rol clar. Am împărțit explicațiile în etichete scurte, ca să vezi rapid ce cumperi și cum se folosește.",
         plans: [
           {
             title: "Pilot — validare inițială",
             items: [
-              "0 € / validare: test controlat pentru a vedea dacă agentul AI se potrivește businessului tău; nu este plan gratuit permanent pentru producție.",
-              "100 mesaje widget / lună: limită pentru conversațiile de test dintre vizitatori și widget.",
-              "5 surse de cunoștințe: câteva pagini, documente sau intrări KB folosite de AI ca informație verificată.",
-              "1 membru echipă: o persoană responsabilă testează răspunsurile și primește leadurile.",
-              "Flux de bază pentru recepționerul AI: AI răspunde la întrebări simple și colectează date de contact.",
-              "Validare fără card: poți testa procesul înainte de o activare comercială plătită.",
+              { label: "0 € / validare", description: "Test controlat pentru a vedea dacă agentul AI se potrivește businessului tău; nu este plan gratuit permanent pentru producție." },
+              { label: "100 mesaje widget / lună", description: "Limită pentru conversațiile de test dintre vizitatori și widget." },
+              { label: "5 surse de cunoștințe", description: "Câteva pagini, documente sau intrări KB folosite de AI ca informație verificată." },
+              { label: "1 membru echipă", description: "O persoană responsabilă testează răspunsurile și primește leadurile." },
+              { label: "Recepționer AI de bază", description: "AI răspunde la întrebări simple și colectează date de contact." },
+              { label: "Validare fără card", description: "Testezi procesul înainte de o activare comercială plătită." },
             ],
           },
           {
             title: "Starter — primul flux real",
             items: [
-              "49 € / lună: plan plătit pentru primul agent AI activ pe website.",
-              "1.000 mesaje widget / lună: volum suficient pentru o firmă mică la început de utilizare reală.",
-              "50 surse de cunoștințe: pagini, FAQ-uri, documente sau intrări KB care explică serviciile și regulile firmei.",
-              "3 membri echipă: ownerul și până la două persoane pot urmări conversații, leaduri și follow-up.",
-              "Widget pe website și captare leaduri: vizitatorii pot discuta cu AI-ul, iar datele utile ajung în dashboard.",
-              "Setup ghidat pentru lansare: Autopilot One te ajută să pregătești profilul, sursele, widgetul și testul final.",
+              { label: "49 € / lună", description: "Planul pentru primul agent AI activ pe website." },
+              { label: "1.000 mesaje widget / lună", description: "Volum potrivit pentru o firmă mică la început de utilizare reală." },
+              { label: "50 surse de cunoștințe", description: "Pagini, FAQ-uri, documente sau intrări KB care explică serviciile și regulile firmei." },
+              { label: "3 membri echipă", description: "Ownerul și până la două persoane pot urmări conversații, leaduri și follow-up." },
+              { label: "Widget + lead capture", description: "Vizitatorii discută cu AI-ul, iar datele utile ajung în dashboard." },
+              { label: "Setup ghidat", description: "Autopilot One te ajută să pregătești profilul, sursele, widgetul și testul final." },
             ],
           },
           {
             title: "Pro — volum și follow-up",
             items: [
-              "99 € / lună: plan pentru echipe care au conversații mai multe și nevoie de control operațional.",
-              "10.000 mesaje widget / lună: volum mai mare pentru site-uri active sau campanii cu trafic.",
-              "500 surse de cunoștințe: bază extinsă pentru servicii, reguli, obiecții, proceduri și întrebări frecvente.",
-              "10 membri echipă: mai multe persoane pot lucra în inbox, analytics și follow-up.",
-              "Inbox, analytics și transfer uman: AI răspunde, dar conversațiile importante pot fi preluate de operator.",
-              "Dashboard operațional: vezi conversații, leaduri, notificări, activitate și recomandări de optimizare.",
+              { label: "99 € / lună", description: "Plan pentru echipe care au mai multe conversații și nevoie de control operațional." },
+              { label: "10.000 mesaje widget / lună", description: "Volum mai mare pentru site-uri active sau campanii cu trafic." },
+              { label: "500 surse de cunoștințe", description: "Bază extinsă pentru servicii, reguli, obiecții, proceduri și întrebări frecvente." },
+              { label: "10 membri echipă", description: "Mai multe persoane pot lucra în inbox, analytics și follow-up." },
+              { label: "Inbox + analytics + transfer uman", description: "AI răspunde, dar conversațiile importante pot fi preluate de operator." },
+              { label: "Dashboard operațional", description: "Vezi conversații, leaduri, notificări, activitate și recomandări de optimizare." },
             ],
           },
           {
             title: "Business — implementare dedicată",
             items: [
-              "Preț personalizat: se stabilește după volum, complexitate, suport și cerințe speciale.",
-              "50.000 mesaje widget / lună: limită orientativă pentru operațiuni cu trafic mare.",
-              "2.000 surse de cunoștințe: bază extinsă pentru documentație, procese, produse, reguli și scenarii complexe.",
-              "50 membri echipă: potrivit pentru echipe mai mari sau mai multe departamente.",
-              "Onboarding și flux operațional personalizat: configurarea se face pe procesul real al clientului.",
-              "Condiții comerciale separate: termenii, suportul, responsabilitățile și activarea se confirmă contractual.",
+              { label: "Preț personalizat", description: "Se stabilește după volum, complexitate, suport și cerințe speciale." },
+              { label: "50.000 mesaje widget / lună", description: "Limită orientativă pentru operațiuni cu trafic mare." },
+              { label: "2.000 surse de cunoștințe", description: "Bază extinsă pentru documentație, procese, produse, reguli și scenarii complexe." },
+              { label: "50 membri echipă", description: "Potrivit pentru echipe mai mari sau mai multe departamente." },
+              { label: "Onboarding personalizat", description: "Configurarea se face pe procesul real al clientului." },
+              { label: "Condiții comerciale separate", description: "Termenii, suportul, responsabilitățile și activarea se confirmă contractual." },
             ],
           },
         ],
@@ -213,50 +215,50 @@ export function PricingClient() {
     : {
         eyebrow: "Plan explanation",
         title: "What each part of the plan means",
-        description: "Every limit and feature has a clear role. Below you can see what each part means in practical client terms.",
+        description: "Every limit and feature has a clear role. We split the explanations into short labels so you can quickly see what you buy and how it is used.",
         plans: [
           {
             title: "Pilot — initial validation",
             items: [
-              "0 € / validation: controlled test to see whether the AI agent fits the business; not a permanent free production plan.",
-              "100 widget messages / month: limit for test conversations between visitors and the widget.",
-              "5 knowledge sources: a few pages, documents or KB entries used by AI as verified information.",
-              "1 team member: one responsible person tests responses and receives leads.",
-              "Basic AI receptionist flow: AI answers simple questions and collects contact details.",
-              "No-card validation: test the process before paid commercial activation.",
+              { label: "0 € / validation", description: "Controlled test to see whether the AI agent fits the business; not a permanent free production plan." },
+              { label: "100 widget messages / month", description: "Limit for test conversations between visitors and the widget." },
+              { label: "5 knowledge sources", description: "A few pages, documents or KB entries used by AI as verified information." },
+              { label: "1 team member", description: "One responsible person tests responses and receives leads." },
+              { label: "Basic AI receptionist", description: "AI answers simple questions and collects contact details." },
+              { label: "No-card validation", description: "Test the process before paid commercial activation." },
             ],
           },
           {
             title: "Starter — first real flow",
             items: [
-              "49 € / month: paid plan for the first active AI agent on the website.",
-              "1,000 widget messages / month: enough volume for a small business starting real usage.",
-              "50 knowledge sources: pages, FAQs, documents or KB entries that explain services and company rules.",
-              "3 team members: the owner and up to two people can track conversations, leads and follow-up.",
-              "Website widget and lead capture: visitors can talk to AI, and useful data reaches the dashboard.",
-              "Guided setup for launch: Autopilot One helps prepare the profile, sources, widget and final test.",
+              { label: "49 € / month", description: "The plan for the first active AI agent on the website." },
+              { label: "1,000 widget messages / month", description: "Suitable volume for a small business starting real usage." },
+              { label: "50 knowledge sources", description: "Pages, FAQs, documents or KB entries that explain services and company rules." },
+              { label: "3 team members", description: "The owner and up to two people can track conversations, leads and follow-up." },
+              { label: "Widget + lead capture", description: "Visitors can talk to AI, and useful data reaches the dashboard." },
+              { label: "Guided setup", description: "Autopilot One helps prepare the profile, sources, widget and final test." },
             ],
           },
           {
             title: "Pro — volume and follow-up",
             items: [
-              "99 € / month: plan for teams with more conversations and operational control needs.",
-              "10,000 widget messages / month: higher volume for active sites or traffic campaigns.",
-              "500 knowledge sources: extended base for services, rules, objections, procedures and FAQs.",
-              "10 team members: more people can work in inbox, analytics and follow-up.",
-              "Inbox, analytics and human handoff: AI replies, but important conversations can be taken over by an operator.",
-              "Operational dashboard: see conversations, leads, notifications, activity and optimization recommendations.",
+              { label: "99 € / month", description: "Plan for teams with more conversations and operational control needs." },
+              { label: "10,000 widget messages / month", description: "Higher volume for active sites or traffic campaigns." },
+              { label: "500 knowledge sources", description: "Extended base for services, rules, objections, procedures and FAQs." },
+              { label: "10 team members", description: "More people can work in inbox, analytics and follow-up." },
+              { label: "Inbox + analytics + human handoff", description: "AI replies, but important conversations can be taken over by an operator." },
+              { label: "Operational dashboard", description: "See conversations, leads, notifications, activity and optimization recommendations." },
             ],
           },
           {
             title: "Business — dedicated implementation",
             items: [
-              "Custom price: agreed based on volume, complexity, support and special requirements.",
-              "50,000 widget messages / month: indicative limit for higher-traffic operations.",
-              "2,000 knowledge sources: extended base for documentation, processes, products, rules and complex scenarios.",
-              "50 team members: suitable for larger teams or multiple departments.",
-              "Custom onboarding and operating model: configuration follows the client's real process.",
-              "Separate commercial terms: terms, support, responsibilities and activation are contractually confirmed.",
+              { label: "Custom price", description: "Agreed based on volume, complexity, support and special requirements." },
+              { label: "50,000 widget messages / month", description: "Indicative limit for higher-traffic operations." },
+              { label: "2,000 knowledge sources", description: "Extended base for documentation, processes, products, rules and complex scenarios." },
+              { label: "50 team members", description: "Suitable for larger teams or multiple departments." },
+              { label: "Custom onboarding", description: "Configuration follows the client's real process." },
+              { label: "Separate commercial terms", description: "Terms, support, responsibilities and activation are contractually confirmed." },
             ],
           },
         ],
@@ -349,7 +351,11 @@ export function PricingClient() {
           <article className="card" key={plan.title}>
             <h3>{plan.title}</h3>
             <ul className="check-list">
-              {plan.items.map((item) => <li key={item}>{item}</li>)}
+              {plan.items.map((item) => (
+                <li key={item.label}>
+                  <strong>{item.label}</strong>: {item.description}
+                </li>
+              ))}
             </ul>
           </article>
         ))}
@@ -367,7 +373,11 @@ export function PricingClient() {
             <h3>{plan.title}</h3>
             <p>{plan.description}</p>
             <ol className="check-list">
-              {plan.steps.map((step) => <li key={step}>{step}</li>)}
+              {plan.steps.map((step, index) => (
+                <li key={step}>
+                  <strong>{planStepsCopy.stepPrefix} {index + 1}</strong>: {step}
+                </li>
+              ))}
             </ol>
           </article>
         ))}
