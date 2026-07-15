@@ -2,183 +2,202 @@
 
 import Link from "next/link";
 import { useAppLanguage } from "../lib/useAppLanguage";
+import styles from "./HomeContent.module.css";
+
+const cx = (...classNames: Array<string | false | null | undefined>) => classNames.filter(Boolean).join(" ");
 
 const homeCopy = {
   ro: {
-    metrics: [
-      ["24/7", "recepție AI pentru vizitatori"],
-      ["< 1 min", "lead pregătit pentru follow-up"],
-      ["CRM", "status, notă internă, next step"],
-      ["Pilot", "lansare controlată pe website"],
-    ],
-    features: [
-      ["AI", "Recepție web inteligentă", "Răspunde la întrebări, explică serviciile și cere datele potrivite fără să pară un formular rigid."],
-      ["CRM", "Lead-uri organizate", "Cererile ajung într-un flux clar, cu status, notă internă, următorul pas și follow-up."],
-      ["QA", "Control înainte de lansare", "Configurezi baza de cunoștințe, domeniile permise și regulile de răspuns înainte de trafic real."],
-    ],
-    audiences: [
-      "Clinici și cabinete private",
-      "Saloane și servicii locale",
-      "Service-uri auto",
-      "Consultanți și agenții",
-      "Firme B2B cu cereri recurente",
-      "Echipe mici care pierd lead-uri după program",
-    ],
-    steps: [
-      ["01", "Discutăm cazul", "Începem cu o cerere demo și alegem primul flux: recepție, întrebări frecvente, captare lead-uri sau calificare cereri."],
-      ["02", "Încărcăm informația", "Adăugăm servicii, reguli, prețuri, program, întrebări frecvente și instrucțiuni pentru răspunsuri controlate."],
-      ["03", "Pornim implementarea", "Instalăm widgetul, urmărim conversațiile și optimizăm fiecare cerere până devine un flux clar."],
-    ],
-    trustItems: [
-      ["Fără token expus", "Snippetul widgetului ascunde datele sensibile în interfață."],
-      ["Backup validat", "Backup local și off-server pregătit pentru operare sigură."],
-      ["Securitate întărită", "Firewall, fail2ban, rate limits și headers de securitate."],
-      ["QA final", "Homepage, API, SEO, backup și monitoring validate pe VPS."],
-    ],
-    beforeAfter: [
-      ["Înainte", "Lead-uri pierdute în inbox, răspunsuri întârziate și întrebări repetitive care consumă timpul echipei."],
-      ["După", "AI-ul răspunde imediat, cere datele importante și trimite conversația într-un CRM simplu de urmărit."],
-    ],
-    heroEyebrow: "Recepționer AI + CRM Lite",
+    heroEyebrow: "AI Website Agent + CRM Lite",
     heroTitlePrefix: "Un angajat AI",
-    heroTitleSuffix: " care transformă vizitatorii în lead-uri urmărite.",
-    heroDescription: "Autopilot One transformă website-ul într-un canal activ de vânzare: răspunde vizitatorilor, colectează datele importante și trimite conversațiile în CRM pentru follow-up.",
-    createAccount: "Creează workspace",
+    heroTitleSuffix: " care analizează, răspunde și pregătește leadurile pentru follow-up.",
+    heroDescription:
+      "Autopilot One transformă website-ul într-un flux AI controlat: răspunde vizitatorilor, colectează leaduri, organizează conversațiile în CRM Lite și pregătește pașii următori pentru tine.",
+    analyzeWebsite: "Analizează website-ul",
     requestDemo: "Cere demo",
     viewPlans: "Vezi planurile",
     trustPage: "Vezi cum lucrăm sigur",
-    kickers: ["Demo fără card", "Pilot ghidat", "Activare controlată", "CRM Lite inclus"],
-    showcaseAria: "Previzualizare Autopilot One",
-    pilotLive: "PILOT LIVE",
-    aiReceptionist: "Recepționer AI",
-    websiteConversation: "Conversație website",
-    online: "online",
-    visitorMessage: "Bună, vreau o programare și câteva detalii despre servicii.",
-    aiMessage: "Sigur. Îți pot explica serviciile și pot trimite cererea către echipă. Pentru ce zi ai prefera programarea?",
-    visitorFollowup: "Mâine după ora 15:00.",
-    newLead: "Lead nou",
-    appointmentRequested: "Programare cerută",
-    qualifiedStatus: "Status: calificat",
-    nextStep: "Pas următor",
-    callClient: "Sună clientul",
-    todayFollowup: "Follow-up: azi",
-    leadCapture: "Captare leaduri",
-    crmLite: "CRM Lite",
-    analytics: "Analitice",
-    whyEyebrow: "De ce contează",
-    whyTitle: "Un website frumos nu ajunge dacă lead-urile nu sunt urmărite.",
-    whyBody: "Autopilot One pune AI-ul la lucru în punctul cel mai important: conversația cu vizitatorul. Nu înlocuiește echipa, ci îi pregătește cererile bune și le face mai ușor de urmărit.",
-    dashboardEyebrow: "Previzualizare dashboard",
-    dashboardTitle: "Tot ce contează ajunge într-un flux clar.",
-    dashboardBody: "Conversații, lead-uri, statusuri, activitate widget și follow-up-uri într-un singur loc, fără să pierzi contextul comercial.",
-    conversations: "Conversații",
-    lastSevenDays: "ultimele 7 zile",
-    leads: "Lead-uri",
-    readyForContact: "pregătite pentru contact",
-    followup: "Follow-up",
-    openActions: "acțiuni deschise",
-    audienceEyebrow: "Pentru cine este",
-    audienceTitle: "Creat pentru afaceri care primesc cereri repetitive.",
-    audienceBody: "Ideal când clienții întreabă aceleași lucruri, echipa răspunde greu după program sau cererile ajung împrăștiate în e-mailuri, telefoane și mesaje.",
-    faster: "Mai rapid",
-    fasterBody: "Vizitatorul primește răspuns imediat, nu așteaptă până a doua zi.",
-    clearer: "Mai clar",
-    clearerBody: "Echipa vede cererile într-un dashboard, nu doar în notificări separate.",
-    measurable: "Mai măsurabil",
-    measurableBody: "Urmărești conversații, lead-uri, statusuri și activitate widget.",
-    howEyebrow: "Cum pornim",
-    howTitle: "Începem cu demo controlat, apoi extindem ce funcționează.",
-    finalEyebrow: "Pregătit pentru demo",
-    finalTitle: "Începe cu un caz real, nu cu un cont gol.",
-    finalBody: "Trimite o cerere demo și stabilim primul flux AI potrivit pentru compania ta. După validare, activăm workspace-ul și configurarea completă.",
+    heroKickers: ["Demo-first", "AI Agent", "CRM Lite", "95% automation roadmap"],
+    consoleStatus: "CONTROLLED LAUNCH",
+    consoleTitle: "AI Sales Autopilot",
+    consoleSubtitle: "Website analysis → plan recommendation → lead follow-up",
+    visitorMessage: "Bună, vreau să văd dacă un agent AI se potrivește site-ului meu.",
+    aiMessage:
+      "Pot analiza cazul de utilizare, pot recomanda un plan și pot pregăti întrebările pentru demo. Care este website-ul tău?",
+    websiteUrl: "client-website.ro",
+    leadScore: "Lead score",
+    recommendation: "Recomandare",
+    starterPlan: "Starter / Pro după demo",
+    ownerGate: "Aprobare owner înainte de activare",
+    metrics: [
+      { value: "24/7", label: "răspuns AI pentru vizitatori" },
+      { value: "CRM", label: "leaduri, statusuri și follow-up" },
+      { value: "Demo", label: "activare controlată înainte de plată" },
+      { value: "95%", label: "țintă de automatizare cu aprobări umane" },
+    ],
+    productEyebrow: "Platformă AI pentru vânzare și suport",
+    productTitle: "Nu construim doar un chat. Construim un flux AI complet pentru IMM-uri.",
+    productDescription:
+      "Inspirat de structura platformelor SaaS moderne, dar original pentru Autopilot One: agent AI, lead capture, CRM Lite, knowledge base, automatizări și monitorizare într-un proces controlat.",
+    products: [
+      {
+        label: "AI Website Agent",
+        title: "Răspunde vizitatorilor în timp real",
+        body: "Agentul explică serviciile, pune întrebări de calificare și știe când să trimită conversația către un om.",
+      },
+      {
+        label: "Lead Capture",
+        title: "Transformă conversațiile în oportunități",
+        body: "Colectează nume, email, telefon, nevoie, sursă și context, apoi pregătește follow-up-ul.",
+      },
+      {
+        label: "CRM Lite / Inbox",
+        title: "Toate cererile într-un singur loc",
+        body: "Vezi conversații, statusuri, scoruri, notițe interne, taskuri și următorul pas pentru fiecare lead.",
+      },
+      {
+        label: "Knowledge Base",
+        title: "Răspunsuri bazate pe surse controlate",
+        body: "AI-ul folosește pagini, FAQ-uri, documente și reguli aprobate, nu promisiuni inventate.",
+      },
+    ],
+    flowEyebrow: "Fluxul clientului",
+    flowTitle: "De la vizitator la client potențial, cu AI pe aproape tot traseul.",
+    flowSteps: [
+      ["01", "Analiză website", "Clientul cere demo sau analiză. AI-ul pregătește contextul și primul caz de utilizare."],
+      ["02", "Recomandare plan", "Sistemul propune Pilot, Starter, Pro sau Business, dar activarea rămâne controlată."],
+      ["03", "Onboarding ghidat", "AI cere informațiile necesare, pregătește profilul firmei și baza de cunoștințe."],
+      ["04", "Go-live aprobat", "Widgetul se testează, se validează conversațiile și ownerul aprobă lansarea."],
+      ["05", "Monitorizare", "AI urmărește conversații, leaduri, riscuri și recomandări de optimizare sau upgrade."],
+    ],
+    automationEyebrow: "AI automation 95%",
+    automationTitle: "AI execută. Omul aprobă. Sistemul loghează.",
+    automationDescription:
+      "Ținta noastră nu este un chatbot fără control. Ținta este un autopilot operațional în care AI-ul pregătește munca, iar tu intervii doar la decizii critice.",
+    automationCards: [
+      ["AI execută", "analiză website, scor lead, draft ofertă, onboarding, knowledge base și follow-up"],
+      ["Tu aprobi", "ofertă finală, plan plătit, go-live, contracte Business, GDPR și situații sensibile"],
+      ["Sistemul loghează", "taskuri, statusuri, decizii, conversații, notificări și recomandări de upgrade"],
+    ],
+    useCasesEyebrow: "Pentru cine construim",
+    useCasesTitle: "Afaceri care primesc întrebări repetitive și pierd leaduri după program.",
+    useCases: [
+      "Servicii locale",
+      "Clinici și cabinete",
+      "Consultanță și agenții",
+      "Service-uri auto",
+      "Ecommerce cu întrebări recurente",
+      "B2B cu cereri de ofertă",
+    ],
+    trustEyebrow: "Lansare controlată",
+    trustTitle: "Fără promisiuni false. Fără taxare automată ascunsă. Fără go-live fără test.",
+    trustItems: [
+      "Planul se confirmă după demo.",
+      "Stripe live rămâne o etapă separată.",
+      "AI-ul folosește surse aprobate.",
+      "Conversațiile importante pot fi transferate la om.",
+      "Datele firmei și legalul final se adaugă înainte de activare comercială completă.",
+    ],
+    finalEyebrow: "Următorul pas",
+    finalTitle: "Începem cu analiza website-ului și primul flux AI potrivit.",
+    finalBody:
+      "Trimite cererea demo, alegem primul caz de utilizare și pornim cu o implementare controlată. După validare, extindem spre AI Sales Autopilot.",
   },
   en: {
-    metrics: [
-      ["24/7", "AI reception for website visitors"],
-      ["< 1 min", "lead ready for follow-up"],
-      ["CRM", "status, internal note, next step"],
-      ["Pilot", "controlled launch on your website"],
-    ],
-    features: [
-      ["AI", "Smart web reception", "Answers questions, explains services and asks for the right details without feeling like a rigid form."],
-      ["CRM", "Organized leads", "Requests land in a clear flow with status, internal note, next step and follow-up."],
-      ["QA", "Control before launch", "Configure the knowledge base, allowed domains and response rules before real traffic."],
-    ],
-    audiences: [
-      "Private clinics and practices",
-      "Salons and local services",
-      "Auto service businesses",
-      "Consultants and agencies",
-      "B2B companies with recurring requests",
-      "Small teams losing leads after hours",
-    ],
-    steps: [
-      ["01", "Discuss the use case", "Start with a demo request and choose the first flow: reception, FAQs, lead capture or request qualification."],
-      ["02", "Load the information", "Add services, rules, prices, opening hours, FAQs and instructions for controlled replies."],
-      ["03", "Start implementation", "Install the widget, track conversations and optimize every request until it becomes a clear flow."],
-    ],
-    trustItems: [
-      ["No exposed token", "The widget snippet keeps sensitive data hidden in the interface."],
-      ["Validated backup", "Local and off-server backup prepared for safe operation."],
-      ["Hardened security", "Firewall, fail2ban, rate limits and security headers."],
-      ["Final QA", "Homepage, API, SEO, backup and monitoring validated on the VPS."],
-    ],
-    beforeAfter: [
-      ["Before", "Leads lost in the inbox, delayed replies and repetitive questions consuming the team’s time."],
-      ["After", "The AI replies immediately, asks for the important details and sends the conversation into a simple CRM flow."],
-    ],
-    heroEyebrow: "AI Receptionist + CRM Lite",
+    heroEyebrow: "AI Website Agent + CRM Lite",
     heroTitlePrefix: "An AI employee",
-    heroTitleSuffix: " that turns visitors into tracked leads.",
-    heroDescription: "Autopilot One turns your website into an active sales channel: it answers visitors, collects the important details and sends conversations to the CRM for follow-up.",
-    createAccount: "Create workspace",
+    heroTitleSuffix: " that analyzes, replies and prepares leads for follow-up.",
+    heroDescription:
+      "Autopilot One turns your website into a controlled AI flow: it answers visitors, captures leads, organizes conversations in CRM Lite and prepares next steps for you.",
+    analyzeWebsite: "Analyze website",
     requestDemo: "Request demo",
     viewPlans: "View plans",
     trustPage: "See how we work safely",
-    kickers: ["No-card demo", "Guided pilot", "Controlled activation", "CRM Lite included"],
-    showcaseAria: "Autopilot One preview",
-    pilotLive: "LIVE PILOT",
-    aiReceptionist: "AI Receptionist",
-    websiteConversation: "Website conversation",
-    online: "online",
-    visitorMessage: "Hi, I’d like to book an appointment and get a few details about your services.",
-    aiMessage: "Sure. I can explain the services and send the request to the team. Which day would you prefer for the appointment?",
-    visitorFollowup: "Tomorrow after 3:00 PM.",
-    newLead: "New lead",
-    appointmentRequested: "Appointment requested",
-    qualifiedStatus: "Status: qualified",
-    nextStep: "Next step",
-    callClient: "Call the client",
-    todayFollowup: "Follow-up: today",
-    leadCapture: "Lead capture",
-    crmLite: "CRM Lite",
-    analytics: "Analytics",
-    whyEyebrow: "Why it matters",
-    whyTitle: "A beautiful website is not enough if leads are not followed up.",
-    whyBody: "Autopilot One puts AI to work at the most important point: the visitor conversation. It does not replace the team; it prepares good requests and makes them easier to track.",
-    dashboardEyebrow: "Dashboard preview",
-    dashboardTitle: "Everything important lands in one clear flow.",
-    dashboardBody: "Conversations, leads, statuses, widget activity and follow-ups in one place, without losing commercial context.",
-    conversations: "Conversations",
-    lastSevenDays: "last 7 days",
-    leads: "Leads",
-    readyForContact: "ready for contact",
-    followup: "Follow-up",
-    openActions: "open actions",
-    audienceEyebrow: "Who it is for",
-    audienceTitle: "Built for businesses that receive repetitive requests.",
-    audienceBody: "Ideal when customers ask the same things, the team replies slowly after hours or requests are scattered across emails, calls and messages.",
-    faster: "Faster",
-    fasterBody: "The visitor gets an immediate reply instead of waiting until the next day.",
-    clearer: "Clearer",
-    clearerBody: "The team sees requests in a dashboard, not only in separate notifications.",
-    measurable: "More measurable",
-    measurableBody: "Track conversations, leads, statuses and widget activity.",
-    howEyebrow: "How we start",
-    howTitle: "We start with a controlled demo, then expand what works.",
-    finalEyebrow: "Ready for demo",
-    finalTitle: "Start with a real use case, not an empty account.",
-    finalBody: "Send a demo request and we will define the first AI flow for your company. After validation, we activate the workspace and complete the setup.",
+    heroKickers: ["Demo-first", "AI Agent", "CRM Lite", "95% automation roadmap"],
+    consoleStatus: "CONTROLLED LAUNCH",
+    consoleTitle: "AI Sales Autopilot",
+    consoleSubtitle: "Website analysis → plan recommendation → lead follow-up",
+    visitorMessage: "Hi, I want to see whether an AI agent fits my website.",
+    aiMessage:
+      "I can analyze the use case, recommend a plan and prepare the demo questions. What is your website?",
+    websiteUrl: "client-website.com",
+    leadScore: "Lead score",
+    recommendation: "Recommendation",
+    starterPlan: "Starter / Pro after demo",
+    ownerGate: "Owner approval before activation",
+    metrics: [
+      { value: "24/7", label: "AI replies for visitors" },
+      { value: "CRM", label: "leads, statuses and follow-up" },
+      { value: "Demo", label: "controlled activation before payment" },
+      { value: "95%", label: "automation target with human approvals" },
+    ],
+    productEyebrow: "AI platform for sales and support",
+    productTitle: "We are not building only a chat. We are building a complete AI flow for small businesses.",
+    productDescription:
+      "Inspired by modern SaaS structure, but original for Autopilot One: AI agent, lead capture, CRM Lite, knowledge base, automations and monitoring in a controlled process.",
+    products: [
+      {
+        label: "AI Website Agent",
+        title: "Reply to visitors in real time",
+        body: "The agent explains services, asks qualification questions and knows when to send the conversation to a human.",
+      },
+      {
+        label: "Lead Capture",
+        title: "Turn conversations into opportunities",
+        body: "Collect name, email, phone, need, source and context, then prepare follow-up.",
+      },
+      {
+        label: "CRM Lite / Inbox",
+        title: "All requests in one place",
+        body: "See conversations, statuses, scores, internal notes, tasks and the next step for every lead.",
+      },
+      {
+        label: "Knowledge Base",
+        title: "Answers based on controlled sources",
+        body: "AI uses approved pages, FAQs, documents and rules, not invented promises.",
+      },
+    ],
+    flowEyebrow: "Client journey",
+    flowTitle: "From visitor to potential client, with AI across most of the journey.",
+    flowSteps: [
+      ["01", "Website analysis", "The client requests a demo or analysis. AI prepares the context and first use case."],
+      ["02", "Plan recommendation", "The system proposes Pilot, Starter, Pro or Business, while activation stays controlled."],
+      ["03", "Guided onboarding", "AI asks for the required information, prepares the company profile and knowledge base."],
+      ["04", "Approved go-live", "The widget is tested, conversations are validated and the owner approves launch."],
+      ["05", "Monitoring", "AI tracks conversations, leads, risks and optimization or upgrade recommendations."],
+    ],
+    automationEyebrow: "AI automation 95%",
+    automationTitle: "AI executes. Human approves. The system logs.",
+    automationDescription:
+      "Our target is not an uncontrolled chatbot. The target is an operational autopilot where AI prepares the work and you step in only for critical decisions.",
+    automationCards: [
+      ["AI executes", "website analysis, lead score, offer draft, onboarding, knowledge base and follow-up"],
+      ["You approve", "final offer, paid plan, go-live, Business contracts, GDPR and sensitive cases"],
+      ["System logs", "tasks, statuses, decisions, conversations, notifications and upgrade recommendations"],
+    ],
+    useCasesEyebrow: "Who we build for",
+    useCasesTitle: "Businesses that receive repetitive questions and lose leads after hours.",
+    useCases: [
+      "Local services",
+      "Clinics and practices",
+      "Consultants and agencies",
+      "Auto service businesses",
+      "Ecommerce with recurring questions",
+      "B2B quote requests",
+    ],
+    trustEyebrow: "Controlled launch",
+    trustTitle: "No false promises. No hidden automatic charges. No go-live without testing.",
+    trustItems: [
+      "The plan is confirmed after demo.",
+      "Stripe live remains a separate stage.",
+      "AI uses approved sources.",
+      "Important conversations can be handed off to a human.",
+      "Company details and final legal review are added before full commercial activation.",
+    ],
+    finalEyebrow: "Next step",
+    finalTitle: "Start with website analysis and the first suitable AI flow.",
+    finalBody:
+      "Send the demo request, we choose the first use case and start with a controlled implementation. After validation, we expand toward AI Sales Autopilot.",
   },
 } as const;
 
@@ -186,177 +205,138 @@ export function HomeContent() {
   const copy = homeCopy[useAppLanguage()];
 
   return (
-    <main className="container">
-      <section className="hero hero-split premium-hero">
-        <div>
+    <main className={cx("container", styles.homeShell)}>
+      <section className={styles.heroSection}>
+        <div className={styles.heroCopy}>
           <div className="eyebrow">{copy.heroEyebrow}</div>
-          <h1><span className="gradient-text">{copy.heroTitlePrefix}</span>{copy.heroTitleSuffix}</h1>
+          <h1>
+            <span className="gradient-text">{copy.heroTitlePrefix}</span>{copy.heroTitleSuffix}
+          </h1>
           <p className="lead-text">{copy.heroDescription}</p>
           <div className="actions">
-            <Link href="/demo" className="button">{copy.requestDemo}</Link>
+            <Link href="/demo?intent=website-analysis" className="button">{copy.analyzeWebsite}</Link>
+            <Link href="/demo" className="button secondary">{copy.requestDemo}</Link>
             <Link href="/pricing" className="button secondary">{copy.viewPlans}</Link>
             <Link href="/trust" className="button secondary">{copy.trustPage}</Link>
           </div>
           <div className="launch-kicker">
-            {copy.kickers.map((kicker) => <span key={kicker}>{kicker}</span>)}
+            {copy.heroKickers.map((kicker) => <span key={kicker}>{kicker}</span>)}
           </div>
         </div>
 
-        <aside className="product-showcase" aria-label={copy.showcaseAria}>
-          <div className="showcase-topbar">
-            <div className="console-dots"><span /><span /><span /></div>
-            <span>{copy.pilotLive}</span>
+        <aside className={styles.autopilotConsole} aria-label={copy.consoleTitle}>
+          <div className={styles.consoleTopbar}>
+            <div className={styles.consoleDots}><span /><span /><span /></div>
+            <strong>{copy.consoleStatus}</strong>
           </div>
-          <div className="showcase-grid">
-            <section className="ai-window">
-              <div className="ai-window-header">
-                <div>
-                  <strong>{copy.aiReceptionist}</strong>
-                  <span>{copy.websiteConversation}</span>
-                </div>
-                <em>{copy.online}</em>
-              </div>
-              <div className="chat-bubble visitor">{copy.visitorMessage}</div>
-              <div className="chat-bubble ai">{copy.aiMessage}</div>
-              <div className="chat-bubble visitor compact">{copy.visitorFollowup}</div>
-            </section>
-
-            <section className="crm-window">
-              <div className="crm-card active">
-                <span>{copy.newLead}</span>
-                <strong>{copy.appointmentRequested}</strong>
-                <p>{copy.qualifiedStatus}</p>
-              </div>
-              <div className="crm-card">
-                <span>{copy.nextStep}</span>
-                <strong>{copy.callClient}</strong>
-                <p>{copy.todayFollowup}</p>
-              </div>
-            </section>
+          <div className={styles.consoleHeader}>
+            <span>{copy.consoleTitle}</span>
+            <p>{copy.consoleSubtitle}</p>
           </div>
-          <div className="showcase-footer">
-            <span>{copy.leadCapture}</span>
-            <span>{copy.crmLite}</span>
-            <span>{copy.analytics}</span>
+          <div className={styles.chatStack}>
+            <div className={cx(styles.chatBubble, styles.visitorBubble)}>{copy.visitorMessage}</div>
+            <div className={cx(styles.chatBubble, styles.aiBubble)}>{copy.aiMessage}</div>
           </div>
+          <div className={styles.analysisPanel}>
+            <div>
+              <span>{copy.websiteUrl}</span>
+              <strong>{copy.leadScore}: 75</strong>
+            </div>
+            <div>
+              <span>{copy.recommendation}</span>
+              <strong>{copy.starterPlan}</strong>
+            </div>
+          </div>
+          <div className={styles.approvalGate}>{copy.ownerGate}</div>
         </aside>
       </section>
 
-      <section className="launch-strip premium-strip">
-        {copy.metrics.map(([value, label]) => (
-          <article key={label}>
-            <strong>{value}</strong>
-            <span>{label}</span>
+      <section className={styles.metricsStrip}>
+        {copy.metrics.map((metric) => (
+          <article key={metric.label}>
+            <strong>{metric.value}</strong>
+            <span>{metric.label}</span>
           </article>
         ))}
       </section>
 
-      <section className="card section-heading statement-card">
-        <div className="eyebrow">{copy.whyEyebrow}</div>
-        <h2>{copy.whyTitle}</h2>
-        <p>{copy.whyBody}</p>
+      <section className={cx("card", styles.sectionIntro)}>
+        <div className="eyebrow">{copy.productEyebrow}</div>
+        <h2>{copy.productTitle}</h2>
+        <p>{copy.productDescription}</p>
       </section>
 
-      <section className="grid three-columns">
-        {copy.features.map(([icon, title, description]) => (
-          <article className="card feature-card elevated-card" key={title}>
-            <div className="feature-icon">{icon}</div>
-            <h3>{title}</h3>
-            <p>{description}</p>
+      <section className={styles.productGrid}>
+        {copy.products.map((product) => (
+          <article className={cx("card", styles.productCard)} key={product.label}>
+            <span>{product.label}</span>
+            <h3>{product.title}</h3>
+            <p>{product.body}</p>
           </article>
         ))}
       </section>
 
-      <section className="before-after-grid">
-        {copy.beforeAfter.map(([title, description]) => (
-          <article className="card before-after-card" key={title}>
-            <div className="eyebrow">{title}</div>
-            <p>{description}</p>
-          </article>
-        ))}
-      </section>
-
-      <section className="card dashboard-preview">
+      <section className={cx("card", styles.flowSection)}>
         <div>
-          <div className="eyebrow">{copy.dashboardEyebrow}</div>
-          <h2>{copy.dashboardTitle}</h2>
-          <p>{copy.dashboardBody}</p>
+          <div className="eyebrow">{copy.flowEyebrow}</div>
+          <h2>{copy.flowTitle}</h2>
         </div>
-        <div className="dashboard-board">
-          <article>
-            <span>{copy.conversations}</span>
-            <strong>38</strong>
-            <p>{copy.lastSevenDays}</p>
-          </article>
-          <article>
-            <span>{copy.leads}</span>
-            <strong>12</strong>
-            <p>{copy.readyForContact}</p>
-          </article>
-          <article>
-            <span>{copy.followup}</span>
-            <strong>5</strong>
-            <p>{copy.openActions}</p>
-          </article>
+        <div className={styles.flowTimeline}>
+          {copy.flowSteps.map(([number, title, description]) => (
+            <article key={number}>
+              <strong>{number}</strong>
+              <div>
+                <h3>{title}</h3>
+                <p>{description}</p>
+              </div>
+            </article>
+          ))}
         </div>
       </section>
 
-      <section className="card story-card">
+      <section className={styles.automationSection}>
+        <div className={cx("card", styles.automationLead)}>
+          <div className="eyebrow">{copy.automationEyebrow}</div>
+          <h2>{copy.automationTitle}</h2>
+          <p>{copy.automationDescription}</p>
+        </div>
+        <div className={styles.automationCards}>
+          {copy.automationCards.map(([title, body]) => (
+            <article className="card" key={title}>
+              <h3>{title}</h3>
+              <p>{body}</p>
+            </article>
+          ))}
+        </div>
+      </section>
+
+      <section className={cx("card", styles.useCaseSection)}>
         <div>
-          <div className="eyebrow">{copy.audienceEyebrow}</div>
-          <h2>{copy.audienceTitle}</h2>
-          <p>{copy.audienceBody}</p>
-          <div className="badge-list">
-            {copy.audiences.map((audience) => <span key={audience}>{audience}</span>)}
-          </div>
+          <div className="eyebrow">{copy.useCasesEyebrow}</div>
+          <h2>{copy.useCasesTitle}</h2>
         </div>
-        <div className="story-panel">
-          <article>
-            <strong>{copy.faster}</strong>
-            <p>{copy.fasterBody}</p>
-          </article>
-          <article>
-            <strong>{copy.clearer}</strong>
-            <p>{copy.clearerBody}</p>
-          </article>
-          <article>
-            <strong>{copy.measurable}</strong>
-            <p>{copy.measurableBody}</p>
-          </article>
+        <div className="badge-list">
+          {copy.useCases.map((useCase) => <span key={useCase}>{useCase}</span>)}
         </div>
       </section>
 
-      <section className="section-heading">
-        <div className="eyebrow">{copy.howEyebrow}</div>
-        <h2>{copy.howTitle}</h2>
+      <section className={cx("card", styles.trustSection)}>
+        <div>
+          <div className="eyebrow">{copy.trustEyebrow}</div>
+          <h2>{copy.trustTitle}</h2>
+        </div>
+        <ul className="check-list">
+          {copy.trustItems.map((item) => <li key={item}>{item}</li>)}
+        </ul>
       </section>
 
-      <section className="grid three-columns">
-        {copy.steps.map(([number, title, description]) => (
-          <article className="card" key={title}>
-            <div className="step-number">{number}</div>
-            <h3>{title}</h3>
-            <p>{description}</p>
-          </article>
-        ))}
-      </section>
-
-      <section className="trust-band premium-trust">
-        {copy.trustItems.map(([title, description]) => (
-          <article key={title}>
-            <strong>{title}</strong>
-            <p>{description}</p>
-          </article>
-        ))}
-      </section>
-
-      <section className="card cta-card final-cta-card">
+      <section className={cx("card", "cta-card", styles.finalCta)}>
         <div>
           <div className="eyebrow">{copy.finalEyebrow}</div>
           <h2>{copy.finalTitle}</h2>
           <p>{copy.finalBody}</p>
         </div>
-        <Link href="/demo" className="button">{copy.requestDemo}</Link>
+        <Link href="/demo?intent=website-analysis" className="button">{copy.analyzeWebsite}</Link>
       </section>
     </main>
   );
